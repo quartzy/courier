@@ -1,0 +1,16 @@
+preset: recommended
+
+linting: true
+
+enabled:
+  - align_equals
+  - concat_with_spaces
+
+disabled:
+  - unalign_equals
+  - concat_without_spaces
+  - empty_return
+
+finder:
+  name:
+    - "*.php"

@@ -1,0 +1,47 @@
+{
+    "name": "quartzy/courier",
+    "description": "A transactional email sending library using the php-email domain",
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Chris Muthig",
+            "email": "camuthig@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^5.6|^7.0",
+        "psr/log": "^1.0",
+        "quartzy/php-email": "0.1.0"
+    },
+    "require-dev": {
+        "sendgrid/sendgrid": "^5.1",
+        "phpunit/phpunit": "^5.7",
+        "guzzlehttp/guzzle": "^6.2",
+        "php-http/guzzle6-adapter": "^1.1",
+        "sparkpost/sparkpost": "^2.1",
+        "mockery/mockery": "^0.9.8",
+        "wildbit/postmark-php": "^2.3"
+    },
+    "suggest": {
+        "sendgrid/sendgrid": "To use the SendGridCourier",
+        "guzzlehttp/guzzle": "This or some other http client is needed for the SparkPostCourier",
+        "php-http/guzzle6-adapter": "This or some other adapter is needed for the SparkPostCourier",
+        "sparkpost/sparkpost": "To use the SparkPostCourier",
+        "wildbit/postmark-php": "To use the PostmarkCourier"
+    },
+    "autoload": {
+        "psr-4": {
+            "Courier\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Courier\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
