@@ -273,7 +273,7 @@ class SparkPostCourier
                     ->setSubject($template[self::SUBJECT]);
 
                 // If the from contains a templated from, it should be actively replaced now to avoid validation errors.
-                if (strpos('{{', $template[self::FROM][self::CONTACT_EMAIL]) !== false) {
+                if (strpos($template[self::FROM][self::CONTACT_EMAIL], '{{') !== false) {
                     $inlineEmail->setFrom($email->getFrom());
                 } else {
                     $inlineEmail->setFrom(
@@ -284,9 +284,9 @@ class SparkPostCourier
                     );
                 }
 
-                // If the form contains templated replyTo it should be replaced now to avoid validation errors.
+                // If the form contains a templated replyTo, it should be actively replaced now to avoid validation errors.
                 if (array_key_exists(self::REPLY_TO, $template)) {
-                    if (strpos('{{', $template[self::REPLY_TO]) !== false) {
+                    if (strpos($template[self::REPLY_TO], '{{') !== false) {
                         if (empty($email->getReplyTos())) {
                             throw new ValidationException('Reply to is templated but no value was given');
                         }
