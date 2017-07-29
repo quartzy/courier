@@ -260,6 +260,128 @@ class SparkPostCourierTest extends TestCase
     }
 
     /**
+     * @testdox It should support sending a templated email with an attachment and a templated from/replyTo
+     */
+    public function handlesTemplatedEmailsWithAttachmentAndDynamicSender()
+    {
+        $courier = new SparkPostCourier($this->sparkPost);
+
+        $email = new Email(
+            'Subject',
+            new TemplatedContent('1234', ['test' => 'value']),
+            new Address('sender@test.com'),
+            [new Address('recipient@test.com')]
+        );
+
+        $email->addReplyTos(new Address('dynamic@replyto.com'));
+
+        $email->addAttachments(new FileAttachment(self::$file, 'file name.txt'));
+
+        $expectedTemplate = [
+            'results' => [
+                'content' => [
+                    'from'     => [
+                        'email' => '{{fromEmail}}@{{fromDomain}}',
+                        'name'  => 'Template Address',
+                    ],
+                    'subject'  => 'Template Subject',
+                    'reply_to' => '{{replyTo}}',
+                    'html'     => 'This is a template html test',
+                    'headers'  => ['X-Header' => 'test'],
+                ],
+            ],
+        ];
+
+        $this->sparkPost
+            ->shouldReceive('syncRequest')
+            ->once()
+            ->with('GET', 'templates/1234')
+            ->andReturn(new SparkPostResponse(new Response(200, [], json_encode($expectedTemplate))));
+
+        $expectedArray = [
+            'content'           => [
+                'from'        => [
+                    'email' => 'sender@test.com',
+                    'name'  => null,
+                ],
+                'subject'     => 'Template Subject',
+                'html'        => 'This is a template html test',
+                'text'        => null,
+                'attachments' => [
+                    [
+                        'name' => 'file name.txt',
+                        'type' => mime_content_type(self::$file),
+                        'data' => base64_encode(file_get_contents(self::$file)),
+                    ],
+                ],
+                'reply_to'    => 'dynamic@replyto.com',
+                'headers'     => ['X-Header' => 'test'],
+            ],
+            'substitution_data' => [
+                'test'        => 'value',
+                'fromName'    => null,
+                'fromEmail'   => 'sender',
+                'fromDomain'  => 'test.com',
+                'subject'     => 'Subject',
+                'replyTo'     => 'dynamic@replyto.com',
+            ],
+            'recipients'        => [
+                [
+                    'address' => [
+                        'name'  => null,
+                        'email' => 'recipient@test.com',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->setExpectedCall($expectedArray, new SparkPostResponse(new Response(200)));
+
+        $courier->deliver($email);
+    }
+
+    /**
+     * @testdox It should throw an error if the reply to is a templated value but not provided on the email
+     * @expectedException \Courier\Exceptions\ValidationException
+     */
+    public function handlesDynamicTemplateMissingSender()
+    {
+        $courier = new SparkPostCourier($this->sparkPost);
+
+        $email = new Email(
+            'Subject',
+            new TemplatedContent('1234', ['test' => 'value']),
+            new Address('sender@test.com'),
+            [new Address('recipient@test.com')]
+        );
+
+        $email->addAttachments(new FileAttachment(self::$file, 'file name.txt'));
+
+        $expectedTemplate = [
+            'results' => [
+                'content' => [
+                    'from'     => [
+                        'email' => '{{fromEmail}}@{{fromDomain}}',
+                        'name'  => 'Template Address',
+                    ],
+                    'subject'  => 'Template Subject',
+                    'reply_to' => '{{replyTo}}',
+                    'html'     => 'This is a template html test',
+                    'headers'  => ['X-Header' => 'test'],
+                ],
+            ],
+        ];
+
+        $this->sparkPost
+            ->shouldReceive('syncRequest')
+            ->once()
+            ->with('GET', 'templates/1234')
+            ->andReturn(new SparkPostResponse(new Response(200, [], json_encode($expectedTemplate))));
+
+        $courier->deliver($email);
+    }
+
+    /**
      * @testdox It should handle errors when searching for a template
      * @expectedException \Courier\Exceptions\TransmissionException
      */
