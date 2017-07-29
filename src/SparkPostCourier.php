@@ -4,6 +4,7 @@ namespace Courier;
 
 use Courier\Exceptions\TransmissionException;
 use Courier\Exceptions\UnsupportedContentException;
+use Courier\Exceptions\ValidationException;
 use PhpEmail\Address;
 use PhpEmail\Attachment;
 use PhpEmail\Content;
@@ -268,22 +269,37 @@ class SparkPostCourier
                 $textContent = array_key_exists(self::TEXT, $template) ? $template[self::TEXT] : null;
 
                 $inlineEmail
-                    ->setFrom(
+                    ->setContent(new Content\SimpleContent($htmlContent, $textContent))
+                    ->setSubject($template[self::SUBJECT]);
+
+                // If the from contains a templated from, it should be actively replaced now to avoid validation errors.
+                if (strpos('{{', $template[self::FROM][self::CONTACT_EMAIL]) !== false) {
+                    $inlineEmail->setFrom($email->getFrom());
+                } else {
+                    $inlineEmail->setFrom(
                         new Address(
                             $template[self::FROM][self::CONTACT_EMAIL],
                             $template[self::FROM][self::CONTACT_NAME]
                         )
-                    )
-                    ->setContent(new Content\SimpleContent($htmlContent, $textContent))
-                    ->setSubject($template[self::SUBJECT]);
+                    );
+                }
 
+                // If the form contains templated replyTo it should be replaced now to avoid validation errors.
                 if (array_key_exists(self::REPLY_TO, $template)) {
-                    if ($parts = explode(' ', $template[self::REPLY_TO])) {
-                        $email = trim(array_pop($parts), '<>');
-                        // Be sure to trim any extraneous quotes from the name
-                        $name  = trim(implode(' ', $parts), '"');
+                    if (strpos('{{', $template[self::REPLY_TO]) !== false) {
+                        if (empty($email->getReplyTos())) {
+                            throw new ValidationException('Reply to is templated but no value was given');
+                        }
 
-                        $inlineEmail->setReplyTos(new Address($email, $name));
+                        $inlineEmail->setReplyTos($email->getReplyTos()[0]);
+                    } else {
+                        if ($parts = explode(' ', $template[self::REPLY_TO])) {
+                            $email = trim(array_pop($parts), '<>');
+                            // Be sure to trim any extraneous quotes from the name
+                            $name  = trim(implode(' ', $parts), '"');
+
+                            $inlineEmail->setReplyTos(new Address($email, $name));
+                        }
                     }
                 }
 
