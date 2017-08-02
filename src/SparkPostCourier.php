@@ -293,13 +293,7 @@ class SparkPostCourier
 
                         $inlineEmail->setReplyTos($email->getReplyTos()[0]);
                     } else {
-                        if ($parts = explode(' ', $template[self::REPLY_TO])) {
-                            $email = trim(array_pop($parts), '<>');
-                            // Be sure to trim any extraneous quotes from the name
-                            $name  = trim(implode(' ', $parts), '"');
-
-                            $inlineEmail->setReplyTos(new Address($email, $name));
-                        }
+                        $inlineEmail->setReplyTos(Address::fromString($template[self::REPLY_TO]));
                     }
                 }
 
