@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.2 - 2017-08-15
+
+### Fixed
+
+* Made sure `SparkPostCourier` implemented the `Courier` interface
+
 ## 0.1.1 - 2017-08-03
 
 ### Fixed
