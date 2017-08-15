@@ -23,7 +23,7 @@ use SparkPost\SparkPostException;
  * case, all template variables will be sent as expected, but tracking/reporting may not work as expected within
  * SparkPost.
  */
-class SparkPostCourier
+class SparkPostCourier implements Courier
 {
     const RECIPIENTS        = 'recipients';
     const CC                = 'cc';
