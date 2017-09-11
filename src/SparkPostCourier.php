@@ -91,6 +91,7 @@ class SparkPostCourier implements Courier
     protected function send(array $mail)
     {
         $promise = $this->sparkPost->transmissions->post($mail);
+
         try {
             $promise->wait();
         } catch (SparkPostException $e) {
@@ -383,13 +384,13 @@ class SparkPostCourier implements Courier
         return [
             self::ADDRESS => [
                 self::CONTACT_EMAIL => $address->getEmail(),
-                self::HEADER_TO     => $headerTo
-            ]
+                self::HEADER_TO     => $headerTo,
+            ],
         ];
     }
 
     /**
-     * Build a string representing the header_to field of this email
+     * Build a string representing the header_to field of this email.
      *
      * @param Email $email
      *
@@ -403,7 +404,7 @@ class SparkPostCourier implements Courier
     }
 
     /**
-     * Build a string representing the CC header for this email
+     * Build a string representing the CC header for this email.
      *
      * @param Email $email
      *
