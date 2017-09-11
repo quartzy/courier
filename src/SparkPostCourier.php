@@ -39,9 +39,13 @@ class SparkPostCourier implements Courier
     const ATTACHMENTS = 'attachments';
     const TEMPLATE_ID = 'template_id';
 
+    const HEADERS     = 'headers';
+    const CC_HEADER   = 'CC';
+
     const ADDRESS       = 'address';
     const CONTACT_NAME  = 'name';
     const CONTACT_EMAIL = 'email';
+    const HEADER_TO     = 'header_to';
 
     const ATTACHMENT_NAME = 'name';
     const ATTACHMENT_TYPE = 'type';
@@ -139,32 +143,21 @@ class SparkPostCourier implements Courier
      */
     protected function prepareEmail(Email $email)
     {
-        $message = [];
+        $message  = [];
+        $headerTo = $this->buildHeaderTo($email);
 
         $message[self::RECIPIENTS] = [];
 
         foreach ($email->getToRecipients() as $recipient) {
-            $message[self::RECIPIENTS][] = $this->createAddress($recipient);
+            $message[self::RECIPIENTS][] = $this->createAddress($recipient, $headerTo);
         }
-
-        $message[self::CC] = [];
 
         foreach ($email->getCcRecipients() as $recipient) {
-            $message[self::CC][] = $this->createAddress($recipient);
+            $message[self::RECIPIENTS][] = $this->createAddress($recipient, $headerTo);
         }
-
-        if (!$message[self::CC]) {
-            unset($message[self::CC]);
-        }
-
-        $message[self::BCC] = [];
 
         foreach ($email->getBccRecipients() as $recipient) {
-            $message[self::BCC][] = $this->createAddress($recipient);
-        }
-
-        if (!$message[self::BCC]) {
-            unset($message[self::BCC]);
+            $message[self::RECIPIENTS][] = $this->createAddress($recipient, $headerTo);
         }
 
         return $message;
@@ -238,6 +231,11 @@ class SparkPostCourier implements Courier
             $templateData['subject'] = $email->getSubject();
         }
 
+        // @TODO Remove this variable once SparkPost CC headers work properly for templates
+        if (!array_key_exists('ccHeader', $templateData)) {
+            $templateData['ccHeader'] = $this->buildCcHeader($email);
+        }
+
         return $templateData;
     }
 
@@ -250,6 +248,9 @@ class SparkPostCourier implements Courier
     {
         $content = [
             self::TEMPLATE_ID => $email->getContent()->getTemplateId(),
+            self::HEADERS     => [
+                self::CC_HEADER => $this->buildCcHeader($email),
+            ],
         ];
 
         if ($email->getAttachments()) {
@@ -299,9 +300,9 @@ class SparkPostCourier implements Courier
 
                 $content = $this->buildSimpleContent($inlineEmail);
 
-                // Some special sauce provided by SparkPost templates
-                if (array_key_exists('headers', $template)) {
-                    $content['headers'] = $template['headers'];
+                // Merge the custom template headers with the headers defined by Courier (CC)
+                if (array_key_exists(self::HEADERS, $template)) {
+                    $content[self::HEADERS] = array_merge($template[self::HEADERS], $content[self::HEADERS]);
                 }
             } catch (SparkPostException $e) {
                 $this->logger->error(
@@ -351,6 +352,9 @@ class SparkPostCourier implements Courier
             self::TEXT        => $email->getContent()->getText(),
             self::ATTACHMENTS => $attachments,
             self::REPLY_TO    => $replyTo,
+            self::HEADERS     => [
+                self::CC_HEADER => $this->buildCcHeader($email),
+            ],
         ];
     }
 
@@ -370,16 +374,45 @@ class SparkPostCourier implements Courier
 
     /**
      * @param Address $address
+     * @param string  $headerTo
      *
      * @return array
      */
-    private function createAddress(Address $address)
+    private function createAddress(Address $address, $headerTo)
     {
         return [
             self::ADDRESS => [
-                self::CONTACT_NAME  => $address->getName(),
                 self::CONTACT_EMAIL => $address->getEmail(),
-            ],
+                self::HEADER_TO     => $headerTo
+            ]
         ];
+    }
+
+    /**
+     * Build a string representing the header_to field of this email
+     *
+     * @param Email $email
+     *
+     * @return string
+     */
+    private function buildHeaderTo(Email $email)
+    {
+        return implode(',', array_map(function (Address $address) {
+            return $address->toRfc2822();
+        }, $email->getToRecipients()));
+    }
+
+    /**
+     * Build a string representing the CC header for this email
+     *
+     * @param Email $email
+     *
+     * @return string
+     */
+    private function buildCcHeader(Email $email)
+    {
+        return implode(',', array_map(function (Address $address) {
+            return $address->toRfc2822();
+        }, $email->getCcRecipients()));
     }
 }
