@@ -122,8 +122,27 @@ SparkPost allows users to define templated keys in the from, reply to, and subje
 * `fromName`
 * `replyTo`
 * `subject`
+* `ccHeader`
 
 These will be added to the template data already defined in the `TemplatedContent` assuming the keys are not already set manually.
+
+##### Temporary fix for correctly displaying CC header
+
+As documented in this [post](https://www.sparkpost.com/docs/faq/cc-bcc-with-rest-api/), the SparkPost API requires sending the `CC` header information in order to properly display recipients. In the context of inline templates and non-templated emails, setting this header works fine. However, if sending a standard templated email, SparkPost's API does not respect the `CC` header. To work around this, Courier will set the `ccHeader` variable in the substitution data to what the value _should_ be. In order to leverage this variable, you will need to update your template using the API (the header attributes are not available in the web editor) to include the value. This can be done with a request like:
+
+```javascript
+// PUT https://api.sparkpost.com/api/v1/templates/my-template-id
+
+{
+  "content": {
+    // All of your other content must go here as this PUT will overwrite all other content
+    "headers": {
+      "CC": "{{ccHeader}}"
+    }
+  }
+}
+
+```
 
 #### Postmark
 
