@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.3 - 2017-09-22
+
+### Fixed
+
+* Send recipients with correct format in `SparkPostCourier` based on this [FAQ](https://www.sparkpost.com/docs/faq/cc-bcc-with-rest-api/)
+
 ## 0.1.2 - 2017-08-15
 
 ### Fixed
