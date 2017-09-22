@@ -234,7 +234,9 @@ class SparkPostCourier implements Courier
 
         // @TODO Remove this variable once SparkPost CC headers work properly for templates
         if (!array_key_exists('ccHeader', $templateData)) {
-            $templateData['ccHeader'] = $this->buildCcHeader($email);
+            if ($header = $this->buildCcHeader($email)) {
+                $templateData['ccHeader'] = $header;
+            }
         }
 
         return $templateData;
@@ -249,10 +251,13 @@ class SparkPostCourier implements Courier
     {
         $content = [
             self::TEMPLATE_ID => $email->getContent()->getTemplateId(),
-            self::HEADERS     => [
-                self::CC_HEADER => $this->buildCcHeader($email),
-            ],
         ];
+
+        if ($header = $this->buildCcHeader($email)) {
+            $content[self::HEADERS] = [
+                self::CC_HEADER => $header,
+            ];
+        }
 
         if ($email->getAttachments()) {
             /*
@@ -343,6 +348,11 @@ class SparkPostCourier implements Courier
             $replyTo = $first->toRfc2822();
         }
 
+        $headers = [];
+        if  ($header = $this->buildCcHeader($email)) {
+            $headers[self::CC_HEADER] = $header;
+        }
+
         return [
             self::FROM        => [
                 self::CONTACT_NAME  => $email->getFrom()->getName(),
@@ -353,9 +363,7 @@ class SparkPostCourier implements Courier
             self::TEXT        => $email->getContent()->getText(),
             self::ATTACHMENTS => $attachments,
             self::REPLY_TO    => $replyTo,
-            self::HEADERS     => [
-                self::CC_HEADER => $this->buildCcHeader($email),
-            ],
+            self::HEADERS     => $headers,
         ];
     }
 
