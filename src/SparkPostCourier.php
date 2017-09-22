@@ -349,7 +349,7 @@ class SparkPostCourier implements Courier
         }
 
         $headers = [];
-        if  ($header = $this->buildCcHeader($email)) {
+        if ($header = $this->buildCcHeader($email)) {
             $headers[self::CC_HEADER] = $header;
         }
 
