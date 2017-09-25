@@ -76,9 +76,7 @@ class SparkPostCourierTest extends TestCase
                     'name'  => null,
                     'email' => 'sender@test.com',
                 ],
-                'headers'     => [
-                    'CC' => '',
-                ],
+                'headers'     => [],
                 'subject'     => 'Subject',
                 'html'        => null,
                 'text'        => 'This is a test email',
@@ -120,9 +118,7 @@ class SparkPostCourierTest extends TestCase
                     'name'  => null,
                     'email' => 'sender@test.com',
                 ],
-                'headers'     => [
-                    'CC' => '',
-                ],
+                'headers'     => [],
                 'subject'     => 'Subject',
                 'html'        => '',
                 'text'        => '',
@@ -163,9 +159,6 @@ class SparkPostCourierTest extends TestCase
         $expectedArray = [
             'content'           => [
                 'template_id' => '1234',
-                'headers'     => [
-                    'CC' => '',
-                ],
             ],
             'substitution_data' => [
                 'test'        => 'value',
@@ -174,7 +167,6 @@ class SparkPostCourierTest extends TestCase
                 'fromDomain'  => 'test.com',
                 'subject'     => 'Subject',
                 'replyTo'     => 'reply.to@test.com',
-                'ccHeader'    => '',
             ],
             'recipients'        => [
                 [
@@ -247,7 +239,6 @@ class SparkPostCourierTest extends TestCase
                 'reply_to'    => '"Template Replier" <template.replier@test.com>',
                 'headers'     => [
                     'X-Header' => 'test',
-                    'CC'       => '',
                 ],
             ],
             'substitution_data' => [
@@ -256,7 +247,6 @@ class SparkPostCourierTest extends TestCase
                 'fromEmail'   => 'sender',
                 'fromDomain'  => 'test.com',
                 'subject'     => 'Subject',
-                'ccHeader'    => '',
             ],
             'recipients'        => [
                 [
@@ -331,7 +321,6 @@ class SparkPostCourierTest extends TestCase
                 'reply_to'    => 'dynamic@replyto.com',
                 'headers'     => [
                     'X-Header' => 'test',
-                    'CC'       => '',
                 ],
             ],
             'substitution_data' => [
@@ -341,7 +330,6 @@ class SparkPostCourierTest extends TestCase
                 'fromDomain'  => 'test.com',
                 'subject'     => 'Subject',
                 'replyTo'     => 'dynamic@replyto.com',
-                'ccHeader'    => '',
             ],
             'recipients'        => [
                 [
@@ -515,9 +503,7 @@ class SparkPostCourierTest extends TestCase
                     'name'  => null,
                     'email' => 'sender@test.com',
                 ],
-                'headers'     => [
-                    'CC' => '',
-                ],
+                'headers'     => [],
                 'subject'     => 'Subject',
                 'html'        => '',
                 'text'        => '',
