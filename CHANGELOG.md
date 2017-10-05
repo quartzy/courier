@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.4 - 2017-10-05
+
+### Fixed
+
+* Only send the CC header with `SparkPostCourier` if it isn't empty
+
 ## 0.1.3 - 2017-09-22
 
 ### Fixed
