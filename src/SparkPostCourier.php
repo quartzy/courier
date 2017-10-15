@@ -306,9 +306,12 @@ class SparkPostCourier implements Courier
 
                 $content = $this->buildSimpleContent($inlineEmail);
 
-                // Merge the custom template headers with the headers defined by Courier (CC)
-                if (array_key_exists(self::HEADERS, $template)) {
+                // If the template AND content include headers, merge them
+                // if only the template includes headers, then just use that
+                if (array_key_exists(self::HEADERS, $template) && array_key_exists(self::HEADERS, $content)) {
                     $content[self::HEADERS] = array_merge($template[self::HEADERS], $content[self::HEADERS]);
+                } elseif (array_key_exists(self::HEADERS, $template)) {
+                    $content[self::HEADERS] = $template[self::HEADERS];
                 }
             } catch (SparkPostException $e) {
                 $this->logger->error(
@@ -348,12 +351,7 @@ class SparkPostCourier implements Courier
             $replyTo = $first->toRfc2822();
         }
 
-        $headers = [];
-        if ($header = $this->buildCcHeader($email)) {
-            $headers[self::CC_HEADER] = $header;
-        }
-
-        return [
+        $content = [
             self::FROM        => [
                 self::CONTACT_NAME  => $email->getFrom()->getName(),
                 self::CONTACT_EMAIL => $email->getFrom()->getEmail(),
@@ -363,8 +361,13 @@ class SparkPostCourier implements Courier
             self::TEXT        => $email->getContent()->getText(),
             self::ATTACHMENTS => $attachments,
             self::REPLY_TO    => $replyTo,
-            self::HEADERS     => $headers,
         ];
+
+        if ($ccHeader = $this->buildCcHeader($email)) {
+            $content[self::HEADERS] = [self::CC_HEADER => $ccHeader];
+        }
+
+        return $content;
     }
 
     /**
