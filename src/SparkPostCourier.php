@@ -39,8 +39,8 @@ class SparkPostCourier implements Courier
     const ATTACHMENTS = 'attachments';
     const TEMPLATE_ID = 'template_id';
 
-    const HEADERS     = 'headers';
-    const CC_HEADER   = 'CC';
+    const HEADERS   = 'headers';
+    const CC_HEADER = 'CC';
 
     const ADDRESS       = 'address';
     const CONTACT_NAME  = 'name';
@@ -208,8 +208,8 @@ class SparkPostCourier implements Courier
         $templateData = $emailContent->getTemplateData();
 
         if ($email->getReplyTos()) {
-            $replyTos    = $email->getReplyTos();
-            $first       = reset($replyTos);
+            $replyTos = $email->getReplyTos();
+            $first    = reset($replyTos);
 
             if (!array_key_exists('replyTo', $templateData)) {
                 $templateData['replyTo'] = $first->toRfc2822();
@@ -352,7 +352,7 @@ class SparkPostCourier implements Courier
         }
 
         $content = [
-            self::FROM        => [
+            self::FROM => [
                 self::CONTACT_NAME  => $email->getFrom()->getName(),
                 self::CONTACT_EMAIL => $email->getFrom()->getEmail(),
             ],

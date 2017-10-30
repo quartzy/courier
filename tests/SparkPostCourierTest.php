@@ -71,8 +71,8 @@ class SparkPostCourierTest extends TestCase
         );
 
         $expectedArray = [
-            'content'    => [
-                'from'        => [
+            'content' => [
+                'from' => [
                     'name'  => null,
                     'email' => 'sender@test.com',
                 ],
@@ -112,8 +112,8 @@ class SparkPostCourierTest extends TestCase
         );
 
         $expectedArray = [
-            'content'    => [
-                'from'        => [
+            'content' => [
+                'from' => [
                     'name'  => null,
                     'email' => 'sender@test.com',
                 ],
@@ -155,18 +155,18 @@ class SparkPostCourierTest extends TestCase
         $email->addReplyTos(new Address('reply.to@test.com'));
 
         $expectedArray = [
-            'content'           => [
+            'content' => [
                 'template_id' => '1234',
             ],
             'substitution_data' => [
-                'test'        => 'value',
-                'fromName'    => null,
-                'fromEmail'   => 'sender',
-                'fromDomain'  => 'test.com',
-                'subject'     => 'Subject',
-                'replyTo'     => 'reply.to@test.com',
+                'test'       => 'value',
+                'fromName'   => null,
+                'fromEmail'  => 'sender',
+                'fromDomain' => 'test.com',
+                'subject'    => 'Subject',
+                'replyTo'    => 'reply.to@test.com',
             ],
-            'recipients'        => [
+            'recipients' => [
                 [
                     'address' => [
                         'email'     => 'recipient@test.com',
@@ -200,7 +200,7 @@ class SparkPostCourierTest extends TestCase
         $expectedTemplate = [
             'results' => [
                 'content' => [
-                    'from'     => [
+                    'from' => [
                         'email' => 'template.sender@test.com',
                         'name'  => 'Template Address',
                     ],
@@ -219,8 +219,8 @@ class SparkPostCourierTest extends TestCase
             ->andReturn(new SparkPostResponse(new Response(200, [], json_encode($expectedTemplate))));
 
         $expectedArray = [
-            'content'           => [
-                'from'        => [
+            'content' => [
+                'from' => [
                     'email' => 'template.sender@test.com',
                     'name'  => 'Template Address',
                 ],
@@ -234,19 +234,19 @@ class SparkPostCourierTest extends TestCase
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
-                'reply_to'    => '"Template Replier" <template.replier@test.com>',
-                'headers'     => [
+                'reply_to' => '"Template Replier" <template.replier@test.com>',
+                'headers'  => [
                     'X-Header' => 'test',
                 ],
             ],
             'substitution_data' => [
-                'test'        => 'value',
-                'fromName'    => null,
-                'fromEmail'   => 'sender',
-                'fromDomain'  => 'test.com',
-                'subject'     => 'Subject',
+                'test'       => 'value',
+                'fromName'   => null,
+                'fromEmail'  => 'sender',
+                'fromDomain' => 'test.com',
+                'subject'    => 'Subject',
             ],
-            'recipients'        => [
+            'recipients' => [
                 [
                     'address' => [
                         'email'     => 'recipient@test.com',
@@ -282,7 +282,7 @@ class SparkPostCourierTest extends TestCase
         $expectedTemplate = [
             'results' => [
                 'content' => [
-                    'from'     => [
+                    'from' => [
                         'email' => '{{fromEmail}}@{{fromDomain}}',
                         'name'  => 'Template Address',
                     ],
@@ -301,8 +301,8 @@ class SparkPostCourierTest extends TestCase
             ->andReturn(new SparkPostResponse(new Response(200, [], json_encode($expectedTemplate))));
 
         $expectedArray = [
-            'content'           => [
-                'from'        => [
+            'content' => [
+                'from' => [
                     'email' => 'sender@test.com',
                     'name'  => null,
                 ],
@@ -316,20 +316,20 @@ class SparkPostCourierTest extends TestCase
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
-                'reply_to'    => 'dynamic@replyto.com',
-                'headers'     => [
+                'reply_to' => 'dynamic@replyto.com',
+                'headers'  => [
                     'X-Header' => 'test',
                 ],
             ],
             'substitution_data' => [
-                'test'        => 'value',
-                'fromName'    => null,
-                'fromEmail'   => 'sender',
-                'fromDomain'  => 'test.com',
-                'subject'     => 'Subject',
-                'replyTo'     => 'dynamic@replyto.com',
+                'test'       => 'value',
+                'fromName'   => null,
+                'fromEmail'  => 'sender',
+                'fromDomain' => 'test.com',
+                'subject'    => 'Subject',
+                'replyTo'    => 'dynamic@replyto.com',
             ],
-            'recipients'        => [
+            'recipients' => [
                 [
                     'address' => [
                         'email'     => 'recipient@test.com',
@@ -364,7 +364,7 @@ class SparkPostCourierTest extends TestCase
         $expectedTemplate = [
             'results' => [
                 'content' => [
-                    'from'     => [
+                    'from' => [
                         'email' => '{{fromEmail}}@{{fromDomain}}',
                         'name'  => 'Template Address',
                     ],
@@ -433,12 +433,12 @@ class SparkPostCourierTest extends TestCase
         $email->setAttachments(new FileAttachment(self::$file));
 
         $expectedArray = [
-            'content'    => [
-                'from'        => [
+            'content' => [
+                'from' => [
                     'name'  => null,
                     'email' => 'sender@test.com',
                 ],
-                'headers'     => [
+                'headers' => [
                     'CC' => '"CC" <cc@test.com>',
                 ],
                 'subject'     => 'This is the Subject',
@@ -451,7 +451,7 @@ class SparkPostCourierTest extends TestCase
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
-                'reply_to'    => 'replyTo@test.com',
+                'reply_to' => 'replyTo@test.com',
             ],
             'recipients' => [
                 [
@@ -496,8 +496,8 @@ class SparkPostCourierTest extends TestCase
         );
 
         $expectedArray = [
-            'content'    => [
-                'from'        => [
+            'content' => [
+                'from' => [
                     'name'  => null,
                     'email' => 'sender@test.com',
                 ],
