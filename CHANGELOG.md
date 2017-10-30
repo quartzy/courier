@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.5 - 2017-10-30
+
+### Fixed
+
+* Avoid empty content headers to SparkPost
+
 ## 0.1.4 - 2017-10-05
 
 ### Fixed
