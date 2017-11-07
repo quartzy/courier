@@ -11,9 +11,9 @@
         }
     ],
     "require": {
-        "php": "^5.6|^7.0",
+        "php": "^7.1",
         "psr/log": "^1.0",
-        "quartzy/php-email": "0.2.0"
+        "quartzy/php-email": "dev-php-71"
     },
     "require-dev": {
         "sendgrid/sendgrid": "^5.1",
