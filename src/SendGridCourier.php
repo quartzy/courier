@@ -46,7 +46,7 @@ class SendGridCourier implements Courier
     /**
      * {@inheritdoc}
      */
-    public function deliver(Email $email)
+    public function deliver(Email $email): void
     {
         if (!$this->supportsContent($email->getContent())) {
             throw new UnsupportedContentException($email->getContent());
@@ -70,7 +70,7 @@ class SendGridCourier implements Courier
     /**
      * {@inheritdoc}
      */
-    protected function supportedContent()
+    protected function supportedContent(): array
     {
         return [
             Content\EmptyContent::class,
@@ -86,7 +86,7 @@ class SendGridCourier implements Courier
      *
      * @return bool
      */
-    protected function supportsContent(Content $content)
+    protected function supportsContent(Content $content): bool
     {
         foreach ($this->supportedContent() as $contentType) {
             if ($content instanceof $contentType) {
@@ -106,7 +106,7 @@ class SendGridCourier implements Courier
      *
      * @return array
      */
-    protected function distinctAddresses(array $emails, array $existing = [])
+    protected function distinctAddresses(array $emails, array $existing = []): array
     {
         $insensitiveAddresses = [];
 
@@ -134,7 +134,7 @@ class SendGridCourier implements Courier
      *
      * @return SendGrid\Mail
      */
-    protected function prepareEmail(Email $email)
+    protected function prepareEmail(Email $email): SendGrid\Mail
     {
         $message = new SendGrid\Mail();
 
@@ -186,7 +186,7 @@ class SendGridCourier implements Courier
      *
      * @return void
      */
-    protected function send(SendGrid\Mail $email)
+    protected function send(SendGrid\Mail $email): void
     {
         try {
             /** @var SendGrid\Response $response */
@@ -213,7 +213,7 @@ class SendGridCourier implements Courier
      *
      * @return void
      */
-    protected function sendEmptyContent(SendGrid\Mail $email)
+    protected function sendEmptyContent(SendGrid\Mail $email): void
     {
         $email->addContent(new SendGrid\Content('text/plain', ''));
 
@@ -226,7 +226,7 @@ class SendGridCourier implements Courier
      *
      * @return void
      */
-    protected function sendSimpleContent(SendGrid\Mail $email, Content\Contracts\SimpleContent $content)
+    protected function sendSimpleContent(SendGrid\Mail $email, Content\Contracts\SimpleContent $content): void
     {
         if ($content->getHtml()) {
             $email->addContent(new SendGrid\Content('text/html', $content->getHtml()));
@@ -245,7 +245,7 @@ class SendGridCourier implements Courier
      *
      * @return void
      */
-    protected function sendTemplatedContent(SendGrid\Mail $email, Content\Contracts\TemplatedContent $content)
+    protected function sendTemplatedContent(SendGrid\Mail $email, Content\Contracts\TemplatedContent $content): void
     {
         foreach ($content->getTemplateData() as $key => $value) {
             $email->personalization[0]->addSubstitution($key, $value);

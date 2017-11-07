@@ -18,5 +18,5 @@ interface Courier
      *
      * @return void
      */
-    public function deliver(Email $email);
+    public function deliver(Email $email): void;
 }
