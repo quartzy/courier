@@ -129,7 +129,7 @@ class SparkPostCourier implements ReceiptCourier
 
     protected function saveReceipt(Email $email, SparkPostResponse $response): void
     {
-        $id  = $response['results']['id'];
+        $id  = $response->getBody()['results']['id'];
         $key = spl_object_hash($email);
 
         $this->receipts[$key] = $id;
