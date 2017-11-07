@@ -9,7 +9,7 @@ use PhpEmail\Email;
 interface ReceiptCourier extends Courier
 {
     /**
-     * Get the receipt from the latest
+     * Get the receipt from the latest.
      *
      * @param Email $email
      *
