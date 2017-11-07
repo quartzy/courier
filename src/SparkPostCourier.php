@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Courier;
 
+use Courier\Exceptions\ReceiptException;
 use Courier\Exceptions\TransmissionException;
 use Courier\Exceptions\UnsupportedContentException;
 use Courier\Exceptions\ValidationException;
@@ -15,6 +16,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use SparkPost\SparkPost;
 use SparkPost\SparkPostException;
+use SparkPost\SparkPostResponse;
 
 /**
  * A courier implementation using SparkPost as the third-party provider. This library uses the web API and the
@@ -25,7 +27,7 @@ use SparkPost\SparkPostException;
  * case, all template variables will be sent as expected, but tracking/reporting may not work as expected within
  * SparkPost.
  */
-class SparkPostCourier implements Courier
+class SparkPostCourier implements ReceiptCourier
 {
     const RECIPIENTS        = 'recipients';
     const CC                = 'cc';
@@ -64,6 +66,11 @@ class SparkPostCourier implements Courier
     private $logger;
 
     /**
+     * @var string[]
+     */
+    private $receipts = [];
+
+    /**
      * @param SparkPost       $sparkPost
      * @param LoggerInterface $logger
      */
@@ -82,20 +89,31 @@ class SparkPostCourier implements Courier
         $mail = $this->prepareEmail($email);
         $mail = $this->prepareContent($email, $mail);
 
-        $this->send($mail);
+        $response = $this->send($mail);
+
+        $this->saveReceipt($email, $response);
+    }
+
+    public function receipt(Email $email): string
+    {
+        if ($receipt = $this->receipts[spl_object_hash($email)] ?? null) {
+            return $receipt;
+        }
+
+        throw new ReceiptException();
     }
 
     /**
      * @param array $mail
      *
-     * @return void
+     * @return SparkPostResponse
      */
-    protected function send(array $mail): void
+    protected function send(array $mail): SparkPostResponse
     {
         $promise = $this->sparkPost->transmissions->post($mail);
 
         try {
-            $promise->wait();
+            return $promise->wait();
         } catch (SparkPostException $e) {
             $this->logger->error(
                 'Received status {code} from SparkPost with body: {body}',
@@ -107,6 +125,14 @@ class SparkPostCourier implements Courier
 
             throw new TransmissionException($e->getCode(), $e);
         }
+    }
+
+    protected function saveReceipt(Email $email, SparkPostResponse $response): void
+    {
+        $id  = $response['results']['id'];
+        $key = spl_object_hash($email);
+
+        $this->receipts[$key] = $id;
     }
 
     /**
