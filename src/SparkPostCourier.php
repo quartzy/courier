@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Courier;
 
-use Courier\Exceptions\ReceiptException;
 use Courier\Exceptions\TransmissionException;
 use Courier\Exceptions\UnsupportedContentException;
 use Courier\Exceptions\ValidationException;

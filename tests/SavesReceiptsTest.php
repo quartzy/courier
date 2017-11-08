@@ -76,5 +76,4 @@ class SavesReceiptsTest extends TestCase
 
         $this->receiptFor($email);
     }
-
 }
