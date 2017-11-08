@@ -6,7 +6,7 @@ namespace Courier;
 
 use PhpEmail\Email;
 
-interface ReceiptCourier extends Courier
+interface ConfirmingCourier extends Courier
 {
     /**
      * Get the receipt from the latest.
@@ -15,5 +15,5 @@ interface ReceiptCourier extends Courier
      *
      * @return string
      */
-    public function receipt(Email $email): string;
+    public function receiptFor(Email $email): string;
 }

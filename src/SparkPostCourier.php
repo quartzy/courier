@@ -27,8 +27,10 @@ use SparkPost\SparkPostResponse;
  * case, all template variables will be sent as expected, but tracking/reporting may not work as expected within
  * SparkPost.
  */
-class SparkPostCourier implements ReceiptCourier
+class SparkPostCourier implements ConfirmingCourier
 {
+    use SavesReceipts;
+
     const RECIPIENTS        = 'recipients';
     const CC                = 'cc';
     const BCC               = 'bcc';
@@ -66,11 +68,6 @@ class SparkPostCourier implements ReceiptCourier
     private $logger;
 
     /**
-     * @var string[]
-     */
-    private $receipts = [];
-
-    /**
      * @param SparkPost       $sparkPost
      * @param LoggerInterface $logger
      */
@@ -91,16 +88,7 @@ class SparkPostCourier implements ReceiptCourier
 
         $response = $this->send($mail);
 
-        $this->saveReceipt($email, $response);
-    }
-
-    public function receipt(Email $email): string
-    {
-        if ($receipt = $this->receipts[spl_object_hash($email)] ?? null) {
-            return $receipt;
-        }
-
-        throw new ReceiptException();
+        $this->saveReceipt($email, $response->getBody()['results']['id']);
     }
 
     /**
@@ -125,14 +113,6 @@ class SparkPostCourier implements ReceiptCourier
 
             throw new TransmissionException($e->getCode(), $e);
         }
-    }
-
-    protected function saveReceipt(Email $email, SparkPostResponse $response): void
-    {
-        $id  = $response->getBody()['results']['id'];
-        $key = spl_object_hash($email);
-
-        $this->receipts[$key] = $id;
     }
 
     /**

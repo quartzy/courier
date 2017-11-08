@@ -58,6 +58,19 @@ class SparkPostCourierTest extends TestCase
         $this->sparkPost = Mockery::mock(SparkPost::class);
     }
 
+    private function success(): SparkPostResponse
+    {
+        return new SparkPostResponse(new Response(
+            200,
+            [],
+            json_encode([
+                'results' => [
+                    'id' => '12343523423',
+                ],
+            ])
+        ));
+    }
+
     /**
      * @testdox It should send a simple email
      */
@@ -94,7 +107,7 @@ class SparkPostCourierTest extends TestCase
             ],
         ];
 
-        $this->setExpectedCall($expectedArray, new SparkPostResponse(new Response(200)));
+        $this->setExpectedCall($expectedArray, $this->success());
 
         $courier->deliver($email);
     }
@@ -135,7 +148,7 @@ class SparkPostCourierTest extends TestCase
             ],
         ];
 
-        $this->setExpectedCall($expectedArray, new SparkPostResponse(new Response(200)));
+        $this->setExpectedCall($expectedArray, $this->success());
 
         $courier->deliver($email);
     }
@@ -178,7 +191,7 @@ class SparkPostCourierTest extends TestCase
             ],
         ];
 
-        $this->setExpectedCall($expectedArray, new SparkPostResponse(new Response(200)));
+        $this->setExpectedCall($expectedArray, $this->success());
 
         $courier->deliver($email);
     }
@@ -258,7 +271,7 @@ class SparkPostCourierTest extends TestCase
             ],
         ];
 
-        $this->setExpectedCall($expectedArray, new SparkPostResponse(new Response(200)));
+        $this->setExpectedCall($expectedArray, $this->success());
 
         $courier->deliver($email);
     }
@@ -341,7 +354,7 @@ class SparkPostCourierTest extends TestCase
             ],
         ];
 
-        $this->setExpectedCall($expectedArray, new SparkPostResponse(new Response(200)));
+        $this->setExpectedCall($expectedArray, $this->success());
 
         $courier->deliver($email);
     }
@@ -477,7 +490,7 @@ class SparkPostCourierTest extends TestCase
             ],
         ];
 
-        $this->setExpectedCall($expectedArray, new SparkPostResponse(new Response(200)));
+        $this->setExpectedCall($expectedArray, $this->success());
 
         $courier->deliver($email);
     }
