@@ -74,7 +74,22 @@ class SendGridCourier implements ConfirmingCourier
                 throw new UnsupportedContentException($email->getContent());
         }
 
-        $this->saveReceipt($email, $response->headers(true)['X-Message-Id']);
+        $this->saveReceipt($email, $this->getReceipt($response));
+    }
+
+    protected function getReceipt(SendGrid\Response $response): string
+    {
+        $key = 'X-Message-Id';
+
+        foreach ($response->headers() as $header) {
+            $parts = explode(':', $header, 2);
+
+            if ($parts[0] === $key) {
+                return $parts[1];
+            }
+        }
+
+        throw new TransmissionException();
     }
 
     /**
