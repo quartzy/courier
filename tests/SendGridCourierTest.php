@@ -314,7 +314,7 @@ class SendGridCourierTest extends TestCase
             new SendGrid\Content('text/plain', '')
         );
 
-        $expectedResponse = new Response(202, [], [/*missing the message ID header*/]);;
+        $expectedResponse = new Response(202, [], [/*missing the message ID header*/]);
 
         $this->setExpectedCall($this->client, $expectedEmail, $expectedResponse);
 

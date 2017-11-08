@@ -216,9 +216,9 @@ class SparkPostCourierTest extends TestCase
         $expectedArray = [
             'content' => [
                 'template_id' => '1234',
-                'headers' => [
+                'headers'     => [
                     'CC' => 'cc@test.com',
-                ]
+                ],
             ],
             'substitution_data' => [
                 'test'       => 'value',
@@ -240,8 +240,8 @@ class SparkPostCourierTest extends TestCase
                     'address' => [
                         'email'     => 'cc@test.com',
                         'header_to' => 'recipient@test.com',
-                    ]
-                ]
+                    ],
+                ],
             ],
         ];
 
@@ -350,7 +350,7 @@ class SparkPostCourierTest extends TestCase
         $expectedTemplate = [
             'results' => [
                 'content' => [
-                    'from'     => [
+                    'from' => [
                         'email' => 'template.sender@test.com',
                         'name'  => 'Template Address',
                     ],
@@ -359,7 +359,7 @@ class SparkPostCourierTest extends TestCase
                     'html'     => 'This is a template html test',
                     'headers'  => [
                         'X-Header' => 'test',
-                        'CC' => 'templated@test.com'
+                        'CC'       => 'templated@test.com',
                     ],
                 ],
             ],
@@ -372,8 +372,8 @@ class SparkPostCourierTest extends TestCase
             ->andReturn(new SparkPostResponse(new Response(200, [], json_encode($expectedTemplate))));
 
         $expectedArray = [
-            'content'           => [
-                'from'        => [
+            'content' => [
+                'from' => [
                     'email' => 'template.sender@test.com',
                     'name'  => 'Template Address',
                 ],
@@ -387,10 +387,10 @@ class SparkPostCourierTest extends TestCase
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
-                'reply_to'    => '"Template Replier" <template.replier@test.com>',
-                'headers'     => [
+                'reply_to' => '"Template Replier" <template.replier@test.com>',
+                'headers'  => [
                     'X-Header' => 'test',
-                    'CC'       => 'cc@test.com'
+                    'CC'       => 'cc@test.com',
                 ],
             ],
             'substitution_data' => [
@@ -401,7 +401,7 @@ class SparkPostCourierTest extends TestCase
                 'subject'    => 'Subject',
                 'ccHeader'   => 'cc@test.com',
             ],
-            'recipients'        => [
+            'recipients' => [
                 [
                     'address' => [
                         'email'     => 'recipient@test.com',
@@ -412,7 +412,7 @@ class SparkPostCourierTest extends TestCase
                     'address' => [
                         'email'     => 'cc@test.com',
                         'header_to' => 'recipient@test.com',
-                    ]
+                    ],
                 ],
             ],
         ];
@@ -422,7 +422,7 @@ class SparkPostCourierTest extends TestCase
         $courier->deliver($email);
     }
 
-        /**
+    /**
      * @testdox It should support sending a templated email with an attachment and a templated from/replyTo
      */
     public function handlesTemplatedEmailsWithAttachmentAndDynamicSender()
