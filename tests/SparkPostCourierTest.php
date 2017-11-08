@@ -197,6 +197,60 @@ class SparkPostCourierTest extends TestCase
     }
 
     /**
+     * @testdox It should send a templated email with a CC recipient
+     */
+    public function sendsTemplatedEmailWithCc()
+    {
+        $courier = new SparkPostCourier($this->sparkPost);
+
+        $email = new Email(
+            'Subject',
+            new TemplatedContent('1234', ['test' => 'value']),
+            new Address('sender@test.com'),
+            [new Address('recipient@test.com')]
+        );
+
+        $email->addCcRecipients(new Address('cc@test.com'));
+        $email->addReplyTos(new Address('reply.to@test.com'));
+
+        $expectedArray = [
+            'content' => [
+                'template_id' => '1234',
+                'headers' => [
+                    'CC' => 'cc@test.com',
+                ]
+            ],
+            'substitution_data' => [
+                'test'       => 'value',
+                'fromName'   => null,
+                'fromEmail'  => 'sender',
+                'fromDomain' => 'test.com',
+                'subject'    => 'Subject',
+                'replyTo'    => 'reply.to@test.com',
+                'ccHeader'   => 'cc@test.com',
+            ],
+            'recipients' => [
+                [
+                    'address' => [
+                        'email'     => 'recipient@test.com',
+                        'header_to' => 'recipient@test.com',
+                    ],
+                ],
+                [
+                    'address' => [
+                        'email'     => 'cc@test.com',
+                        'header_to' => 'recipient@test.com',
+                    ]
+                ]
+            ],
+        ];
+
+        $this->setExpectedCall($expectedArray, $this->success());
+
+        $courier->deliver($email);
+    }
+
+    /**
      * @testdox It should support sending a templated email with attachments
      */
     public function sendsTemplatedEmailWithAttachment()
@@ -277,6 +331,98 @@ class SparkPostCourierTest extends TestCase
     }
 
     /**
+     * @testdox It should replace templated CC headers when attaching to a templated email
+     */
+    public function replaceTemplatedEmailCc()
+    {
+        $courier = new SparkPostCourier($this->sparkPost);
+
+        $email = new Email(
+            'Subject',
+            new TemplatedContent('1234', ['test' => 'value']),
+            new Address('sender@test.com'),
+            [new Address('recipient@test.com')]
+        );
+
+        $email->addCcRecipients(new Address('cc@test.com'));
+        $email->addAttachments(new FileAttachment(self::$file, 'file name.txt'));
+
+        $expectedTemplate = [
+            'results' => [
+                'content' => [
+                    'from'     => [
+                        'email' => 'template.sender@test.com',
+                        'name'  => 'Template Address',
+                    ],
+                    'subject'  => 'Template Subject',
+                    'reply_to' => '"Template Replier" <template.replier@test.com>',
+                    'html'     => 'This is a template html test',
+                    'headers'  => [
+                        'X-Header' => 'test',
+                        'CC' => 'templated@test.com'
+                    ],
+                ],
+            ],
+        ];
+
+        $this->sparkPost
+            ->shouldReceive('syncRequest')
+            ->once()
+            ->with('GET', 'templates/1234')
+            ->andReturn(new SparkPostResponse(new Response(200, [], json_encode($expectedTemplate))));
+
+        $expectedArray = [
+            'content'           => [
+                'from'        => [
+                    'email' => 'template.sender@test.com',
+                    'name'  => 'Template Address',
+                ],
+                'subject'     => 'Template Subject',
+                'html'        => 'This is a template html test',
+                'text'        => null,
+                'attachments' => [
+                    [
+                        'name' => 'file name.txt',
+                        'type' => mime_content_type(self::$file),
+                        'data' => base64_encode(file_get_contents(self::$file)),
+                    ],
+                ],
+                'reply_to'    => '"Template Replier" <template.replier@test.com>',
+                'headers'     => [
+                    'X-Header' => 'test',
+                    'CC'       => 'cc@test.com'
+                ],
+            ],
+            'substitution_data' => [
+                'test'       => 'value',
+                'fromName'   => null,
+                'fromEmail'  => 'sender',
+                'fromDomain' => 'test.com',
+                'subject'    => 'Subject',
+                'ccHeader'   => 'cc@test.com',
+            ],
+            'recipients'        => [
+                [
+                    'address' => [
+                        'email'     => 'recipient@test.com',
+                        'header_to' => 'recipient@test.com',
+                    ],
+                ],
+                [
+                    'address' => [
+                        'email'     => 'cc@test.com',
+                        'header_to' => 'recipient@test.com',
+                    ]
+                ],
+            ],
+        ];
+
+        $this->setExpectedCall($expectedArray, $this->success());
+
+        $courier->deliver($email);
+    }
+
+        /**
      * @testdox It should support sending a templated email with an attachment and a templated from/replyTo
      */
     public function handlesTemplatedEmailsWithAttachmentAndDynamicSender()

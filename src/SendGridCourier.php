@@ -71,7 +71,9 @@ class SendGridCourier implements ConfirmingCourier
 
             default:
                 // Should never get here
+                // @codeCoverageIgnoreStart
                 throw new UnsupportedContentException($email->getContent());
+                // @codeCoverageIgnoreEnd
         }
 
         $this->saveReceipt($email, $this->getReceipt($response));

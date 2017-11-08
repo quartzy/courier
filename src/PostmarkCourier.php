@@ -101,7 +101,9 @@ class PostmarkCourier implements ConfirmingCourier
 
             default:
                 // Should never get here
+                // @codeCoverageIgnoreStart
                 throw new UnsupportedContentException($content);
+                // @codeCoverageIgnoreEnd
         }
 
         $this->saveReceipt($email, $response['MessageID']);
