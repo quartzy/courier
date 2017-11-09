@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Courier;
 
 use Courier\Exceptions\TransmissionException;
@@ -38,7 +40,7 @@ class PostmarkCourier implements Courier
     /**
      * @return array
      */
-    protected function supportedContent()
+    protected function supportedContent(): array
     {
         return [
             Content\EmptyContent::class,
@@ -54,7 +56,7 @@ class PostmarkCourier implements Courier
      *
      * @return bool
      */
-    protected function supportsContent(Content $content)
+    protected function supportsContent(Content $content): bool
     {
         foreach ($this->supportedContent() as $contentType) {
             if ($content instanceof $contentType) {
@@ -73,7 +75,7 @@ class PostmarkCourier implements Courier
      *
      * @return void
      */
-    public function deliver(Email $email)
+    public function deliver(Email $email): void
     {
         $content = $email->getContent();
 
@@ -96,7 +98,7 @@ class PostmarkCourier implements Courier
         }
     }
 
-    protected function sendTemplateEmail(Email $email)
+    protected function sendTemplateEmail(Email $email): void
     {
         try {
             $this->client->sendEmailWithTemplate(
@@ -126,7 +128,7 @@ class PostmarkCourier implements Courier
      * @param string|null $html
      * @param string|null $text
      */
-    protected function sendNonTemplateEmail(Email $email, $html, $text)
+    protected function sendNonTemplateEmail(Email $email, ?string $html, ?string $text): void
     {
         try {
             $this->client->sendEmail(
@@ -151,7 +153,7 @@ class PostmarkCourier implements Courier
         }
     }
 
-    protected function buildReplyTo(Email $email)
+    protected function buildReplyTo(Email $email): ?string
     {
         /** @var Address|null $replyTo */
         $replyTo = null;
@@ -171,7 +173,7 @@ class PostmarkCourier implements Courier
      *
      * @return string
      */
-    protected function buildRecipients(Address ...$addresses)
+    protected function buildRecipients(Address ...$addresses): string
     {
         return implode(',', array_map(function (Address $address) {
             return $address->toRfc2822();
@@ -183,7 +185,7 @@ class PostmarkCourier implements Courier
      *
      * @return array
      */
-    protected function buildAttachments(Email $email)
+    protected function buildAttachments(Email $email): array
     {
         return array_map(function (Attachment $attachment) {
             return [
@@ -199,7 +201,7 @@ class PostmarkCourier implements Courier
      *
      * @return array
      */
-    protected function buildTemplateData(Email $email)
+    protected function buildTemplateData(Email $email): array
     {
         $data = $email->getContent()->getTemplateData();
 
@@ -214,7 +216,7 @@ class PostmarkCourier implements Courier
      *
      * @return void
      */
-    protected function logError(PostmarkException $pe)
+    protected function logError(PostmarkException $pe): void
     {
         $this->logger->error(
             'Received status {httpCode} and API code {apiCode} from Postmark with message: {message}',

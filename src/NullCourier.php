@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Courier;
 
 use Courier\Exceptions\TransmissionException;
@@ -21,7 +23,7 @@ class NullCourier implements Courier
      *
      * @return void
      */
-    public function deliver(Email $email)
+    public function deliver(Email $email): void
     {
     }
 }

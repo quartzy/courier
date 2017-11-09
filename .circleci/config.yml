@@ -59,42 +59,6 @@ jobs:
           paths:
             - courier
 
-  php56:
-    working_directory: /home/circleci/courier
-    docker:
-      - image: notnoopci/php:5.6
-    steps:
-      - *attach_workspace
-      - *load_code
-      - *composer
-      - run:
-          name: Run tests
-          command: |
-            # Ensure xdebug is installed
-            sudo sh .circleci/enable_xdebug.sh
-            sh .circleci/test.sh 56
-      - *report_results
-      - *store_results
-      - *push_coverage
-
-  php70:
-    working_directory: /home/circleci/courier
-    docker:
-      - image: notnoopci/php:7.0
-    steps:
-      - *attach_workspace
-      - *load_code
-      - *composer
-      - run:
-          name: Run tests
-          command: |
-            # Ensure xdebug is installed
-            sudo sh .circleci/enable_xdebug.sh
-            sh .circleci/test.sh 70
-      - *report_results
-      - *store_results
-      - *push_coverage
-
   php71:
     working_directory: /home/circleci/courier
     docker:
@@ -119,12 +83,6 @@ workflows:
   build_and_test:
     jobs:
       - checkout_code
-      - php56:
-          requires:
-            - checkout_code
-      - php70:
-          requires:
-            - checkout_code
       - php71:
           requires:
             - checkout_code

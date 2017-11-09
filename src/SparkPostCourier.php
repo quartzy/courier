@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Courier;
 
 use Courier\Exceptions\TransmissionException;
@@ -71,7 +73,7 @@ class SparkPostCourier implements Courier
         $this->logger    = $logger ?: new NullLogger();
     }
 
-    public function deliver(Email $email)
+    public function deliver(Email $email): void
     {
         if (!$this->supportsContent($email->getContent())) {
             throw new UnsupportedContentException($email->getContent());
@@ -88,7 +90,7 @@ class SparkPostCourier implements Courier
      *
      * @return void
      */
-    protected function send(array $mail)
+    protected function send(array $mail): void
     {
         $promise = $this->sparkPost->transmissions->post($mail);
 
@@ -110,7 +112,7 @@ class SparkPostCourier implements Courier
     /**
      * @return array
      */
-    protected function supportedContent()
+    protected function supportedContent(): array
     {
         return [
             Content\EmptyContent::class,
@@ -126,7 +128,7 @@ class SparkPostCourier implements Courier
      *
      * @return bool
      */
-    protected function supportsContent(Content $content)
+    protected function supportsContent(Content $content): bool
     {
         foreach ($this->supportedContent() as $contentType) {
             if ($content instanceof $contentType) {
@@ -142,7 +144,7 @@ class SparkPostCourier implements Courier
      *
      * @return array
      */
-    protected function prepareEmail(Email $email)
+    protected function prepareEmail(Email $email): array
     {
         $message  = [];
         $headerTo = $this->buildHeaderTo($email);
@@ -170,7 +172,7 @@ class SparkPostCourier implements Courier
      *
      * @return array
      */
-    protected function prepareContent(Email $email, array $message)
+    protected function prepareContent(Email $email, array $message): array
     {
         switch (true) {
             case $email->getContent() instanceof Content\Contracts\TemplatedContent:
@@ -201,7 +203,7 @@ class SparkPostCourier implements Courier
      *
      * @return array
      */
-    protected function buildTemplateData(Email $email)
+    protected function buildTemplateData(Email $email): array
     {
         /** @var Content\TemplatedContent $emailContent */
         $emailContent = $email->getContent();
@@ -247,7 +249,7 @@ class SparkPostCourier implements Courier
      *
      * @return array
      */
-    protected function buildTemplateContent(Email $email)
+    protected function buildTemplateContent(Email $email): array
     {
         $content = [
             self::TEMPLATE_ID => $email->getContent()->getTemplateId(),
@@ -334,7 +336,7 @@ class SparkPostCourier implements Courier
      *
      * @return array
      */
-    protected function buildSimpleContent(Email $email)
+    protected function buildSimpleContent(Email $email): array
     {
         $attachments = [];
 
@@ -375,7 +377,7 @@ class SparkPostCourier implements Courier
      *
      * @return array
      */
-    private function buildAttachment(Attachment $attachment)
+    private function buildAttachment(Attachment $attachment): array
     {
         return [
             self::ATTACHMENT_NAME => $attachment->getName(),
@@ -390,7 +392,7 @@ class SparkPostCourier implements Courier
      *
      * @return array
      */
-    private function createAddress(Address $address, $headerTo)
+    private function createAddress(Address $address, string $headerTo): array
     {
         return [
             self::ADDRESS => [
@@ -407,7 +409,7 @@ class SparkPostCourier implements Courier
      *
      * @return string
      */
-    private function buildHeaderTo(Email $email)
+    private function buildHeaderTo(Email $email): string
     {
         return implode(',', array_map(function (Address $address) {
             return $address->toRfc2822();
@@ -421,7 +423,7 @@ class SparkPostCourier implements Courier
      *
      * @return string
      */
-    private function buildCcHeader(Email $email)
+    private function buildCcHeader(Email $email): string
     {
         return implode(',', array_map(function (Address $address) {
             return $address->toRfc2822();
