@@ -11,6 +11,7 @@ use PhpEmail\Content\EmptyContent;
 use PhpEmail\Content\SimpleContent;
 use PhpEmail\Content\TemplatedContent;
 use PhpEmail\EmailBuilder;
+use Postmark\Models\DynamicResponseModel;
 use Postmark\Models\PostmarkException;
 use Postmark\PostmarkClient;
 
@@ -38,6 +39,11 @@ class PostmarkCourierTest extends TestCase
         parent::tearDownAfterClass();
 
         unlink(self::$file);
+    }
+
+    private function success(): DynamicResponseModel
+    {
+        return new DynamicResponseModel(['MessageID' => '0a129aee-e1cd-480d-b08d-4f48548ff48d']);
     }
 
     /**
@@ -85,7 +91,8 @@ class PostmarkCourierTest extends TestCase
                     ],
                 ],
                 null
-            );
+            )
+            ->andReturn($this->success());
 
         $courier->deliver($email);
     }
@@ -124,7 +131,8 @@ class PostmarkCourierTest extends TestCase
                 null,
                 [],
                 null
-            );
+            )
+            ->andReturn($this->success());
 
         $courier->deliver($email);
     }
@@ -183,7 +191,8 @@ class PostmarkCourierTest extends TestCase
                     ],
                 ],
                 null
-            );
+            )
+            ->andReturn($this->success());
 
         $courier->deliver($email);
     }

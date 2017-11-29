@@ -66,6 +66,11 @@ class SendGridCourierTest extends TestCase
         $this->courier = new SendGridCourier($sendGrid);
     }
 
+    private function success(): Response
+    {
+        return new Response(202, [], ['X-Message-Id: 123452']);
+    }
+
     /**
      * @testdox It should send a simple email
      */
@@ -78,7 +83,7 @@ class SendGridCourierTest extends TestCase
             new SendGrid\Content('text/plain', 'This is a test email')
         );
 
-        $expectedResponse = new Response(200);
+        $expectedResponse = $this->success();
 
         $this->setExpectedCall($this->client, $expectedEmail, $expectedResponse);
 
@@ -104,7 +109,7 @@ class SendGridCourierTest extends TestCase
             new SendGrid\Content('text/plain', '')
         );
 
-        $expectedResponse = new Response(200);
+        $expectedResponse = $this->success();
 
         $this->setExpectedCall($this->client, $expectedEmail, $expectedResponse);
 
@@ -130,7 +135,7 @@ class SendGridCourierTest extends TestCase
             new SendGrid\Content('text/plain', '')
         );
 
-        $expectedResponse = new Response(200);
+        $expectedResponse = $this->success();
 
         $this->setExpectedCall($this->client, $expectedEmail, $expectedResponse);
 
@@ -159,7 +164,7 @@ class SendGridCourierTest extends TestCase
         $expectedEmail->setTemplateId('1234');
         $expectedEmail->getPersonalizations()[0]->addSubstitution('test', 'value');
 
-        $expectedResponse = new Response(200);
+        $expectedResponse = $this->success();
 
         $this->setExpectedCall($this->client, $expectedEmail, $expectedResponse);
 
@@ -195,7 +200,7 @@ class SendGridCourierTest extends TestCase
         $expectedEmail->setReplyTo(new SendGrid\Email('Reply To', 'replyTo@test.com'));
         $expectedEmail->addAttachment($attachment);
 
-        $expectedResponse = new Response(200);
+        $expectedResponse = $this->success();
 
         $this->setExpectedCall($this->client, $expectedEmail, $expectedResponse);
 
@@ -230,7 +235,7 @@ class SendGridCourierTest extends TestCase
         $expectedEmail->addPersonalization($personalization);
         $expectedEmail->addContent(new SendGrid\Content('text/html', 'This is a test email'));
 
-        $expectedResponse = new Response(200);
+        $expectedResponse = $this->success();
 
         $this->setExpectedCall($this->client, $expectedEmail, $expectedResponse);
 
@@ -284,9 +289,34 @@ class SendGridCourierTest extends TestCase
             new SendGrid\Content('text/plain', '')
         );
 
-        $expectedResponse = new Response(200);
-
         $this->setExpectedCall($this->client, $expectedEmail, new Exception());
+
+        $email = new Email(
+            'Subject',
+            new EmptyContent(),
+            new Address('sender@test.com'),
+            [new Address('recipient@test.com')]
+        );
+
+        $this->courier->deliver($email);
+    }
+
+    /**
+     * @testdox It should throw an exception if an ID can't be found
+     * @expectedException \Courier\Exceptions\TransmissionException
+     */
+    public function throwsWithoutId()
+    {
+        $expectedEmail = new Mail(
+            new SendGrid\Email(null, 'sender@test.com'),
+            'Subject',
+            new SendGrid\Email(null, 'recipient@test.com'),
+            new SendGrid\Content('text/plain', '')
+        );
+
+        $expectedResponse = new Response(202, [], [/*missing the message ID header*/]);
+
+        $this->setExpectedCall($this->client, $expectedEmail, $expectedResponse);
 
         $email = new Email(
             'Subject',

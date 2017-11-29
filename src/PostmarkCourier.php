@@ -10,13 +10,16 @@ use PhpEmail\Address;
 use PhpEmail\Attachment;
 use PhpEmail\Content;
 use PhpEmail\Email;
+use Postmark\Models\DynamicResponseModel;
 use Postmark\Models\PostmarkException;
 use Postmark\PostmarkClient;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class PostmarkCourier implements Courier
+class PostmarkCourier implements ConfirmingCourier
 {
+    use SavesReceipts;
+
     /**
      * @var PostmarkClient
      */
@@ -85,23 +88,36 @@ class PostmarkCourier implements Courier
 
         switch (true) {
             case $content instanceof Content\TemplatedContent:
-                $this->sendTemplateEmail($email);
+                $response = $this->sendTemplateEmail($email);
                 break;
 
             case $content instanceof Content\SimpleContent:
-                $this->sendNonTemplateEmail($email, $content->getHtml(), $content->getText());
+                $response = $this->sendNonTemplateEmail($email, $content->getHtml(), $content->getText());
                 break;
 
             case $content instanceof Content\EmptyContent:
-                $this->sendNonTemplateEmail($email, 'No message', 'No message');
+                $response = $this->sendNonTemplateEmail($email, 'No message', 'No message');
                 break;
+
+            default:
+                // Should never get here
+                // @codeCoverageIgnoreStart
+                throw new UnsupportedContentException($content);
+                // @codeCoverageIgnoreEnd
         }
+
+        $this->saveReceipt($email, $response['MessageID']);
     }
 
-    protected function sendTemplateEmail(Email $email): void
+    /**
+     * @param Email $email
+     *
+     * @return DynamicResponseModel
+     */
+    protected function sendTemplateEmail(Email $email): DynamicResponseModel
     {
         try {
-            $this->client->sendEmailWithTemplate(
+            return $this->client->sendEmailWithTemplate(
                 $email->getFrom()->toRfc2822(),
                 $this->buildRecipients(...$email->getToRecipients()),
                 (int) $email->getContent()->getTemplateId(),
@@ -127,11 +143,13 @@ class PostmarkCourier implements Courier
      * @param Email       $email
      * @param string|null $html
      * @param string|null $text
+     *
+     * @return DynamicResponseModel
      */
-    protected function sendNonTemplateEmail(Email $email, ?string $html, ?string $text): void
+    protected function sendNonTemplateEmail(Email $email, ?string $html, ?string $text): DynamicResponseModel
     {
         try {
-            $this->client->sendEmail(
+            return $this->client->sendEmail(
                 $email->getFrom()->toRfc2822(),
                 $this->buildRecipients(...$email->getToRecipients()),
                 $email->getSubject(),

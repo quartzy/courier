@@ -15,6 +15,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use SparkPost\SparkPost;
 use SparkPost\SparkPostException;
+use SparkPost\SparkPostResponse;
 
 /**
  * A courier implementation using SparkPost as the third-party provider. This library uses the web API and the
@@ -25,8 +26,10 @@ use SparkPost\SparkPostException;
  * case, all template variables will be sent as expected, but tracking/reporting may not work as expected within
  * SparkPost.
  */
-class SparkPostCourier implements Courier
+class SparkPostCourier implements ConfirmingCourier
 {
+    use SavesReceipts;
+
     const RECIPIENTS        = 'recipients';
     const CC                = 'cc';
     const BCC               = 'bcc';
@@ -82,20 +85,22 @@ class SparkPostCourier implements Courier
         $mail = $this->prepareEmail($email);
         $mail = $this->prepareContent($email, $mail);
 
-        $this->send($mail);
+        $response = $this->send($mail);
+
+        $this->saveReceipt($email, $response->getBody()['results']['id']);
     }
 
     /**
      * @param array $mail
      *
-     * @return void
+     * @return SparkPostResponse
      */
-    protected function send(array $mail): void
+    protected function send(array $mail): SparkPostResponse
     {
         $promise = $this->sparkPost->transmissions->post($mail);
 
         try {
-            $promise->wait();
+            return $promise->wait();
         } catch (SparkPostException $e) {
             $this->logger->error(
                 'Received status {code} from SparkPost with body: {body}',

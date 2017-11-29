@@ -21,8 +21,10 @@ use SendGrid;
  * paradigm of transactional emails. For this reason, this courier only creates a single personalization with multiple
  * recipients.
  */
-class SendGridCourier implements Courier
+class SendGridCourier implements ConfirmingCourier
 {
+    use SavesReceipts;
+
     /**
      * @var SendGrid
      */
@@ -56,15 +58,40 @@ class SendGridCourier implements Courier
 
         switch (true) {
             case $email->getContent() instanceof Content\EmptyContent:
-                $this->sendEmptyContent($mail);
+                $response = $this->sendEmptyContent($mail);
                 break;
+
             case $email->getContent() instanceof Content\Contracts\SimpleContent:
-                $this->sendSimpleContent($mail, $email->getContent());
+                $response = $this->sendSimpleContent($mail, $email->getContent());
                 break;
+
             case $email->getContent() instanceof Content\Contracts\TemplatedContent:
-                $this->sendTemplatedContent($mail, $email->getContent());
+                $response = $this->sendTemplatedContent($mail, $email->getContent());
                 break;
+
+            default:
+                // Should never get here
+                // @codeCoverageIgnoreStart
+                throw new UnsupportedContentException($email->getContent());
+                // @codeCoverageIgnoreEnd
         }
+
+        $this->saveReceipt($email, $this->getReceipt($response));
+    }
+
+    protected function getReceipt(SendGrid\Response $response): string
+    {
+        $key = 'X-Message-Id';
+
+        foreach ($response->headers() as $header) {
+            $parts = explode(':', $header, 2);
+
+            if ($parts[0] === $key) {
+                return $parts[1];
+            }
+        }
+
+        throw new TransmissionException();
     }
 
     /**
@@ -184,9 +211,9 @@ class SendGridCourier implements Courier
     /**
      * @param SendGrid\Mail $email
      *
-     * @return void
+     * @return SendGrid\Response
      */
-    protected function send(SendGrid\Mail $email): void
+    protected function send(SendGrid\Mail $email): SendGrid\Response
     {
         try {
             /** @var SendGrid\Response $response */
@@ -203,6 +230,8 @@ class SendGridCourier implements Courier
 
                 throw new TransmissionException($response->statusCode());
             }
+
+            return $response;
         } catch (Exception $e) {
             throw new TransmissionException($e->getCode(), $e);
         }
@@ -211,23 +240,25 @@ class SendGridCourier implements Courier
     /**
      * @param SendGrid\Mail $email
      *
-     * @return void
+     * @return SendGrid\Response
      */
-    protected function sendEmptyContent(SendGrid\Mail $email): void
+    protected function sendEmptyContent(SendGrid\Mail $email): SendGrid\Response
     {
         $email->addContent(new SendGrid\Content('text/plain', ''));
 
-        $this->send($email);
+        return $this->send($email);
     }
 
     /**
      * @param SendGrid\Mail                   $email
      * @param Content\Contracts\SimpleContent $content
      *
-     * @return void
+     * @return SendGrid\Response
      */
-    protected function sendSimpleContent(SendGrid\Mail $email, Content\Contracts\SimpleContent $content): void
-    {
+    protected function sendSimpleContent(
+        SendGrid\Mail $email,
+        Content\Contracts\SimpleContent $content
+    ): SendGrid\Response {
         if ($content->getHtml()) {
             $email->addContent(new SendGrid\Content('text/html', $content->getHtml()));
         } elseif ($content->getText()) {
@@ -236,23 +267,25 @@ class SendGridCourier implements Courier
             $email->addContent(new SendGrid\Content('text/plain', ''));
         }
 
-        $this->send($email);
+        return $this->send($email);
     }
 
     /**
      * @param SendGrid\Mail                      $email
      * @param Content\Contracts\TemplatedContent $content
      *
-     * @return void
+     * @return SendGrid\Response
      */
-    protected function sendTemplatedContent(SendGrid\Mail $email, Content\Contracts\TemplatedContent $content): void
-    {
+    protected function sendTemplatedContent(
+        SendGrid\Mail $email,
+        Content\Contracts\TemplatedContent $content
+    ): SendGrid\Response {
         foreach ($content->getTemplateData() as $key => $value) {
             $email->personalization[0]->addSubstitution($key, $value);
         }
 
         $email->setTemplateId($content->getTemplateId());
 
-        $this->send($email);
+        return $this->send($email);
     }
 }
