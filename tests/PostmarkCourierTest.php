@@ -7,6 +7,7 @@ namespace Courier\Test;
 use Courier\PostmarkCourier;
 use Courier\Test\Support\TestContent;
 use Mockery;
+use PhpEmail\Attachment\FileAttachment;
 use PhpEmail\Content\EmptyContent;
 use PhpEmail\Content\SimpleContent;
 use PhpEmail\Content\TemplatedContent;
@@ -65,7 +66,7 @@ class PostmarkCourierTest extends TestCase
             ->cc('copy@test.com')
             ->bcc('blind.copy@test.com')
             ->replyTo('reply.to@test.com', 'Replier')
-            ->attach(self::$file, 'Test File')
+            ->attach(new FileAttachment(self::$file, 'Test File'))
             ->build();
 
         $client
@@ -161,7 +162,7 @@ class PostmarkCourierTest extends TestCase
             ->cc('copy@test.com')
             ->bcc('blind.copy@test.com')
             ->replyTo('reply.to@test.com', 'Replier')
-            ->attach(self::$file, 'Test File')
+            ->attach(new FileAttachment(self::$file, 'Test File'))
             ->build();
 
         $client
