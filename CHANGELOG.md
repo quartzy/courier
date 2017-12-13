@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.3.0 - 2017-12-13
+
+### Changed
+
+#### Dependencies
+
+* Updated php-email to 0.4.0
+
+### Added
+
+* Created `ConfirmingCourier` interface for `Courier` implementations that return an ID for tracking
+
 ## 0.2.0 - 2017-11-08
 
 ### Changed
