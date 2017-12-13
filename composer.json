@@ -13,7 +13,7 @@
     "require": {
         "php": "^7.1",
         "psr/log": "^1.0",
-        "quartzy/php-email": "^0.3.0"
+        "quartzy/php-email": "^0.4.0"
     },
     "require-dev": {
         "sendgrid/sendgrid": "^5.1",
