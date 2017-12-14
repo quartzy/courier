@@ -130,11 +130,9 @@ class SwiftMailerCourier implements Courier
                 $swiftAttachment->setFilename($attachment->getName());
 
                 $message->attach($swiftAttachment);
-
             } else {
                 throw new ValidationException('Unsupported attachment type ' . get_class($attachment));
             }
-
         }
     }
 }

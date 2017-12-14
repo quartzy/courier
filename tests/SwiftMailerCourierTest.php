@@ -7,13 +7,10 @@ namespace Courier\Test;
 use Courier\SwiftMailerCourier;
 use Mockery;
 use PhpEmail\Attachment\FileAttachment;
-use PhpEmail\Content\EmptyContent;
 use PhpEmail\Content\SimpleContent;
 use PhpEmail\EmailBuilder;
 use Swift_Mailer;
 use Swift_Message;
-use Swift_SendmailTransport;
-use Swift_Transport;
 
 /**
  * @covers \Courier\SwiftMailerCourier
