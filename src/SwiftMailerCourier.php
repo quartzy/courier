@@ -6,7 +6,6 @@ namespace Courier;
 
 use Courier\Exceptions\TransmissionException;
 use Courier\Exceptions\UnsupportedContentException;
-use Courier\Exceptions\ValidationException;
 use PhpEmail\Attachment\FileAttachment;
 use PhpEmail\Content;
 use PhpEmail\Email;
@@ -86,7 +85,7 @@ class SwiftMailerCourier implements Courier
     }
 
     /**
-     * @param Content $content
+     * @param Content       $content
      * @param Swift_Message $message
      *
      * @return void
@@ -107,7 +106,7 @@ class SwiftMailerCourier implements Courier
     }
 
     /**
-     * @param Email $email
+     * @param Email         $email
      * @param Swift_Message $message
      *
      * @return void
@@ -128,7 +127,7 @@ class SwiftMailerCourier implements Courier
     }
 
     /**
-     * @param Email $email
+     * @param Email         $email
      * @param Swift_Message $message
      *
      * @return void
@@ -143,7 +142,7 @@ class SwiftMailerCourier implements Courier
     }
 
     /**
-     * @param Email $email
+     * @param Email         $email
      * @param Swift_Message $message
      *
      * @return void
