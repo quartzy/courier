@@ -7,6 +7,7 @@ namespace Courier\Test;
 use Courier\SwiftMailerCourier;
 use Mockery;
 use PhpEmail\Attachment\FileAttachment;
+use PhpEmail\Attachment\ResourceAttachment;
 use PhpEmail\Content\SimpleContent;
 use PhpEmail\EmailBuilder;
 use Swift_Mailer;
@@ -47,19 +48,35 @@ class SwiftMailerCourierTest extends TestCase
         $email = EmailBuilder::email()
             ->from('from@test.com')
             ->to('to@test.com')
+            ->cc('cc@test.com')
+            ->bcc('bcc@test.com', 'Bcc')
+            ->replyTo('reply.to@test.com', 'Reply To')
             ->withSubject('SwiftMailer Courier')
-            ->withContent(new SimpleContent('Html body', 'Test body'))
+            ->withContent(new SimpleContent('Html body', 'Text body'))
             ->attach(new FileAttachment(self::$file, 'test.txt'))
+            ->attach(new ResourceAttachment(fopen(self::$file, 'r'), 'other.txt'))
             ->build();
 
         $mailer
             ->shouldReceive('send')
             ->once()
             ->with(Mockery::on(function (Swift_Message $message) {
+                $fileAttachment     = $message->getChildren()[1];
+                $resourceAttachment = $message->getChildren()[2];
+
                 return $message->getFrom() === ['from@test.com' => null]
                 && $message->getTo() === ['to@test.com' => null]
+                && $message->getCc() === ['cc@test.com' => null]
+                && $message->getBcc() === ['bcc@test.com' => 'Bcc']
+                && $message->getReplyTo() === ['reply.to@test.com' => 'Reply To']
                 && $message->getSubject() === 'SwiftMailer Courier'
-                && $message->getBody() === 'Html body';
+                && $message->getBody() === 'Html body'
+                // Verify the text body was added
+                && $message->getChildren()[0]->getBody() === 'Text body'
+                // Verify the attachment was added
+                && $fileAttachment->getBody() === 'Attachment file'
+                //Verify the resource attachment is added
+                && $resourceAttachment->getHeaders()->get('Content-Disposition')->getFieldBody() === 'attachment; filename=other.txt';
             }));
 
         $courier->deliver($email);

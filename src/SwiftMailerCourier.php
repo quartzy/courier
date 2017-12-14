@@ -21,6 +21,9 @@ class SwiftMailerCourier implements Courier
      */
     private $mailer;
 
+    /**
+     * @param Swift_Mailer $mailer
+     */
     public function __construct(Swift_Mailer $mailer)
     {
         $this->mailer = $mailer;
@@ -82,6 +85,12 @@ class SwiftMailerCourier implements Courier
         return false;
     }
 
+    /**
+     * @param Content $content
+     * @param Swift_Message $message
+     *
+     * @return void
+     */
     protected function addBody(Content $content, Swift_Message $message): void
     {
         if ($content instanceof Content\SimpleContent) {
@@ -97,6 +106,12 @@ class SwiftMailerCourier implements Courier
         }
     }
 
+    /**
+     * @param Email $email
+     * @param Swift_Message $message
+     *
+     * @return void
+     */
     protected function addRecipients(Email $email, Swift_Message $message): void
     {
         foreach ($email->getToRecipients() as $recipient) {
@@ -112,6 +127,12 @@ class SwiftMailerCourier implements Courier
         }
     }
 
+    /**
+     * @param Email $email
+     * @param Swift_Message $message
+     *
+     * @return void
+     */
     protected function addFrom(Email $email, Swift_Message $message): void
     {
         $message->setFrom($email->getFrom()->getEmail(), $email->getFrom()->getName());
@@ -121,18 +142,27 @@ class SwiftMailerCourier implements Courier
         }
     }
 
+    /**
+     * @param Email $email
+     * @param Swift_Message $message
+     *
+     * @return void
+     */
     protected function addAttachments(Email $email, Swift_Message $message): void
     {
         foreach ($email->getAttachments() as $attachment) {
             if ($attachment instanceof FileAttachment) {
-                $swiftAttachment = Swift_Attachment::fromPath($attachment->getFile(), $attachment->getContentType());
-
-                $swiftAttachment->setFilename($attachment->getName());
-
-                $message->attach($swiftAttachment);
+                $swiftAttachment = Swift_Attachment::fromPath($attachment->getFile(), $attachment->getContentType())
+                    ->setFilename($attachment->getName());
             } else {
-                throw new ValidationException('Unsupported attachment type ' . get_class($attachment));
+                $swiftAttachment = new Swift_Attachment(
+                    $attachment->getContent(),
+                    $attachment->getName(),
+                    $attachment->getContentType()
+                );
             }
+
+            $message->attach($swiftAttachment);
         }
     }
 }
