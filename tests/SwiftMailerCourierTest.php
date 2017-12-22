@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Courier\Test;
 
+use Courier\Exceptions\UnsupportedContentException;
 use Courier\SwiftMailerCourier;
 use Mockery;
 use PhpEmail\Attachment\FileAttachment;
 use PhpEmail\Attachment\ResourceAttachment;
 use PhpEmail\Content\SimpleContent;
+use PhpEmail\Content\TemplatedContent;
 use PhpEmail\EmailBuilder;
 use Swift_Mailer;
 use Swift_Message;
@@ -42,7 +44,7 @@ class SwiftMailerCourierTest extends TestCase
      */
     public function sendsASwiftMailerEmail()
     {
-        $mailer    = Mockery::mock(Swift_Mailer::class);
+        $mailer    = Mockery::spy(Swift_Mailer::class);
         $courier   = new SwiftMailerCourier($mailer);
 
         $email = EmailBuilder::email()
@@ -78,6 +80,86 @@ class SwiftMailerCourierTest extends TestCase
                 //Verify the resource attachment is added
                 && $resourceAttachment->getHeaders()->get('Content-Disposition')->getFieldBody() === 'attachment; filename=other.txt';
             }));
+
+        $courier->deliver($email);
+    }
+
+    /**
+     * @testdox It should handle text only emails
+     */
+    public function supportsTextOnly()
+    {
+        $mailer    = Mockery::spy(Swift_Mailer::class);
+        $courier   = new SwiftMailerCourier($mailer);
+
+        $email = EmailBuilder::email()
+            ->from('from@test.com')
+            ->to('to@test.com')
+            ->withSubject('SwiftMailer Courier')
+            ->withContent(SimpleContent::text('Text body'))
+            ->build();
+
+        $mailer
+            ->shouldReceive('send')
+            ->once()
+            ->with(Mockery::on(function (Swift_Message $message) {
+                return $message->getFrom() === ['from@test.com' => null]
+                    && $message->getTo() === ['to@test.com' => null]
+                    && $message->getSubject() === 'SwiftMailer Courier'
+                    && $message->getBody() === 'Text body'
+                    && $message->getContentType() === 'text/plain';
+            }));
+
+        $courier->deliver($email);
+    }
+
+    /**
+     * @testdox It should handle HTML only emails
+     */
+    public function supportsHtmlOnly()
+    {
+        $mailer    = Mockery::spy(Swift_Mailer::class);
+        $courier   = new SwiftMailerCourier($mailer);
+
+        $email = EmailBuilder::email()
+            ->from('from@test.com')
+            ->to('to@test.com')
+            ->withSubject('SwiftMailer Courier')
+            ->withContent(SimpleContent::html('HTML body'))
+            ->build();
+
+        $mailer
+            ->shouldReceive('send')
+            ->once()
+            ->with(Mockery::on(function (Swift_Message $message) {
+                return $message->getFrom() === ['from@test.com' => null]
+                    && $message->getTo() === ['to@test.com' => null]
+                    && $message->getSubject() === 'SwiftMailer Courier'
+                    && $message->getBody() === 'HTML body'
+                    && $message->getContentType() === 'text/html';
+            }));
+
+        $courier->deliver($email);
+    }
+
+    /**
+     * @testdox It should not support templated content
+     */
+    public function doesNotSupportTemplatedContent()
+    {
+        self::expectException(UnsupportedContentException::class);
+
+        $mailer    = Mockery::mock(Swift_Mailer::class);
+        $courier   = new SwiftMailerCourier($mailer);
+
+        $email = EmailBuilder::email()
+            ->from('from@test.com')
+            ->to('to@test.com')
+            ->withSubject('SwiftMailer Courier')
+            ->withContent(new TemplatedContent('test', []))
+            ->build();
+
+        $mailer->shouldNotReceive('send');
 
         $courier->deliver($email);
     }
