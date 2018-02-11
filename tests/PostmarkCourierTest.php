@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Courier\Test;
 
+use Courier\Exceptions\TransmissionException;
+use Courier\Exceptions\UnsupportedContentException;
 use Courier\PostmarkCourier;
 use Courier\Test\Support\TestContent;
 use Mockery;
@@ -50,7 +52,7 @@ class PostmarkCourierTest extends TestCase
     /**
      * @testdox It should send an email with simple content
      */
-    public function sendsSimpleEmail()
+    public function testSendsSimpleEmail()
     {
         /** @var Mockery\Mock|PostmarkClient $client */
         $client = Mockery::mock(PostmarkClient::class);
@@ -101,7 +103,7 @@ class PostmarkCourierTest extends TestCase
     /**
      * @testdox It should send an email with no content
      */
-    public function sendsEmptyEmail()
+    public function testSendsEmptyEmail()
     {
         /** @var Mockery\Mock|PostmarkClient $client */
         $client = Mockery::mock(PostmarkClient::class);
@@ -141,7 +143,7 @@ class PostmarkCourierTest extends TestCase
     /**
      * @testdox It should send an email with templated content
      */
-    public function sendsTemplatedEmail()
+    public function testSendsTemplatedEmail()
     {
         /** @var Mockery\Mock|PostmarkClient $client */
         $client = Mockery::mock(PostmarkClient::class);
@@ -200,9 +202,8 @@ class PostmarkCourierTest extends TestCase
 
     /**
      * @testdox It should handle a client error with simple content
-     * @expectedException \Courier\Exceptions\TransmissionException
      */
-    public function handlesExceptionsOnSimpleContent()
+    public function testHandlesExceptionsOnSimpleContent()
     {
         /** @var Mockery\Mock|PostmarkClient $client */
         $client = Mockery::mock(PostmarkClient::class);
@@ -241,14 +242,14 @@ class PostmarkCourierTest extends TestCase
             )
             ->andThrow($exception);
 
+        self::expectException(TransmissionException::class);
         $courier->deliver($email);
     }
 
     /**
      * @testdox It should handle a client error with template content
-     * @expectedException \Courier\Exceptions\TransmissionException
      */
-    public function handlesExceptionsOnTemplateContent()
+    public function testHandlesExceptionsOnTemplateContent()
     {
         /** @var Mockery\Mock|PostmarkClient $client */
         $client = Mockery::mock(PostmarkClient::class);
@@ -289,14 +290,14 @@ class PostmarkCourierTest extends TestCase
             )
             ->andThrow($exception);
 
+        self::expectException(TransmissionException::class);
         $courier->deliver($email);
     }
 
     /**
      * @testdox It should throw an error if unsupported content is provided
-     * @expectedException \Courier\Exceptions\UnsupportedContentException
      */
-    public function checksForSupportedContent()
+    public function testChecksForSupportedContent()
     {
         /** @var Mockery\Mock|PostmarkClient $client */
         $client = Mockery::mock(PostmarkClient::class);
@@ -310,6 +311,7 @@ class PostmarkCourierTest extends TestCase
             ->withContent(new TestContent())
             ->build();
 
+        self::expectException(UnsupportedContentException::class);
         $courier->deliver($email);
     }
 }

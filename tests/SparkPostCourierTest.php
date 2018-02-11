@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Courier\Test;
 
+use Courier\Exceptions\TransmissionException;
+use Courier\Exceptions\UnsupportedContentException;
+use Courier\Exceptions\ValidationException;
 use Courier\SparkPostCourier;
 use Courier\Test\Support\TestContent;
 use GuzzleHttp\Psr7\Request;
@@ -74,7 +77,7 @@ class SparkPostCourierTest extends TestCase
     /**
      * @testdox It should send a simple email
      */
-    public function sendsSimpleEmail()
+    public function testSendsSimpleEmail()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -115,7 +118,7 @@ class SparkPostCourierTest extends TestCase
     /**
      * @testdox It should send an empty email
      */
-    public function sendsEmptyEmail()
+    public function testSendsEmptyEmail()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -156,7 +159,7 @@ class SparkPostCourierTest extends TestCase
     /**
      * @testdox It should send a templated email
      */
-    public function sendsTemplatedEmail()
+    public function testSendsTemplatedEmail()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -199,7 +202,7 @@ class SparkPostCourierTest extends TestCase
     /**
      * @testdox It should send a templated email with a CC recipient
      */
-    public function sendsTemplatedEmailWithCc()
+    public function testSendsTemplatedEmailWithCc()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -253,7 +256,7 @@ class SparkPostCourierTest extends TestCase
     /**
      * @testdox It should support sending a templated email with attachments
      */
-    public function sendsTemplatedEmailWithAttachment()
+    public function testSendsTemplatedEmailWithAttachment()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -333,7 +336,7 @@ class SparkPostCourierTest extends TestCase
     /**
      * @testdox It should replace templated CC headers when attaching to a templated email
      */
-    public function replaceTemplatedEmailCc()
+    public function testReplaceTemplatedEmailCc()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -425,7 +428,7 @@ class SparkPostCourierTest extends TestCase
     /**
      * @testdox It should support sending a templated email with an attachment and a templated from/replyTo
      */
-    public function handlesTemplatedEmailsWithAttachmentAndDynamicSender()
+    public function testHandlesTemplatedEmailsWithAttachmentAndDynamicSender()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -507,9 +510,8 @@ class SparkPostCourierTest extends TestCase
 
     /**
      * @testdox It should throw an error if the reply to is a templated value but not provided on the email
-     * @expectedException \Courier\Exceptions\ValidationException
      */
-    public function handlesDynamicTemplateMissingSender()
+    public function testHandlesDynamicTemplateMissingSender()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -543,14 +545,14 @@ class SparkPostCourierTest extends TestCase
             ->with('GET', 'templates/1234')
             ->andReturn(new SparkPostResponse(new Response(200, [], json_encode($expectedTemplate))));
 
+        self::expectException(ValidationException::class);
         $courier->deliver($email);
     }
 
     /**
      * @testdox It should handle errors when searching for a template
-     * @expectedException \Courier\Exceptions\TransmissionException
      */
-    public function handlesTemplateRetrievalErrors()
+    public function testHandlesTemplateRetrievalErrors()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -571,13 +573,14 @@ class SparkPostCourierTest extends TestCase
             ->with('GET', 'templates/1234')
             ->andThrow(new SparkPostException($exception));
 
+        self::expectException(TransmissionException::class);
         $courier->deliver($email);
     }
 
     /**
      * @testdox It should support all Email values
      */
-    public function supportsAllValues()
+    public function testSupportsAllValues()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -643,9 +646,8 @@ class SparkPostCourierTest extends TestCase
 
     /**
      * @testdox It should handle an error transmitting the email to SparkPost
-     * @expectedException \Courier\Exceptions\TransmissionException
      */
-    public function handlesTransmissionErrors()
+    public function testHandlesTransmissionErrors()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -681,14 +683,14 @@ class SparkPostCourierTest extends TestCase
         $exception = new HttpException('Message', new Request('GET', 'stuff'), new Response(400, [], ''));
         $this->setExpectedCall($expectedArray, new SparkPostException($exception));
 
+        self::expectException(TransmissionException::class);
         $courier->deliver($email);
     }
 
     /**
      * @testdox It should validate the input content is deliverable
-     * @expectedException \Courier\Exceptions\UnsupportedContentException
      */
-    public function validatesSupportedContent()
+    public function testValidatesSupportedContent()
     {
         $courier = new SparkPostCourier($this->sparkPost);
 
@@ -699,6 +701,7 @@ class SparkPostCourierTest extends TestCase
             [new Address('recipient@test.com')]
         );
 
+        self::expectException(UnsupportedContentException::class);
         $courier->deliver($email);
     }
 
