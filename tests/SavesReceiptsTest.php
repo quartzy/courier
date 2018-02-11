@@ -19,7 +19,7 @@ class SavesReceiptsTest extends TestCase
     /**
      * @testdox It should save the receipt for an email
      */
-    public function savesReceipt()
+    public function testSavesReceipt()
     {
         $email = EmailBuilder::email()
             ->to('to@test.com')
@@ -36,7 +36,7 @@ class SavesReceiptsTest extends TestCase
     /**
      * @testdox It should save each email's receipt separately
      */
-    public function savesMultipleReceipts()
+    public function testSavesMultipleReceipts()
     {
         $first = EmailBuilder::email()
             ->to('to@test.com')
@@ -63,7 +63,7 @@ class SavesReceiptsTest extends TestCase
     /**
      * @testdox It should throw an error if there is no receipt for the email
      */
-    public function throwsOnMissingReceipt()
+    public function testThrowsOnMissingReceipt()
     {
         self::expectException(ReceiptException::class);
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Courier\Test;
 
+use Courier\Exceptions\TransmissionException;
+use Courier\Exceptions\UnsupportedContentException;
 use Courier\SendGridCourier;
 use Courier\Test\Support\TestContent;
 use Exception;
@@ -74,7 +76,7 @@ class SendGridCourierTest extends TestCase
     /**
      * @testdox It should send a simple email
      */
-    public function sendsSimpleEmail()
+    public function testSendsSimpleEmail()
     {
         $expectedEmail = new Mail(
             new SendGrid\Email(null, 'sender@test.com'),
@@ -100,7 +102,7 @@ class SendGridCourierTest extends TestCase
     /**
      * @testdox It should send an empty simple email
      */
-    public function sendsAnEmptySimpleEmail()
+    public function testSendsAnEmptySimpleEmail()
     {
         $expectedEmail = new Mail(
             new SendGrid\Email(null, 'sender@test.com'),
@@ -126,7 +128,7 @@ class SendGridCourierTest extends TestCase
     /**
      * @testdox It should send an empty email
      */
-    public function sendsEmptyEmail()
+    public function testSendsEmptyEmail()
     {
         $expectedEmail = new Mail(
             new SendGrid\Email(null, 'sender@test.com'),
@@ -152,7 +154,7 @@ class SendGridCourierTest extends TestCase
     /**
      * @testdox It should send a templated email
      */
-    public function sendTemplatedEmail()
+    public function testSendTemplatedEmail()
     {
         $personalization = new SendGrid\Personalization();
         $personalization->addTo(new SendGrid\Email(null, 'recipient@test.com'));
@@ -181,7 +183,7 @@ class SendGridCourierTest extends TestCase
     /**
      * @testdox It should add all email values for SendGrid
      */
-    public function acceptsAllEmailValues()
+    public function testAcceptsAllEmailValues()
     {
         $personalization = new SendGrid\Personalization();
         $personalization->addTo(new SendGrid\Email(null, 'recipient@test.com'));
@@ -222,7 +224,7 @@ class SendGridCourierTest extends TestCase
     /**
      * @testdox It should ensure unique addresses across to, cc, and bcc
      */
-    public function usesUniqueAddress()
+    public function testUsesUniqueAddress()
     {
         $personalization = new SendGrid\Personalization();
         $personalization->addTo(new SendGrid\Email(null, 'recipient@test.com'));
@@ -262,9 +264,8 @@ class SendGridCourierTest extends TestCase
 
     /**
      * @testdox It should validate the content is deliverable
-     * @expectedException \Courier\Exceptions\UnsupportedContentException
      */
-    public function validatesContent()
+    public function testValidatesContent()
     {
         $email = new Email(
             'Subject',
@@ -273,14 +274,14 @@ class SendGridCourierTest extends TestCase
             [new Address('recipient@test.com')]
         );
 
+        self::expectException(UnsupportedContentException::class);
         $this->courier->deliver($email);
     }
 
     /**
      * @testdox It should handle an exception during email transmission
-     * @expectedException \Courier\Exceptions\TransmissionException
      */
-    public function handlesTransmissionException()
+    public function testHandlesTransmissionException()
     {
         $expectedEmail = new Mail(
             new SendGrid\Email(null, 'sender@test.com'),
@@ -298,14 +299,14 @@ class SendGridCourierTest extends TestCase
             [new Address('recipient@test.com')]
         );
 
+        self::expectException(TransmissionException::class);
         $this->courier->deliver($email);
     }
 
     /**
      * @testdox It should throw an exception if an ID can't be found
-     * @expectedException \Courier\Exceptions\TransmissionException
      */
-    public function throwsWithoutId()
+    public function testThrowsWithoutId()
     {
         $expectedEmail = new Mail(
             new SendGrid\Email(null, 'sender@test.com'),
@@ -325,14 +326,14 @@ class SendGridCourierTest extends TestCase
             [new Address('recipient@test.com')]
         );
 
+        self::expectException(TransmissionException::class);
         $this->courier->deliver($email);
     }
 
     /**
      * @testdox It should handle an error response during email transmission
-     * @expectedException \Courier\Exceptions\TransmissionException
      */
-    public function handlesTransmissionErrorResponse()
+    public function testHandlesTransmissionErrorResponse()
     {
         $expectedEmail = new Mail(
             new SendGrid\Email(null, 'sender@test.com'),
@@ -352,6 +353,7 @@ class SendGridCourierTest extends TestCase
             [new Address('recipient@test.com')]
         );
 
+        self::expectException(TransmissionException::class);
         $this->courier->deliver($email);
     }
 
