@@ -1,9 +1,0 @@
-comment:
-  layout: header
-coverage:
-  ignore:
-  - vendor/.*
-  status:
-    patch:
-      default: {}
-
