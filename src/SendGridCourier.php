@@ -259,9 +259,9 @@ class SendGridCourier implements ConfirmingCourier
         SendGrid\Mail $email,
         Content\Contracts\SimpleContent $content
     ): SendGrid\Response {
-        if ($content->getHtml()) {
+        if ($content->getHtml() !== null) {
             $email->addContent(new SendGrid\Content('text/html', $content->getHtml()));
-        } elseif ($content->getText()) {
+        } elseif ($content->getText() !== null) {
             $email->addContent(new SendGrid\Content('text/plain', $content->getText()));
         } else {
             $email->addContent(new SendGrid\Content('text/plain', ''));
