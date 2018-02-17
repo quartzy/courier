@@ -1,11 +1,12 @@
 # Courier
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
+[![Total Downloads][ico-downloads]][link-downloads]
 [![Software License][ico-license]](LICENSE)
-[![Build Status][ico-circleci]][link-circleci]
+[![Build Status][ico-travisci]][link-travisci]
 [![Coverage Status][ico-codecov]][link-codecov]
 [![Style Status][ico-styleci]][link-styleci]
-[![Total Downloads][ico-downloads]][link-downloads]
+[![Scrutinizer Code Quality][ico-scrutinizer]][link-scrutinizer]
 
 A transactional email sending library built on the idea of third-party email senders, using php-email domain objects and drivers for each sender.
 
@@ -202,14 +203,16 @@ The Apache License, v2.0. Please see [License File](LICENSE) for more informatio
 
 [ico-version]: https://img.shields.io/packagist/v/quartzy/courier.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-Apache%202.0-brightgreen.svg?style=flat-square
-[ico-circleci]: https://img.shields.io/circleci/project/github/quartzy/courier/master.svg?style=flat-square
-[ico-codecov]: https://img.shields.io/codecov/c/github/quartzy/courier.svg?style=flat-square
+[ico-travisci]: https://img.shields.io/travis/quartzy/courier.svg?style=flat-square
+[ico-codecov]: https://img.shields.io/scrutinizer/coverage/g/quartzy/courier.svg?style=flat-square
 [ico-styleci]: https://styleci.io/repos/98693280/shield
+[ico-scrutinizer]: https://img.shields.io/scrutinizer/g/quartzy/courier.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/quartzy/courier.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/quartzy/courier
-[link-circleci]: https://circleci.com/gh/quartzy/courier/tree/master
+[link-travisci]: https://travis-ci.org/quartzy/courier
 [link-codecov]: http://codecov.io/github/quartzy/courier?branch=master
 [link-styleci]: https://styleci.io/repos/98693280
+[link-scrutinizer]: https://scrutinizer-ci.com/g/quartzy/courier
 [link-downloads]: https://packagist.org/packages/quartzy/courier
 [link-contributors]: ../../contributors

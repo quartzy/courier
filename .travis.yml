@@ -1,0 +1,18 @@
+language: php
+php:
+  - 7.1
+  - 7.2
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+install: composer update --prefer-lowest --no-interaction
+
+script: phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.clover
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
