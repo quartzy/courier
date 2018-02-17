@@ -211,7 +211,7 @@ The Apache License, v2.0. Please see [License File](LICENSE) for more informatio
 
 [link-packagist]: https://packagist.org/packages/quartzy/courier
 [link-travisci]: https://travis-ci.org/quartzy/courier
-[link-codecov]: http://codecov.io/github/quartzy/courier?branch=master
+[link-codecov]: https://scrutinizer-ci.com/g/quartzy/courier
 [link-styleci]: https://styleci.io/repos/98693280
 [link-scrutinizer]: https://scrutinizer-ci.com/g/quartzy/courier
 [link-downloads]: https://packagist.org/packages/quartzy/courier
