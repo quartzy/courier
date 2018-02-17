@@ -22,7 +22,8 @@
         "php-http/guzzle6-adapter": "^1.1",
         "sparkpost/sparkpost": "^2.1",
         "mockery/mockery": "^0.9.8",
-        "wildbit/postmark-php": "^2.3"
+        "wildbit/postmark-php": "^2.3",
+        "scrutinizer/ocular": "^1.4"
     },
     "suggest": {
         "sendgrid/sendgrid": "To use the SendGridCourier",
