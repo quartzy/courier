@@ -1,6 +1,8 @@
 The Postmark courier supports both templated and simple emails.
 
-To create a Postmark courier, you should follow the steps documented in the [Postmark PHP](https://github.com/wildbit/postmark-php/wiki/Getting-Started) docs to create a client and pass it into the `PostmarkCourier`.
+To create a Postmark courier, you should follow the steps documented in the
+[Postmark PHP](https://github.com/wildbit/postmark-php/wiki/Getting-Started)
+docs to create a client and pass it into the `PostmarkCourier`.
 
 ```php
 <?php
@@ -28,4 +30,6 @@ $courier->deliver($email);
 
 ## Notes for Postmark Templates
 
-Postmark allows users to define template keys in the subject of templated emails. To support this functionality, the courier will pass the `subject` of the `Email` into the template variables with the key `subject`.
+Postmark allows users to define template keys in the subject of templated
+emails. To support this functionality, the courier will pass the `subject` of
+the `Email` into the template variables with the key `subject`.
