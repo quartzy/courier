@@ -586,7 +586,7 @@ class SparkPostCourierTest extends TestCase
 
         $email = new Email(
             'This is the Subject',
-            new SimpleContent('This is the html email', 'This is the text email'),
+            SimpleContent::html('This is the html email')->addText('This is the text email'),
             new Address('sender@test.com'),
             [new Address('recipient@test.com')]
         );

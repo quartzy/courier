@@ -92,7 +92,11 @@ class PostmarkCourier implements ConfirmingCourier
                 break;
 
             case $content instanceof Content\SimpleContent:
-                $response = $this->sendNonTemplateEmail($email, $content->getHtml(), $content->getText());
+                $response = $this->sendNonTemplateEmail(
+                    $email,
+                    $content->getHtml()->getBody(),
+                    $content->getText()->getBody()
+                );
                 break;
 
             case $content instanceof Content\EmptyContent:

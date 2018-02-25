@@ -1,5 +1,17 @@
 # Change Log
 
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project attempts to follow [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## Unreleased
+
+### Changed
+
+* Upgrade to [php-email](https://github.com/quartzy/php-email) version 0.5.0.
+* Update use of `SimpleContent` to handle BC incompatible changes from php-email.
+
 ## 0.3.0 - 2017-12-13
 
 ### Changed
