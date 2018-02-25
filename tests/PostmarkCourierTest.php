@@ -64,7 +64,7 @@ class PostmarkCourierTest extends TestCase
             ->to('receiver@test.com')
             ->to('other@test.com')
             ->withSubject('Test From Postmark API')
-            ->withContent(new SimpleContent('<b>Test from Postmark</b>', 'Test from Postmark'))
+            ->withContent(SimpleContent::html('<b>Test from Postmark</b>')->addText('Test from Postmark'))
             ->cc('copy@test.com')
             ->bcc('blind.copy@test.com')
             ->replyTo('reply.to@test.com', 'Replier')
