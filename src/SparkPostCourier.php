@@ -375,18 +375,17 @@ class SparkPostCourier implements ConfirmingCourier
      */
     protected function getInlineContent(array $template): Content\SimpleContent
     {
-        $htmlContent = array_key_exists(self::HTML, $template) ? $template[self::HTML] : null;
-        $textContent = array_key_exists(self::TEXT, $template) ? $template[self::TEXT] : null;
-
-        if ($htmlContent !== null && $textContent !== null) {
-            return Content\SimpleContent::html($htmlContent)->addText($textContent);
-        } elseif ($htmlContent !== null) {
-            return Content\SimpleContent::html($htmlContent);
-        } elseif ($textContent !== null) {
-            return Content\SimpleContent::text($textContent);
+        $htmlContent = null;
+        if (array_key_exists(self::HTML, $template)) {
+            $htmlContent = new Content\SimpleContent\Message($template[self::HTML]);
         }
 
-        return Content\SimpleContent::html('');
+        $textContent = null;
+        if (array_key_exists(self::TEXT, $template)) {
+            $textContent = new Content\SimpleContent\Message($template[self::TEXT]);
+        }
+
+        return new Content\SimpleContent($htmlContent, $textContent);
     }
 
     /**
