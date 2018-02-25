@@ -205,6 +205,10 @@ class SendGridCourier implements ConfirmingCourier
             }
         }
 
+        foreach ($email->getHeaders() as $header) {
+            $message->addHeader($header->getField(), $header->getValue());
+        }
+
         return $message;
     }
 

@@ -92,15 +92,11 @@ class PostmarkCourier implements ConfirmingCourier
                 break;
 
             case $content instanceof Content\SimpleContent:
-                $response = $this->sendNonTemplateEmail(
-                    $email,
-                    $content->getHtml()->getBody(),
-                    $content->getText()->getBody()
-                );
+                $response = $this->sendNonTemplateEmail($email);
                 break;
 
             case $content instanceof Content\EmptyContent:
-                $response = $this->sendNonTemplateEmail($email, 'No message', 'No message');
+                $response = $this->sendNonTemplateEmail($email);
                 break;
 
             default:
@@ -132,7 +128,7 @@ class PostmarkCourier implements ConfirmingCourier
                 $this->buildReplyTo($email),
                 $this->buildRecipients(...$email->getCcRecipients()),
                 $this->buildRecipients(...$email->getBccRecipients()),
-                null,
+                $this->buildHeaders($email),
                 $this->buildAttachments($email),
                 null
             );
@@ -144,27 +140,33 @@ class PostmarkCourier implements ConfirmingCourier
     }
 
     /**
-     * @param Email       $email
-     * @param string|null $html
-     * @param string|null $text
+     * @param Email $email
      *
      * @return DynamicResponseModel
      */
-    protected function sendNonTemplateEmail(Email $email, ?string $html, ?string $text): DynamicResponseModel
+    protected function sendNonTemplateEmail(Email $email): DynamicResponseModel
     {
+        $content     = $email->getContent();
+        $htmlContent = 'No message';
+        $textContent = 'No message';
+        if ($content instanceof Content\Contracts\SimpleContent) {
+            $htmlContent = $content->getHtml() !== null ? $content->getHtml()->getBody() : null;
+            $textContent = $content->getText() !== null ? $content->getText()->getBody() : null;
+        }
+
         try {
             return $this->client->sendEmail(
                 $email->getFrom()->toRfc2822(),
                 $this->buildRecipients(...$email->getToRecipients()),
                 $email->getSubject(),
-                $html,
-                $text,
+                $htmlContent,
+                $textContent,
                 null,
                 true,
                 $this->buildReplyTo($email),
                 $this->buildRecipients(...$email->getCcRecipients()),
                 $this->buildRecipients(...$email->getBccRecipients()),
-                null,
+                $this->buildHeaders($email),
                 $this->buildAttachments($email),
                 null
             );
@@ -216,6 +218,22 @@ class PostmarkCourier implements ConfirmingCourier
                 'ContentType' => $attachment->getContentType(),
             ];
         }, $email->getAttachments());
+    }
+
+    /**
+     * @param Email $email
+     *
+     * @return array
+     */
+    protected function buildHeaders(Email $email): array
+    {
+        $headers = [];
+
+        foreach ($email->getHeaders() as $header) {
+            $headers[$header->getField()] = $header->getValue();
+        }
+
+        return $headers;
     }
 
     /**

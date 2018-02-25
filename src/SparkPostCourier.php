@@ -263,11 +263,7 @@ class SparkPostCourier implements ConfirmingCourier
             self::TEMPLATE_ID => $email->getContent()->getTemplateId(),
         ];
 
-        if ($header = $this->buildCcHeader($email)) {
-            $content[self::HEADERS] = [
-                self::CC_HEADER => $header,
-            ];
-        }
+        $content[self::HEADERS] = $this->getContentHeaders($email);
 
         if ($email->getAttachments()) {
             /*
@@ -358,11 +354,24 @@ class SparkPostCourier implements ConfirmingCourier
             self::REPLY_TO    => $replyTo,
         ];
 
-        if ($ccHeader = $this->buildCcHeader($email)) {
-            $content[self::HEADERS] = [self::CC_HEADER => $ccHeader];
-        }
+        $content[self::HEADERS] = $this->getContentHeaders($email);
 
         return $content;
+    }
+
+    protected function getContentHeaders(Email $email): array
+    {
+        $headers = [];
+
+        if ($ccHeader = $this->buildCcHeader($email)) {
+            $headers[self::CC_HEADER] = $ccHeader;
+        }
+
+        foreach ($email->getHeaders() as $header) {
+            $headers[$header->getField()] = $header->getValue();
+        }
+
+        return $headers;
     }
 
     /**

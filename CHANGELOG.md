@@ -7,6 +7,10 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ## Unreleased
 
+### Added
+
+* Send custom headers defined on the `Email` (caveat on SparkPost templated emails in readme).
+
 ### Changed
 
 * Upgrade to [php-email](https://github.com/quartzy/php-email) version 0.5.0.

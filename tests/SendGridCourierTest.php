@@ -16,6 +16,7 @@ use PhpEmail\Content\EmptyContent;
 use PhpEmail\Content\SimpleContent;
 use PhpEmail\Content\TemplatedContent;
 use PhpEmail\Email;
+use PhpEmail\Header;
 use SendGrid;
 use SendGrid\Client;
 use SendGrid\Mail;
@@ -201,6 +202,7 @@ class SendGridCourierTest extends TestCase
         $expectedEmail->addContent(new SendGrid\Content('text/html', 'This is a test email'));
         $expectedEmail->setReplyTo(new SendGrid\Email('Reply To', 'replyTo@test.com'));
         $expectedEmail->addAttachment($attachment);
+        $expectedEmail->addHeader('X-Test-Header', 'test');
 
         $expectedResponse = $this->success();
 
@@ -217,6 +219,7 @@ class SendGridCourierTest extends TestCase
         $email->setCcRecipients(new Address('cc@test.com', 'CC'));
         $email->setBccRecipients(new Address('bcc@test.com', 'BCC'));
         $email->setAttachments(new FileAttachment(self::$file, 'file name.txt'));
+        $email->setHeaders(new Header('X-Test-Header', 'test'));
 
         $this->courier->deliver($email);
     }
