@@ -275,8 +275,7 @@ class SparkPostCourier implements ConfirmingCourier
              * we will instead get the template from SparkPost and create a new inline template using the information
              * from it instead.
              */
-            $template = $this->getTemplate($email);
-
+            $template    = $this->getTemplate($email);
             $inlineEmail = clone $email;
 
             $inlineEmail
@@ -394,6 +393,8 @@ class SparkPostCourier implements ConfirmingCourier
      * @param Email $email
      *
      * @return array
+     *
+     * @throws TransmissionException
      */
     private function getTemplate(Email $email): array
     {
