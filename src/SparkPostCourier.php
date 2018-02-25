@@ -8,7 +8,6 @@ use Courier\Exceptions\TransmissionException;
 use Courier\Exceptions\UnsupportedContentException;
 use Courier\Exceptions\ValidationException;
 use PhpEmail\Address;
-use PhpEmail\Attachment;
 use PhpEmail\Content;
 use PhpEmail\Email;
 use Psr\Log\LoggerInterface;
