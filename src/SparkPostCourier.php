@@ -392,9 +392,9 @@ class SparkPostCourier implements ConfirmingCourier
      *
      * @param Email $email
      *
-     * @return array
-     *
      * @throws TransmissionException
+     *
+     * @return array
      */
     private function getTemplate(Email $email): array
     {
