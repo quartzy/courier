@@ -10,7 +10,6 @@ use PhpEmail\Address;
 use PhpEmail\Attachment;
 use PhpEmail\Content;
 use PhpEmail\Email;
-use PhpEmail\Header;
 use Postmark\Models\DynamicResponseModel;
 use Postmark\Models\PostmarkException;
 use Postmark\PostmarkClient;
