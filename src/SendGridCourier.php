@@ -8,6 +8,7 @@ use Courier\Exceptions\TransmissionException;
 use Courier\Exceptions\UnsupportedContentException;
 use Exception;
 use PhpEmail\Address;
+use PhpEmail\Attachment;
 use PhpEmail\Content;
 use PhpEmail\Email;
 use Psr\Log\LoggerInterface;
@@ -195,15 +196,7 @@ class SendGridCourier implements ConfirmingCourier
             $message->setReplyTo($replyTo);
         }
 
-        if (!empty($email->getAttachments())) {
-            foreach ($email->getAttachments() as $file) {
-                $attachment = new SendGrid\Attachment();
-                $attachment->setFilename($file->getName());
-                $attachment->setContent($file->getBase64Content());
-
-                $message->addAttachment($attachment);
-            }
-        }
+        $message->attachments = $this->buildAttachments($email);
 
         foreach ($email->getHeaders() as $header) {
             $message->addHeader($header->getField(), $header->getValue());
@@ -291,5 +284,35 @@ class SendGridCourier implements ConfirmingCourier
         $email->setTemplateId($content->getTemplateId());
 
         return $this->send($email);
+    }
+
+    /**
+     * @param Email $email
+     *
+     * @return SendGrid\Attachment[]
+     */
+    protected function buildAttachments(Email $email): array
+    {
+        $attachments = [];
+
+        foreach ($email->getAttachments() as $attachment) {
+            $sendGridAttachment = new SendGrid\Attachment();
+            $sendGridAttachment->setFilename($attachment->getName());
+            $sendGridAttachment->setContent($attachment->getBase64Content());
+
+            $attachments[] = $sendGridAttachment;
+        }
+
+        foreach ($email->getEmbedded() as $attachment) {
+            $sendGridAttachment = new SendGrid\Attachment();
+            $sendGridAttachment->setFilename($attachment->getName());
+            $sendGridAttachment->setContent($attachment->getBase64Content());
+            $sendGridAttachment->setContentID($attachment->getContentId());
+            $sendGridAttachment->setDisposition('inline');
+
+            $attachments[] = $sendGridAttachment;
+        }
+
+        return $attachments;
     }
 }

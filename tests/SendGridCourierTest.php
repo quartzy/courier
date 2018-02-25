@@ -195,6 +195,12 @@ class SendGridCourierTest extends TestCase
         $attachment->setContent(base64_encode(file_get_contents(self::$file)));
         $attachment->setFilename('file name.txt');
 
+        $inlineAttachment = new SendGrid\Attachment();
+        $inlineAttachment->setContent(base64_encode(file_get_contents(self::$file)));
+        $inlineAttachment->setFilename('image.jpg');
+        $inlineAttachment->setContentID('inline');
+        $inlineAttachment->setDisposition('inline');
+
         $expectedEmail = new Mail();
         $expectedEmail->setSubject('This is the Subject');
         $expectedEmail->setFrom(new SendGrid\Email(null, 'sender@test.com'));
@@ -202,6 +208,7 @@ class SendGridCourierTest extends TestCase
         $expectedEmail->addContent(new SendGrid\Content('text/html', 'This is a test email'));
         $expectedEmail->setReplyTo(new SendGrid\Email('Reply To', 'replyTo@test.com'));
         $expectedEmail->addAttachment($attachment);
+        $expectedEmail->addAttachment($inlineAttachment);
         $expectedEmail->addHeader('X-Test-Header', 'test');
 
         $expectedResponse = $this->success();
@@ -219,6 +226,7 @@ class SendGridCourierTest extends TestCase
         $email->setCcRecipients(new Address('cc@test.com', 'CC'));
         $email->setBccRecipients(new Address('bcc@test.com', 'BCC'));
         $email->setAttachments(new FileAttachment(self::$file, 'file name.txt'));
+        $email->embed(new FileAttachment(self::$file, 'image.jpg'), 'inline');
         $email->setHeaders(new Header('X-Test-Header', 'test'));
 
         $this->courier->deliver($email);

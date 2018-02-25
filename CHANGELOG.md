@@ -10,6 +10,7 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 ### Added
 
 * Send custom headers defined on the `Email` (caveat on SparkPost templated emails in readme).
+* Add inline attachments defined on the `Email`
 
 ### Changed
 
