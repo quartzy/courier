@@ -19,6 +19,7 @@ use PhpEmail\Content\EmptyContent;
 use PhpEmail\Content\SimpleContent;
 use PhpEmail\Content\TemplatedContent;
 use PhpEmail\Email;
+use PhpEmail\Header;
 use SparkPost\SparkPost;
 use SparkPost\SparkPostException;
 use SparkPost\SparkPostPromise;
@@ -99,6 +100,7 @@ class SparkPostCourierTest extends TestCase
                 'text'        => 'This is a test email',
                 'attachments' => [],
                 'reply_to'    => null,
+                'headers'     => [],
             ],
             'recipients' => [
                 [
@@ -140,6 +142,7 @@ class SparkPostCourierTest extends TestCase
                 'text'        => '',
                 'attachments' => [],
                 'reply_to'    => null,
+                'headers'     => [],
             ],
             'recipients' => [
                 [
@@ -175,6 +178,7 @@ class SparkPostCourierTest extends TestCase
         $expectedArray = [
             'content' => [
                 'template_id' => '1234',
+                'headers'     => [],
             ],
             'substitution_data' => [
                 'test'       => 'value',
@@ -595,6 +599,7 @@ class SparkPostCourierTest extends TestCase
         $email->setCcRecipients(new Address('cc@test.com', 'CC'));
         $email->setBccRecipients(new Address('bcc@test.com', 'BCC'));
         $email->setAttachments(new FileAttachment(self::$file));
+        $email->setHeaders(new Header('X-Test-Header', 'test'));
 
         $expectedArray = [
             'content' => [
@@ -603,7 +608,8 @@ class SparkPostCourierTest extends TestCase
                     'email' => 'sender@test.com',
                 ],
                 'headers' => [
-                    'CC' => '"CC" <cc@test.com>',
+                    'CC'            => '"CC" <cc@test.com>',
+                    'X-Test-Header' => 'test',
                 ],
                 'subject'     => 'This is the Subject',
                 'html'        => 'This is the html email',
@@ -669,6 +675,7 @@ class SparkPostCourierTest extends TestCase
                 'text'        => '',
                 'attachments' => [],
                 'reply_to'    => null,
+                'headers'     => [],
             ],
             'recipients' => [
                 [

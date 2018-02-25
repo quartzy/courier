@@ -69,6 +69,7 @@ class PostmarkCourierTest extends TestCase
             ->bcc('blind.copy@test.com')
             ->replyTo('reply.to@test.com', 'Replier')
             ->attach(new FileAttachment(self::$file, 'Test File'))
+            ->addHeader('X-Test-Header', 'test')
             ->build();
 
         $client
@@ -85,7 +86,7 @@ class PostmarkCourierTest extends TestCase
                 '"Replier" <reply.to@test.com>',
                 'copy@test.com',
                 'blind.copy@test.com',
-                null,
+                ['X-Test-Header' => 'test'],
                 [
                     [
                         'Content'     => base64_encode('Attachment file'),
@@ -131,7 +132,7 @@ class PostmarkCourierTest extends TestCase
                 null,
                 null,
                 null,
-                null,
+                [],
                 [],
                 null
             )
@@ -165,6 +166,7 @@ class PostmarkCourierTest extends TestCase
             ->bcc('blind.copy@test.com')
             ->replyTo('reply.to@test.com', 'Replier')
             ->attach(new FileAttachment(self::$file, 'Test File'))
+            ->addHeader('X-Test-Header', 'test')
             ->build();
 
         $client
@@ -185,7 +187,7 @@ class PostmarkCourierTest extends TestCase
                 '"Replier" <reply.to@test.com>',
                 'copy@test.com',
                 'blind.copy@test.com',
-                null,
+                ['X-Test-Header' => 'test'],
                 [
                     [
                         'Content'     => base64_encode('Attachment file'),
@@ -236,7 +238,7 @@ class PostmarkCourierTest extends TestCase
                 null,
                 null,
                 null,
-                null,
+                [],
                 [],
                 null
             )

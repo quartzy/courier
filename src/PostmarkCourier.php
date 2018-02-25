@@ -10,6 +10,7 @@ use PhpEmail\Address;
 use PhpEmail\Attachment;
 use PhpEmail\Content;
 use PhpEmail\Email;
+use PhpEmail\Header;
 use Postmark\Models\DynamicResponseModel;
 use Postmark\Models\PostmarkException;
 use Postmark\PostmarkClient;
@@ -94,8 +95,8 @@ class PostmarkCourier implements ConfirmingCourier
             case $content instanceof Content\SimpleContent:
                 $response = $this->sendNonTemplateEmail(
                     $email,
-                    $content->getHtml()->getBody(),
-                    $content->getText()->getBody()
+                    $content->getHtml() !== null ? $content->getHtml()->getBody() : null,
+                    $content->getText() !== null ? $content->getText()->getBody() : null
                 );
                 break;
 
@@ -132,7 +133,7 @@ class PostmarkCourier implements ConfirmingCourier
                 $this->buildReplyTo($email),
                 $this->buildRecipients(...$email->getCcRecipients()),
                 $this->buildRecipients(...$email->getBccRecipients()),
-                null,
+                $this->buildHeaders($email),
                 $this->buildAttachments($email),
                 null
             );
@@ -164,7 +165,7 @@ class PostmarkCourier implements ConfirmingCourier
                 $this->buildReplyTo($email),
                 $this->buildRecipients(...$email->getCcRecipients()),
                 $this->buildRecipients(...$email->getBccRecipients()),
-                null,
+                $this->buildHeaders($email),
                 $this->buildAttachments($email),
                 null
             );
@@ -216,6 +217,22 @@ class PostmarkCourier implements ConfirmingCourier
                 'ContentType' => $attachment->getContentType(),
             ];
         }, $email->getAttachments());
+    }
+
+    /**
+     * @param Email $email
+     *
+     * @return array
+     */
+    protected function buildHeaders(Email $email): array
+    {
+        $headers = [];
+
+        foreach ($email->getHeaders() as $header) {
+            $headers[$header->getField()] = $header->getValue();
+        }
+
+        return $headers;
     }
 
     /**
