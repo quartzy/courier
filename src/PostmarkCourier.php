@@ -140,15 +140,15 @@ class PostmarkCourier implements ConfirmingCourier
     }
 
     /**
-     * @param Email       $email
+     * @param Email $email
      *
      * @return DynamicResponseModel
      */
     protected function sendNonTemplateEmail(Email $email): DynamicResponseModel
     {
         $content     = $email->getContent();
-        $htmlContent = "No message";
-        $textContent = "No message";
+        $htmlContent = 'No message';
+        $textContent = 'No message';
         if ($content instanceof Content\Contracts\SimpleContent) {
             $htmlContent = $content->getHtml() !== null ? $content->getHtml()->getBody() : null;
             $textContent = $content->getText() !== null ? $content->getText()->getBody() : null;
