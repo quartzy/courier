@@ -33,6 +33,7 @@ theme:
     primary: 'orange'
     accent: 'blue'
   favicon: 'images/favicon.jpg'
+  logo: 'images/logo.png'
 
 pages:
   - Home: index.md
