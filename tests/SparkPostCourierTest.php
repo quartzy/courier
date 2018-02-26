@@ -310,14 +310,14 @@ class SparkPostCourierTest extends TestCase
                 'inline_images' => [
                     [
                         'name' => 'inline',
-                        'type' => mime_content_type(self::$file) . '; charset="utf-8"',
+                        'type' => mime_content_type(self::$file) . '; name="image.jpg"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
                 'attachments'   => [
                     [
                         'name' => 'file name.txt',
-                        'type' => mime_content_type(self::$file) . '; charset="UTF-16"',
+                        'type' => mime_content_type(self::$file) . '; name="file name.txt"; charset="UTF-16"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
@@ -402,7 +402,7 @@ class SparkPostCourierTest extends TestCase
                 'attachments'   => [
                     [
                         'name' => 'file name.txt',
-                        'type' => mime_content_type(self::$file) . '; charset="utf-8"',
+                        'type' => mime_content_type(self::$file) . '; name="file name.txt"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
@@ -493,7 +493,7 @@ class SparkPostCourierTest extends TestCase
                 'attachments'   => [
                     [
                         'name' => 'file name.txt',
-                        'type' => mime_content_type(self::$file) . '; charset="utf-8"',
+                        'type' => mime_content_type(self::$file) . '; name="file name.txt"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
@@ -631,14 +631,14 @@ class SparkPostCourierTest extends TestCase
                 'inline_images' => [
                     [
                         'name' => 'inline',
-                        'type' => mime_content_type(self::$file) . '; charset="utf-8"',
+                        'type' => mime_content_type(self::$file) . '; name="sparkpost_attachment_test.txt"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
                 'attachments'   => [
                     [
                         'name' => basename(self::$file),
-                        'type' => mime_content_type(self::$file) . '; charset="utf-8"',
+                        'type' => mime_content_type(self::$file) . '; name="sparkpost_attachment_test.txt"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],

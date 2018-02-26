@@ -68,7 +68,7 @@ class PostmarkCourierTest extends TestCase
             ->cc('copy@test.com')
             ->bcc('blind.copy@test.com')
             ->replyTo('reply.to@test.com', 'Replier')
-            ->attach(new FileAttachment(self::$file, 'Test File'))
+            ->attach(FileAttachment::fromFile(self::$file, 'Test File')->setCharset('utf-8'))
             ->embed(new FileAttachment(self::$file, 'image.jpg'), 'inline')
             ->addHeader('X-Test-Header', 'test')
             ->build();
@@ -91,13 +91,13 @@ class PostmarkCourierTest extends TestCase
                 [
                     [
                         'Content'     => base64_encode('Attachment file'),
-                        'ContentType' => mime_content_type(self::$file) . '; charset="utf-8"',
+                        'ContentType' => mime_content_type(self::$file) . '; name="Test File"; charset="utf-8"',
                         'Name'        => 'Test File',
                         'ContentID'   => null,
                     ],
                     [
                         'Content'     => base64_encode('Attachment file'),
-                        'ContentType' => mime_content_type(self::$file) . '; charset="utf-8"',
+                        'ContentType' => mime_content_type(self::$file) . '; name="image.jpg"',
                         'Name'        => 'image.jpg',
                         'ContentID'   => 'inline',
                     ],
@@ -200,13 +200,13 @@ class PostmarkCourierTest extends TestCase
                 [
                     [
                         'Content'     => base64_encode('Attachment file'),
-                        'ContentType' => mime_content_type(self::$file) . '; charset="utf-16"',
+                        'ContentType' => mime_content_type(self::$file) . '; name="Test File"; charset="utf-16"',
                         'Name'        => 'Test File',
                         'ContentID'   => null,
                     ],
                     [
                         'Content'     => base64_encode('Attachment file'),
-                        'ContentType' => mime_content_type(self::$file) . '; charset="utf-8"',
+                        'ContentType' => mime_content_type(self::$file) . '; name="image.jpg"',
                         'Name'        => 'image.jpg',
                         'ContentID'   => 'inline',
                     ],
