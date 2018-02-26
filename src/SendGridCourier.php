@@ -298,6 +298,7 @@ class SendGridCourier implements ConfirmingCourier
             $sendGridAttachment = new SendGrid\Attachment();
             $sendGridAttachment->setFilename($attachment->getName());
             $sendGridAttachment->setContent($attachment->getBase64Content());
+            $sendGridAttachment->setType($attachment->getContentType());
 
             $attachments[] = $sendGridAttachment;
         }
@@ -306,6 +307,7 @@ class SendGridCourier implements ConfirmingCourier
             $sendGridAttachment = new SendGrid\Attachment();
             $sendGridAttachment->setFilename($attachment->getName());
             $sendGridAttachment->setContent($attachment->getBase64Content());
+            $sendGridAttachment->setType($attachment->getContentType());
             $sendGridAttachment->setContentID($attachment->getContentId());
             $sendGridAttachment->setDisposition('inline');
 

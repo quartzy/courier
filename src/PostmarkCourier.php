@@ -212,10 +212,12 @@ class PostmarkCourier implements ConfirmingCourier
     protected function buildAttachments(Email $email): array
     {
         return array_map(function (Attachment $attachment) {
+            $contentType = sprintf('%s; charset="%s"', $attachment->getContentType(), $attachment->getCharset());
+
             return [
                 'Name'        => $attachment->getName(),
                 'Content'     => $attachment->getBase64Content(),
-                'ContentType' => $attachment->getContentType(),
+                'ContentType' => $contentType,
                 'ContentID'   => $attachment->getContentId(),
             ];
         }, array_merge($email->getAttachments(), $email->getEmbedded()));
