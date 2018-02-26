@@ -35,6 +35,16 @@ $email = EmailBuilder::email()
 $courier->deliver($email);
 ```
 
+## Notes on Headers
+
+At this time, custom headers are only sent on `SimpleContent` emails or
+`TemplatedContent` emails that include an attachment.
+
+SparkPost does not currently support sending headers on stored template emails.
+There is currently not a known release date for when this might get fixed, but
+Courier is ready whenever it does and already sends the `headers` value with all
+headers defined on the `Email`.
+
 ## Notes for SparkPost Templates
 
 SparkPost allows users to define templated keys in the from, reply to, and
