@@ -1,0 +1,47 @@
+# Project information
+site_name: 'Courier'
+site_description: 'A domain-driven library for sending transactional emails in PHP'
+site_author: 'Quartzy'
+site_url: ''
+
+# Repository
+repo_name: 'quartzy/courier'
+repo_url: 'https://github.com/quartzy/courier'
+
+# Copyright
+copyright: 'Copyright &copy; 2017-2018 Quartzy'
+
+# Customization
+extra:
+  social:
+    - type: 'github'
+      link: 'https://github.com/quartzy'
+    - type: 'twitter'
+      link: 'https://twitter.com/quartzy'
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite:
+        guess_lang: false
+  - toc:
+      permalink: true
+
+theme:
+  name: 'material'
+  palette:
+    primary: 'orange'
+    accent: 'blue'
+  favicon: 'images/favicon.jpg'
+  logo: 'images/logo.png'
+
+pages:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Example Usage: getting-started/example-usage.md
+    - Couriers: getting-started/couriers.md
+  - Couriers:
+    - Postmark: couriers/postmark.md
+    - SendGrid: couriers/sendgrid.md
+    - SparkPost: couriers/sparkpost.md
