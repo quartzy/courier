@@ -91,16 +91,17 @@ class SparkPostCourierTest extends TestCase
 
         $expectedArray = [
             'content' => [
-                'from' => [
+                'from'          => [
                     'name'  => null,
                     'email' => 'sender@test.com',
                 ],
-                'subject'     => 'Subject',
-                'html'        => null,
-                'text'        => 'This is a test email',
-                'attachments' => [],
-                'reply_to'    => null,
-                'headers'     => [],
+                'subject'       => 'Subject',
+                'html'          => null,
+                'text'          => 'This is a test email',
+                'inline_images' => [],
+                'attachments'   => [],
+                'reply_to'      => null,
+                'headers'       => [],
             ],
             'recipients' => [
                 [
@@ -133,16 +134,17 @@ class SparkPostCourierTest extends TestCase
 
         $expectedArray = [
             'content' => [
-                'from' => [
+                'from'          => [
                     'name'  => null,
                     'email' => 'sender@test.com',
                 ],
-                'subject'     => 'Subject',
-                'html'        => '',
-                'text'        => '',
-                'attachments' => [],
-                'reply_to'    => null,
-                'headers'     => [],
+                'subject'       => 'Subject',
+                'html'          => '',
+                'text'          => '',
+                'inline_images' => [],
+                'attachments'   => [],
+                'reply_to'      => null,
+                'headers'       => [],
             ],
             'recipients' => [
                 [
@@ -271,7 +273,9 @@ class SparkPostCourierTest extends TestCase
             [new Address('recipient@test.com')]
         );
 
-        $email->addAttachments(new FileAttachment(self::$file, 'file name.txt'));
+        $email
+            ->addAttachments(new FileAttachment(self::$file, 'file name.txt'))
+            ->embed(new FileAttachment(self::$file, 'image.jpg'), 'inline');
 
         $expectedTemplate = [
             'results' => [
@@ -296,22 +300,29 @@ class SparkPostCourierTest extends TestCase
 
         $expectedArray = [
             'content' => [
-                'from' => [
+                'from'          => [
                     'email' => 'template.sender@test.com',
                     'name'  => 'Template Address',
                 ],
-                'subject'     => 'Template Subject',
-                'html'        => 'This is a template html test',
-                'text'        => null,
-                'attachments' => [
+                'subject'       => 'Template Subject',
+                'html'          => 'This is a template html test',
+                'text'          => null,
+                'inline_images' => [
+                    [
+                        'name' => 'inline',
+                        'type' => mime_content_type(self::$file),
+                        'data' => base64_encode(file_get_contents(self::$file)),
+                    ],
+                ],
+                'attachments'   => [
                     [
                         'name' => 'file name.txt',
                         'type' => mime_content_type(self::$file),
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
-                'reply_to' => '"Template Replier" <template.replier@test.com>',
-                'headers'  => [
+                'reply_to'      => '"Template Replier" <template.replier@test.com>',
+                'headers'       => [
                     'X-Header' => 'test',
                 ],
             ],
@@ -380,22 +391,23 @@ class SparkPostCourierTest extends TestCase
 
         $expectedArray = [
             'content' => [
-                'from' => [
+                'from'          => [
                     'email' => 'template.sender@test.com',
                     'name'  => 'Template Address',
                 ],
-                'subject'     => 'Template Subject',
-                'html'        => 'This is a template html test',
-                'text'        => null,
-                'attachments' => [
+                'subject'       => 'Template Subject',
+                'html'          => 'This is a template html test',
+                'text'          => null,
+                'inline_images' => [],
+                'attachments'   => [
                     [
                         'name' => 'file name.txt',
                         'type' => mime_content_type(self::$file),
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
-                'reply_to' => '"Template Replier" <template.replier@test.com>',
-                'headers'  => [
+                'reply_to'      => '"Template Replier" <template.replier@test.com>',
+                'headers'       => [
                     'X-Header' => 'test',
                     'CC'       => 'cc@test.com',
                 ],
@@ -470,22 +482,23 @@ class SparkPostCourierTest extends TestCase
 
         $expectedArray = [
             'content' => [
-                'from' => [
+                'from'          => [
                     'email' => 'sender@test.com',
                     'name'  => null,
                 ],
-                'subject'     => 'Template Subject',
-                'html'        => 'This is a template html test',
-                'text'        => null,
-                'attachments' => [
+                'subject'       => 'Template Subject',
+                'html'          => 'This is a template html test',
+                'text'          => null,
+                'inline_images' => [],
+                'attachments'   => [
                     [
                         'name' => 'file name.txt',
                         'type' => mime_content_type(self::$file),
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
-                'reply_to' => 'dynamic@replyto.com',
-                'headers'  => [
+                'reply_to'      => 'dynamic@replyto.com',
+                'headers'       => [
                     'X-Header' => 'test',
                 ],
             ],
@@ -599,29 +612,37 @@ class SparkPostCourierTest extends TestCase
         $email->setCcRecipients(new Address('cc@test.com', 'CC'));
         $email->setBccRecipients(new Address('bcc@test.com', 'BCC'));
         $email->setAttachments(new FileAttachment(self::$file));
+        $email->embed(new FileAttachment(self::$file), 'inline');
         $email->setHeaders(new Header('X-Test-Header', 'test'));
 
         $expectedArray = [
             'content' => [
-                'from' => [
+                'from'          => [
                     'name'  => null,
                     'email' => 'sender@test.com',
                 ],
-                'headers' => [
+                'headers'       => [
                     'CC'            => '"CC" <cc@test.com>',
                     'X-Test-Header' => 'test',
                 ],
-                'subject'     => 'This is the Subject',
-                'html'        => 'This is the html email',
-                'text'        => 'This is the text email',
-                'attachments' => [
+                'subject'       => 'This is the Subject',
+                'html'          => 'This is the html email',
+                'text'          => 'This is the text email',
+                'inline_images' => [
+                    [
+                        'name' => 'inline',
+                        'type' => mime_content_type(self::$file),
+                        'data' => base64_encode(file_get_contents(self::$file)),
+                    ],
+                ],
+                'attachments'   => [
                     [
                         'name' => basename(self::$file),
                         'type' => mime_content_type(self::$file),
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
-                'reply_to' => 'replyTo@test.com',
+                'reply_to'      => 'replyTo@test.com',
             ],
             'recipients' => [
                 [
@@ -666,16 +687,17 @@ class SparkPostCourierTest extends TestCase
 
         $expectedArray = [
             'content' => [
-                'from' => [
+                'from'          => [
                     'name'  => null,
                     'email' => 'sender@test.com',
                 ],
-                'subject'     => 'Subject',
-                'html'        => '',
-                'text'        => '',
-                'attachments' => [],
-                'reply_to'    => null,
-                'headers'     => [],
+                'subject'       => 'Subject',
+                'html'          => '',
+                'text'          => '',
+                'inline_images' => [],
+                'attachments'   => [],
+                'reply_to'      => null,
+                'headers'       => [],
             ],
             'recipients' => [
                 [

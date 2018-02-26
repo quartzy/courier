@@ -8,7 +8,6 @@ use Courier\Exceptions\TransmissionException;
 use Courier\Exceptions\UnsupportedContentException;
 use Courier\Exceptions\ValidationException;
 use PhpEmail\Address;
-use PhpEmail\Attachment;
 use PhpEmail\Content;
 use PhpEmail\Email;
 use Psr\Log\LoggerInterface;
@@ -36,13 +35,14 @@ class SparkPostCourier implements ConfirmingCourier
     const REPLY_TO          = 'reply_to';
     const SUBSTITUTION_DATA = 'substitution_data';
 
-    const CONTENT     = 'content';
-    const FROM        = 'from';
-    const SUBJECT     = 'subject';
-    const HTML        = 'html';
-    const TEXT        = 'text';
-    const ATTACHMENTS = 'attachments';
-    const TEMPLATE_ID = 'template_id';
+    const CONTENT       = 'content';
+    const FROM          = 'from';
+    const SUBJECT       = 'subject';
+    const HTML          = 'html';
+    const TEXT          = 'text';
+    const INLINE_IMAGES = 'inline_images';
+    const ATTACHMENTS   = 'attachments';
+    const TEMPLATE_ID   = 'template_id';
 
     const HEADERS   = 'headers';
     const CC_HEADER = 'CC';
@@ -324,12 +324,6 @@ class SparkPostCourier implements ConfirmingCourier
      */
     protected function buildSimpleContent(Email $email): array
     {
-        $attachments = [];
-
-        foreach ($email->getAttachments() as $attachment) {
-            $attachments[] = $this->buildAttachment($attachment);
-        }
-
         $replyTo = null;
         if (!empty($email->getReplyTos())) {
             // SparkPost only supports a single reply-to
@@ -343,15 +337,16 @@ class SparkPostCourier implements ConfirmingCourier
         $emailContent = $email->getContent();
 
         $content = [
-            self::FROM => [
+            self::FROM          => [
                 self::CONTACT_NAME  => $email->getFrom()->getName(),
                 self::CONTACT_EMAIL => $email->getFrom()->getEmail(),
             ],
-            self::SUBJECT     => $email->getSubject(),
-            self::HTML        => $emailContent->getHtml() !== null ? $emailContent->getHtml()->getBody() : null,
-            self::TEXT        => $emailContent->getText() !== null ? $emailContent->getText()->getBody() : null,
-            self::ATTACHMENTS => $attachments,
-            self::REPLY_TO    => $replyTo,
+            self::SUBJECT       => $email->getSubject(),
+            self::HTML          => $emailContent->getHtml() !== null ? $emailContent->getHtml()->getBody() : null,
+            self::TEXT          => $emailContent->getText() !== null ? $emailContent->getText()->getBody() : null,
+            self::ATTACHMENTS   => $this->buildAttachments($email),
+            self::INLINE_IMAGES => $this->buildInlineAttachments($email),
+            self::REPLY_TO      => $replyTo,
         ];
 
         $content[self::HEADERS] = $this->getContentHeaders($email);
@@ -425,17 +420,43 @@ class SparkPostCourier implements ConfirmingCourier
     }
 
     /**
-     * @param Attachment $attachment
+     * @param Email $email
      *
      * @return array
      */
-    private function buildAttachment(Attachment $attachment): array
+    private function buildAttachments(Email $email): array
     {
-        return [
-            self::ATTACHMENT_NAME => $attachment->getName(),
-            self::ATTACHMENT_TYPE => $attachment->getContentType(),
-            self::ATTACHMENT_DATA => $attachment->getBase64Content(),
-        ];
+        $attachments = [];
+
+        foreach ($email->getAttachments() as $attachment) {
+            $attachments[] = [
+                self::ATTACHMENT_NAME => $attachment->getName(),
+                self::ATTACHMENT_TYPE => $attachment->getContentType(),
+                self::ATTACHMENT_DATA => $attachment->getBase64Content(),
+            ];
+        }
+
+        return $attachments;
+    }
+
+    /**
+     * @param Email $email
+     *
+     * @return array
+     */
+    private function buildInlineAttachments(Email $email): array
+    {
+        $inlineAttachments = [];
+
+        foreach ($email->getEmbedded() as $embedded) {
+            $inlineAttachments[] = [
+                self::ATTACHMENT_NAME => $embedded->getContentId(),
+                self::ATTACHMENT_TYPE => $embedded->getContentType(),
+                self::ATTACHMENT_DATA => $embedded->getBase64Content(),
+            ];
+        }
+
+        return $inlineAttachments;
     }
 
     /**

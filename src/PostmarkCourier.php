@@ -216,8 +216,9 @@ class PostmarkCourier implements ConfirmingCourier
                 'Name'        => $attachment->getName(),
                 'Content'     => $attachment->getBase64Content(),
                 'ContentType' => $attachment->getContentType(),
+                'ContentID'   => $attachment->getContentId(),
             ];
-        }, $email->getAttachments());
+        }, array_merge($email->getAttachments(), $email->getEmbedded()));
     }
 
     /**

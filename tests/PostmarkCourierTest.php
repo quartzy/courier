@@ -69,6 +69,7 @@ class PostmarkCourierTest extends TestCase
             ->bcc('blind.copy@test.com')
             ->replyTo('reply.to@test.com', 'Replier')
             ->attach(new FileAttachment(self::$file, 'Test File'))
+            ->embed(new FileAttachment(self::$file, 'image.jpg'), 'inline')
             ->addHeader('X-Test-Header', 'test')
             ->build();
 
@@ -92,6 +93,13 @@ class PostmarkCourierTest extends TestCase
                         'Content'     => base64_encode('Attachment file'),
                         'ContentType' => mime_content_type(self::$file),
                         'Name'        => 'Test File',
+                        'ContentID'   => null,
+                    ],
+                    [
+                        'Content'     => base64_encode('Attachment file'),
+                        'ContentType' => mime_content_type(self::$file),
+                        'Name'        => 'image.jpg',
+                        'ContentID'   => 'inline',
                     ],
                 ],
                 null
@@ -166,6 +174,7 @@ class PostmarkCourierTest extends TestCase
             ->bcc('blind.copy@test.com')
             ->replyTo('reply.to@test.com', 'Replier')
             ->attach(new FileAttachment(self::$file, 'Test File'))
+            ->embed(new FileAttachment(self::$file, 'image.jpg'), 'inline')
             ->addHeader('X-Test-Header', 'test')
             ->build();
 
@@ -193,6 +202,13 @@ class PostmarkCourierTest extends TestCase
                         'Content'     => base64_encode('Attachment file'),
                         'ContentType' => mime_content_type(self::$file),
                         'Name'        => 'Test File',
+                        'ContentID'   => null,
+                    ],
+                    [
+                        'Content'     => base64_encode('Attachment file'),
+                        'ContentType' => mime_content_type(self::$file),
+                        'Name'        => 'image.jpg',
+                        'ContentID'   => 'inline',
                     ],
                 ],
                 null
