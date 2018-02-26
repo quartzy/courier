@@ -8,11 +8,19 @@
 [![Style Status][ico-styleci]][link-styleci]
 [![Scrutinizer Code Quality][ico-scrutinizer]][link-scrutinizer]
 
-A transactional email sending library built on the idea of third-party email senders, using php-email domain objects and drivers for each sender.
+A library to send transactional emails using domain objects and concise
+interfaces.
 
-Let's face it, most developers don't want to spend their time writing code that renders email templates. In fact, most don't even want to deal with the templates at all. That is what makes the features of third-party emailing services (a la SendGrid, SparkPost, Postmark, etc), such as reporting, template storing/rendering, retries, etc, so wonderful. These features allow the people that care the most about the emails own them, while developers can focus on other matters. Each service provider has their own way of implementing their API though, making it difficult to switch providers if one starts to let you down.
+Check out the [documentation](https://courier.netlify.com) for more details on
+how to use Courier!
 
-The goal of this library is to provide the ability to send standardized emails without having to reinvent the wheel each time you want to change third party providers. By leveraging a standardized domain model (php-email) for defining our emails, this library is capable of defining drivers (or "couriers" in our case) that allow the developer to easily switch out service providers without changing any part of their code. 
+This library provides tools to send standardized emails using third-party SaaS
+SMTP providers like SparkPost and Postmark without having to reinvent the wheel.
+By leveraging a [standardized domain
+model](https://github.com/quartzy/php-email) for defining our emails, Courier is
+capable of defining drivers (or "couriers" in our case) that allow the developer
+to easily switch out how they send their emails without changing any part of
+their code that builds and delivers the email.
 
 ## Install
 
@@ -53,147 +61,14 @@ $email = EmailBuilder::email()
 $courier->deliver($email);
 ```
 
-For details on building the email objects, see the [Php Email](https://github.com/quartzy/php-email).
+For details on building the email objects, see [Php Email](https://github.com/quartzy/php-email).
 
 
-### Supported Service Providers
+## Supported Service Providers
 
 1. SendGrid (using v3 Web API)
 1. SparkPost
 1. Postmark
-
-#### SendGrid
-
-The SendGrid courier supports both templated and simple emails. To use the SendGrid courier, you will need an API key with the following permissions:
-
-* `Mail Send - Full Access`
-
-You will also need to include `sendgrid/sendgrid` into your dependencies. You can then make a SendGrid courier like so:
-
-```php
-<?php
-
-use Courier\SendGridCourier;
-
-$courier = new SendGridCourier(new \SendGrid("mysendgridkey"));
-```
-
-##### Note on Charset
-
-SendGrid does not support adding `; charset="x"` when defining the type of an
-attachment, as such, whatever value is defined on the `Email` will be ignored
-when preparing the delivery for SendGrid.
-
-#### SparkPost
-
-The SparkPost courier supports both templated and simple emails. To use the SparkPost courier, you will need an API key with the following permissions:
-
-* `Transmissions: Read/Write`
-* `Templates: Read-only`
-
-You should follow the steps documented in the [SparkPost PHP](https://github.com/SparkPost/php-sparkpost) project for details on how to build a SparkPost client and pass it into a `SparkPostCourier`:
-
-```php
-<?php
-
-use Courier\SparkPostCourier;
-use GuzzleHttp\Client;
-use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
-use PhpEmail\Content\TemplatedContent;
-use PhpEmail\EmailBuilder;
-use SparkPost\SparkPost;
-
-new Client();
-
-$courier = new SparkPostCourier(
-    new SparkPost(new GuzzleAdapter(new Client()), ['key'=>'YOUR_API_KEY'])
-);
-
-$email = EmailBuilder::email()
-    ->from('test@mybiz.com')
-    ->to('loyal.customer@email.com')
-    ->replyTo('test@mybiz.com', 'Your Sales Rep')
-    ->withSubject('Welcome!')
-    ->withContent(new TemplatedContent('my_email', ['testKey' => 'value']))
-    ->build();
-
-$courier->deliver($email);
-```
-
-##### Notes on Headers
-
-At this time, custom headers are only sent on `SimpleContent` emails or
-`TemplatedContent` emails that include an attachment.
-
-SparkPost does not currently support sending headers on stored template emails.
-There is currently not a known release date for when this might get fixed, but
-Courier is ready whenever it does and already sends the `headers` value with all
-headers defined on the `Email`.
-
-##### Notes for SparkPost Templates
-
-SparkPost allows users to define templated keys in the from, reply to, and subject fields along with the body. In order to make your courier work as expected, the library will automatically created the following template values based on the properties of the `Email`:
-
-* `fromEmail`
-* `fromDomain`
-* `fromName`
-* `replyTo`
-* `subject`
-* `ccHeader`
-
-These will be added to the template data already defined in the `TemplatedContent` assuming the keys are not already set manually.
-
-##### Temporary fix for correctly displaying CC header
-
-As documented in this [post](https://www.sparkpost.com/docs/faq/cc-bcc-with-rest-api/), the SparkPost API requires sending the `CC` header information in order to properly display recipients. In the context of inline templates and non-templated emails, setting this header works fine. However, if sending a standard templated email, SparkPost's API does not respect the `CC` header. To work around this, Courier will set the `ccHeader` variable in the substitution data to what the value _should_ be. In order to leverage this variable, you will need to update your template using the API (the header attributes are not available in the web editor) to include the value. This can be done with a request like:
-
-```javascript
-// PUT https://api.sparkpost.com/api/v1/templates/my-template-id
-
-{
-  "content": {
-    // All of your other content must go here as this PUT will overwrite all other content
-    "headers": {
-      "CC": "{{ccHeader}}"
-    }
-  }
-}
-
-```
-
-#### Postmark
-
-The Postmark courier supports both templated and simple emails.
-
-To create a Postmark courier, you should follow the steps documented in the [Postmark PHP](https://github.com/wildbit/postmark-php/wiki/Getting-Started) docs to create a client and pass it into the `PostmarkCourier`.
-
-```php
-<?php
-
-use Courier\PostmarkCourier;
-use GuzzleHttp\Client;
-use PhpEmail\Content\TemplatedContent;
-use PhpEmail\EmailBuilder;
-use Postmark\PostmarkClient;
-
-new Client();
-
-$courier = new PostmarkCourier(new PostmarkClient('MY_KEY'));
-        
-$email = EmailBuilder::email()
-    ->from('test@mybiz.com')
-    ->to('loyal.customer@email.com')
-    ->replyTo('test@mybiz.com', 'Your Sales Rep')
-    ->withSubject('Welcome!')
-    ->withContent(new TemplatedContent('my_email', ['testKey' => 'value']))
-    ->build();
-
-$courier->deliver($email);
-```
-
-##### Notes for Postmark Templates
-
-Postmark allows users to define template keys in the subject of templated emails. To support this functionality, the courier will pass the `subject` of the `Email` into the template variables with the key `subject`.
 
 ## Change log
 
