@@ -78,6 +78,12 @@ use Courier\SendGridCourier;
 $courier = new SendGridCourier(new \SendGrid("mysendgridkey"));
 ```
 
+##### Note on Charset
+
+SendGrid does not support adding `; charset="x"` when defining the type of an
+attachment, as such, whatever value is defined on the `Email` will be ignored
+when preparing the delivery for SendGrid.
+
 #### SparkPost
 
 The SparkPost courier supports both templated and simple emails. To use the SparkPost courier, you will need an API key with the following permissions:

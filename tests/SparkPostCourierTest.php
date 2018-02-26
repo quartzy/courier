@@ -274,7 +274,7 @@ class SparkPostCourierTest extends TestCase
         );
 
         $email
-            ->addAttachments(new FileAttachment(self::$file, 'file name.txt'))
+            ->addAttachments(new FileAttachment(self::$file, 'file name.txt', null, null, 'UTF-16'))
             ->embed(new FileAttachment(self::$file, 'image.jpg'), 'inline');
 
         $expectedTemplate = [
@@ -310,14 +310,14 @@ class SparkPostCourierTest extends TestCase
                 'inline_images' => [
                     [
                         'name' => 'inline',
-                        'type' => mime_content_type(self::$file),
+                        'type' => mime_content_type(self::$file) . '; name="image.jpg"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
                 'attachments'   => [
                     [
                         'name' => 'file name.txt',
-                        'type' => mime_content_type(self::$file),
+                        'type' => mime_content_type(self::$file) . '; name="file name.txt"; charset="UTF-16"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
@@ -402,7 +402,7 @@ class SparkPostCourierTest extends TestCase
                 'attachments'   => [
                     [
                         'name' => 'file name.txt',
-                        'type' => mime_content_type(self::$file),
+                        'type' => mime_content_type(self::$file) . '; name="file name.txt"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
@@ -493,7 +493,7 @@ class SparkPostCourierTest extends TestCase
                 'attachments'   => [
                     [
                         'name' => 'file name.txt',
-                        'type' => mime_content_type(self::$file),
+                        'type' => mime_content_type(self::$file) . '; name="file name.txt"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
@@ -631,14 +631,14 @@ class SparkPostCourierTest extends TestCase
                 'inline_images' => [
                     [
                         'name' => 'inline',
-                        'type' => mime_content_type(self::$file),
+                        'type' => mime_content_type(self::$file) . '; name="sparkpost_attachment_test.txt"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],
                 'attachments'   => [
                     [
                         'name' => basename(self::$file),
-                        'type' => mime_content_type(self::$file),
+                        'type' => mime_content_type(self::$file) . '; name="sparkpost_attachment_test.txt"',
                         'data' => base64_encode(file_get_contents(self::$file)),
                     ],
                 ],

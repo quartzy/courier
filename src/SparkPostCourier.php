@@ -431,7 +431,7 @@ class SparkPostCourier implements ConfirmingCourier
         foreach ($email->getAttachments() as $attachment) {
             $attachments[] = [
                 self::ATTACHMENT_NAME => $attachment->getName(),
-                self::ATTACHMENT_TYPE => $attachment->getContentType(),
+                self::ATTACHMENT_TYPE => $attachment->getRfc2822ContentType(),
                 self::ATTACHMENT_DATA => $attachment->getBase64Content(),
             ];
         }
@@ -451,7 +451,7 @@ class SparkPostCourier implements ConfirmingCourier
         foreach ($email->getEmbedded() as $embedded) {
             $inlineAttachments[] = [
                 self::ATTACHMENT_NAME => $embedded->getContentId(),
-                self::ATTACHMENT_TYPE => $embedded->getContentType(),
+                self::ATTACHMENT_TYPE => $embedded->getRfc2822ContentType(),
                 self::ATTACHMENT_DATA => $embedded->getBase64Content(),
             ];
         }

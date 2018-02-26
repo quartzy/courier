@@ -194,12 +194,14 @@ class SendGridCourierTest extends TestCase
         $attachment = new SendGrid\Attachment();
         $attachment->setContent(base64_encode(file_get_contents(self::$file)));
         $attachment->setFilename('file name.txt');
+        $attachment->setType(mime_content_type(self::$file));
 
         $inlineAttachment = new SendGrid\Attachment();
         $inlineAttachment->setContent(base64_encode(file_get_contents(self::$file)));
         $inlineAttachment->setFilename('image.jpg');
         $inlineAttachment->setContentID('inline');
         $inlineAttachment->setDisposition('inline');
+        $inlineAttachment->setType(mime_content_type(self::$file));
 
         $expectedEmail = new Mail();
         $expectedEmail->setSubject('This is the Subject');

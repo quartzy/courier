@@ -11,6 +11,7 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 * Send custom headers defined on the `Email` (caveat on SparkPost templated emails in readme).
 * Add inline attachments defined on the `Email`
+* Add charset to attachments for all couriers that support it
 
 ### Changed
 
