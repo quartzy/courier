@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# This is limited to a single version to avoid deploying the docs multiple times in a single build matrix
 if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then
   git config user.name ${GH_USER_NAME}
   git config user.email ${GH_USER_EMAIL}
