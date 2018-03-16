@@ -28,4 +28,4 @@ deploy:
   keep-history: true
   local-dir: site
   on:
-    branch: fix-doc-builds
+    branch: master
