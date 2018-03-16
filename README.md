@@ -11,7 +11,7 @@
 A library to send transactional emails using domain objects and concise
 interfaces.
 
-Check out the [documentation](https://courier.netlify.com) for more details on
+Check out the [documentation](https://quartzy.github.io/courier/) for more details on
 how to use Courier!
 
 This library provides tools to send standardized emails using third-party SaaS
