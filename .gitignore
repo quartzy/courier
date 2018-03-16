@@ -7,3 +7,4 @@
 reports
 coverage.xml
 junit.xml
+.env

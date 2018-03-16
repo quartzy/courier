@@ -10,6 +10,12 @@
             "role": "Developer"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/quartzy/mailslurp-swagger.git"
+        }
+    ],
     "require": {
         "php": "^7.1",
         "psr/log": "^1.0",
@@ -22,7 +28,10 @@
         "php-http/guzzle6-adapter": "^1.1",
         "sparkpost/sparkpost": "^2.1",
         "mockery/mockery": "^0.9.8",
-        "wildbit/postmark-php": "^2.3"
+        "wildbit/postmark-php": "^2.3",
+        "vlucas/phpdotenv": "^2.4",
+        "quartzy/mailslurp-swagger": "dev-master@dev",
+        "zbateson/mail-mime-parser": "^0.4.8"
     },
     "suggest": {
         "sendgrid/sendgrid": "To use the SendGridCourier",

@@ -255,11 +255,15 @@ class SendGridCourier implements ConfirmingCourier
         SendGrid\Mail $email,
         Content\Contracts\SimpleContent $content
     ): SendGrid\Response {
+        if ($content->getText() !== null) {
+            $email->addContent(new SendGrid\Content('text/plain', $content->getText()->getBody()));
+        }
+
         if ($content->getHtml() !== null) {
             $email->addContent(new SendGrid\Content('text/html', $content->getHtml()->getBody()));
-        } elseif ($content->getText() !== null) {
-            $email->addContent(new SendGrid\Content('text/plain', $content->getText()->getBody()));
-        } else {
+        }
+
+        if ($content->getHtml() === null && $content->getText() === null) {
             $email->addContent(new SendGrid\Content('text/plain', ''));
         }
 
