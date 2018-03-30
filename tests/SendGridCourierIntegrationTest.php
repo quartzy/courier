@@ -95,9 +95,6 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
         // @TODO MailSlurp doesn't yet support BCC, but will soon //$message = $this->getLatestEmail($bccInbox);
     }
 
-    /**
-     * @group test
-     */
     public function testSendsTemplatedEmail()
     {
         $inbox    = $this->createInbox();
