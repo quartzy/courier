@@ -11,7 +11,6 @@ use PhpEmail\Content\SimpleContent;
 use PhpEmail\Content\TemplatedContent;
 use PhpEmail\EmailBuilder;
 use Postmark\PostmarkClient;
-use ZBateson\MailMimeParser\Message\PartFilter;
 
 /**
  * @covers \Courier\PostmarkCourier
@@ -52,8 +51,8 @@ class PostmarkCourierIntegrationTest extends IntegrationTestCase
 
     public function testSendsInlineEmail()
     {
-        $inbox = $this->createInbox();
-        $ccInbox = $this->createInbox();
+        $inbox    = $this->createInbox();
+        $ccInbox  = $this->createInbox();
         $bccInbox = $this->createInbox();
 
         $email = EmailBuilder::email()
@@ -99,8 +98,8 @@ class PostmarkCourierIntegrationTest extends IntegrationTestCase
 
     public function testSendsTemplatedEmail()
     {
-        $inbox = $this->createInbox();
-        $ccInbox = $this->createInbox();
+        $inbox    = $this->createInbox();
+        $ccInbox  = $this->createInbox();
         $bccInbox = $this->createInbox();
 
         $email = EmailBuilder::email()
