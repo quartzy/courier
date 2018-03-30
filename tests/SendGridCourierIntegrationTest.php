@@ -23,7 +23,7 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
     /**
      * @var string
      */
-    private static $file = '/tmp/sparkpost_attachment_test.txt';
+    private static $file = '/tmp/attachment_test.txt';
 
     /**
      * @var SparkPostCourier
@@ -117,12 +117,12 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
                 getenv('SEND_GRID_TEMPLATE_ID'),
                 [
                     '--html--' => 'HTML<img src="cid:embed-test"/>',
-                    '--text--' => '',
+                    '--text--' => 'text',
                 ]
             ))
+            ->attach(new FileAttachment(self::$file, 'Attached File'))
             // @TODO There is a bug with SendGrid that makes templates with multiple attachment dispositions fail
-            //->attach(new FileAttachment(self::$file, 'Attached File'))
-            ->embed(new FileAttachment(self::$file, 'Embedded File'), 'embed-test')
+            //->embed(new FileAttachment(self::$file, 'Embedded File'), 'embed-test')
             ->addHeader('X-test-header', 'Test')
             ->build();
 
@@ -135,9 +135,9 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
         self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
         self::stringStartsWith('HTML', $message->getHtmlContent());
         self::assertEquals('text', trim($message->getTextContent()));
-        self::assertHasEmbeddedWithContentId($message, 'embed-test');
         // @TODO There is a bug with SendGrid that makes templates with multiple attachment dispositions fail
-        //self::assertHasAttachmentWithName($message, 'Attached File');
+        //self::assertHasEmbeddedWithContentId($message, 'embed-test');
+        self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
 
         $message = $this->getLatestEmail($ccInbox);
@@ -147,9 +147,9 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
         self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
         self::assertStringStartsWith('HTML', $message->getHtmlContent());
         self::assertEquals('text', trim($message->getTextContent()));
-        self::assertHasEmbeddedWithContentId($message, 'embed-test');
         // @TODO There is a bug with SendGrid that makes templates with multiple attachment dispositions fail
-        //self::assertHasAttachmentWithName($message, 'Attached File');
+        //self::assertHasEmbeddedWithContentId($message, 'embed-test');
+        self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
 
         // @TODO MailSlurp doesn't yet support BCC, but will soon

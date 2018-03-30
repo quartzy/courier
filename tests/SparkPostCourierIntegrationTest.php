@@ -108,7 +108,7 @@ class SparkPostCourierIntegrationTest extends IntegrationTestCase
             ->bcc($ccInbox->getAddress(), 'BCC')
             ->withSubject('Templated')
             ->withContent(new TemplatedContent(
-                'courier-test-template',
+                getenv('SPARKPOST_TEMPLATE_ID'),
                 [
                     'html' => 'HTML<img src="cid:embed-test"/>',
                     'text' => 'text',
