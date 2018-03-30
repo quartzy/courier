@@ -54,8 +54,8 @@ class SparkPostCourierIntegrationTest extends IntegrationTestCase
 
     public function testSendsInlineEmail()
     {
-        $inbox = $this->createInbox();
-        $ccInbox = $this->createInbox();
+        $inbox    = $this->createInbox();
+        $ccInbox  = $this->createInbox();
         $bccInbox = $this->createInbox();
 
         $email = EmailBuilder::email()
@@ -97,8 +97,8 @@ class SparkPostCourierIntegrationTest extends IntegrationTestCase
 
     public function testSendsTemplatedEmail()
     {
-        $inbox = $this->createInbox();
-        $ccInbox = $this->createInbox();
+        $inbox    = $this->createInbox();
+        $ccInbox  = $this->createInbox();
         $bccInbox = $this->createInbox();
 
         $email = EmailBuilder::email()
