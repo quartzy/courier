@@ -12,6 +12,7 @@ cache:
 install: composer update --prefer-lowest --no-interaction
 
 script:
+  - cp .env.example .env
   - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then phpdbg -qrr vendor/bin/phpunit --exclude-group=large --coverage-clover=coverage.clover; fi'
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.clover; fi'
 
