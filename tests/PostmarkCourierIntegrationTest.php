@@ -77,7 +77,7 @@ class PostmarkCourierIntegrationTest extends IntegrationTestCase
         self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
         self::stringStartsWith('HTML', $message->getHtmlContent());
         self::assertEquals('text', trim($message->getTextContent()));
-        self::assertHasEmbeddedWithContentId($message, 'embed-test');
+        self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
 
@@ -89,7 +89,7 @@ class PostmarkCourierIntegrationTest extends IntegrationTestCase
         self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
         self::stringStartsWith('HTML', $message->getHtmlContent());
         self::assertEquals('text', trim($message->getTextContent()));
-        self::assertHasEmbeddedWithContentId($message, 'embed-test');
+        self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
 
@@ -129,7 +129,7 @@ class PostmarkCourierIntegrationTest extends IntegrationTestCase
         self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
         self::stringStartsWith('HTML', $message->getHtmlContent());
         self::assertEquals('text', trim($message->getTextContent()));
-        self::assertHasEmbeddedWithContentId($message, 'embed-test');
+        self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
 
@@ -140,7 +140,7 @@ class PostmarkCourierIntegrationTest extends IntegrationTestCase
         self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
         self::assertStringStartsWith('HTML', $message->getHtmlContent());
         self::assertEquals('text', trim($message->getTextContent()));
-        self::assertHasEmbeddedWithContentId($message, 'embed-test');
+        self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
 

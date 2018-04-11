@@ -76,7 +76,7 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
         self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
         self::stringStartsWith('HTML', $message->getHtmlContent());
         self::assertEquals('text', trim($message->getTextContent()));
-        self::assertHasEmbeddedWithContentId($message, 'embed-test');
+        self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
 
@@ -88,7 +88,7 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
         self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
         self::stringStartsWith('HTML', $message->getHtmlContent());
         self::assertEquals('text', trim($message->getTextContent()));
-        self::assertHasEmbeddedWithContentId($message, 'embed-test');
+        self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
 
@@ -115,7 +115,7 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
                 ]
             ))
             ->attach(new FileAttachment(self::$file, 'Attached File'))
-            // @TODO There is a bug with SendGrid that makes templates with multiple attachment dispositions fail
+            // @TODO There is a bug with SendGrid that makes templates with multiple attachments fail
             //->embed(new FileAttachment(self::$file, 'Embedded File'), 'embed-test')
             ->addHeader('X-test-header', 'Test')
             ->build();
@@ -129,7 +129,7 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
         self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
         self::stringStartsWith('HTML', $message->getHtmlContent());
         self::assertEquals('text', trim($message->getTextContent()));
-        // @TODO There is a bug with SendGrid that makes templates with multiple attachment dispositions fail
+        // @TODO There is a bug with SendGrid that makes templates with multiple attachments fail
         //self::assertHasEmbeddedWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
@@ -141,7 +141,7 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
         self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
         self::assertStringStartsWith('HTML', $message->getHtmlContent());
         self::assertEquals('text', trim($message->getTextContent()));
-        // @TODO There is a bug with SendGrid that makes templates with multiple attachment dispositions fail
+        // @TODO There is a bug with SendGrid that makes templates with multiple attachments fail
         //self::assertHasEmbeddedWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));

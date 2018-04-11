@@ -57,7 +57,7 @@ class IntegrationTestCase extends TestCase
         }
     }
 
-    protected static function assertHasEmbeddedWithContentId(Message $message, string $contentId): void
+    protected static function assertHasAttachmentWithContentId(Message $message, string $contentId): void
     {
         $parts = $message->getAllParts(
             new Message\PartFilter(
@@ -65,9 +65,6 @@ class IntegrationTestCase extends TestCase
                     'headers' => [
                         Message\PartFilter::FILTER_INCLUDE => [
                             'Content-ID' => sprintf('<%s>', $contentId),
-                            // @TODO Postmark is sending embedded attachment as "attachment" currently, so the function
-                            // isn't finding the expected attachment.
-                            //'Content-Disposition' => 'inline',
                         ],
                     ],
                 ]
