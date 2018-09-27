@@ -1,7 +1,5 @@
 preset: recommended
 
-linting: true
-
 enabled:
   - align_equals
   - concat_with_spaces
