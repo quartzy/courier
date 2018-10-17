@@ -101,7 +101,6 @@ class SparkPostCourierTest extends TestCase
                 'inline_images' => [],
                 'attachments'   => [],
                 'reply_to'      => null,
-                'headers'       => [],
             ],
             'recipients' => [
                 [
@@ -144,7 +143,6 @@ class SparkPostCourierTest extends TestCase
                 'inline_images' => [],
                 'attachments'   => [],
                 'reply_to'      => null,
-                'headers'       => [],
             ],
             'recipients' => [
                 [
@@ -180,7 +178,6 @@ class SparkPostCourierTest extends TestCase
         $expectedArray = [
             'content' => [
                 'template_id' => '1234',
-                'headers'     => [],
             ],
             'substitution_data' => [
                 'test'       => 'value',
@@ -697,7 +694,6 @@ class SparkPostCourierTest extends TestCase
                 'inline_images' => [],
                 'attachments'   => [],
                 'reply_to'      => null,
-                'headers'       => [],
             ],
             'recipients' => [
                 [
