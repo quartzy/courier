@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Courier\Test;
 
-use GuzzleHttp\Client;
 use ZBateson\MailMimeParser\Header\Part\ParameterPart;
 use ZBateson\MailMimeParser\MailMimeParser;
 use ZBateson\MailMimeParser\Message;

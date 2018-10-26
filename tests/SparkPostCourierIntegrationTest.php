@@ -99,7 +99,6 @@ class SparkPostCourierIntegrationTest extends IntegrationTestCase
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
         self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
-
     }
 
     public function testSendsTemplatedEmail()
@@ -158,6 +157,5 @@ class SparkPostCourierIntegrationTest extends IntegrationTestCase
         self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
-
     }
 }
