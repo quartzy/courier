@@ -10,12 +10,6 @@
             "role": "Developer"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/quartzy/mailslurp-swagger.git"
-        }
-    ],
     "require": {
         "php": "^7.1",
         "psr/log": "^1.0",
@@ -30,7 +24,6 @@
         "mockery/mockery": "^0.9.8",
         "wildbit/postmark-php": "^2.3",
         "vlucas/phpdotenv": "^2.4",
-        "quartzy/mailslurp-swagger": "dev-master@dev",
         "zbateson/mail-mime-parser": "^0.4.8"
     },
     "suggest": {

@@ -5,56 +5,40 @@ declare(strict_types=1);
 namespace Courier\Test;
 
 use GuzzleHttp\Client;
-use MailSlurp\Swagger\Api\InboxControllerApi;
-use MailSlurp\Swagger\ApiException;
-use MailSlurp\Swagger\Model\InboxDto;
 use ZBateson\MailMimeParser\Header\Part\ParameterPart;
 use ZBateson\MailMimeParser\MailMimeParser;
 use ZBateson\MailMimeParser\Message;
 
 class IntegrationTestCase extends TestCase
 {
-    /**
-     * @var InboxControllerApi
-     */
-    protected $inboxClient;
-
-    public function setUp(): void
+    protected function getTo(): string
     {
-        parent::setUp();
-
-        $this->inboxClient = new InboxControllerApi(new Client());
+        return getenv('TO_EMAIL');
     }
 
-    protected function createInbox(): ?InboxDto
+    protected function getCc(): string
     {
-        try {
-            return $this->inboxClient->createRandomInboxUsingPOST(getenv('MAIL_SLURP_KEY'))
-                ->getPayload();
-        } catch (ApiException $ae) {
-            self::fail('Unable to create an inbox');
-
-            return null;
-        }
+        return getenv('CC_EMAIL');
     }
 
-    protected function getLatestEmail(InboxDto $inbox): ?Message
+    protected function getBcc(): string
     {
-        try {
-            $parser = new MailMimeParser();
+        return getenv('BCC_EMAIL');
+    }
 
-            $email = $this->inboxClient->getEmailsForInboxUsingGET(
-                getenv('MAIL_SLURP_KEY'),
-                $inbox->getId(),
-                1
-            )->getPayload()[0];
+    protected function getEmailDeliveredToTo(string $subject): ?Message
+    {
+        return $this->getEmailFromMailBox('Courier/To', $subject);
+    }
 
-            return $parser->parse($email->getBody());
-        } catch (ApiException $ae) {
-            self::fail('Unable to retrieve the latest email');
+    protected function getEmailDeliveredToCc(string $subject): ?Message
+    {
+        return $this->getEmailFromMailBox('Courier/CC', $subject);
+    }
 
-            return null;
-        }
+    protected function getEmailDeliveredToBcc(string $subject): ?Message
+    {
+        return $this->getEmailFromMailBox('Courier/BCC', $subject);
     }
 
     protected static function assertHasAttachmentWithContentId(Message $message, string $contentId): void
@@ -104,5 +88,27 @@ class IntegrationTestCase extends TestCase
         }
 
         self::assertEquals(1, count($matching), 'Unable to find an attachment with the name ' . $name);
+    }
+
+    private function getEmailFromMailBox(string $mailBox, string $subject): ?Message
+    {
+        $parser = new MailMimeParser();
+
+        $attempts = 5;
+        while ($attempts > 0) {
+            $conn = imap_open(getenv('IMAP_SERVER') . $mailBox, getenv('IMAP_USERNAME'), getenv('IMAP_PASSWORD'));
+
+            $messages = imap_search($conn, 'SUBJECT "' . $subject . '"');
+
+            if ($messages !== false) {
+                return $parser->parse(imap_fetchbody($conn, $messages[0], ''));
+            }
+
+            $attempts--;
+            imap_close($conn);
+            sleep(2);
+        }
+
+        return null;
     }
 }

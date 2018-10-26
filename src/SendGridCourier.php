@@ -195,7 +195,9 @@ class SendGridCourier implements ConfirmingCourier
             $message->setReplyTo($replyTo);
         }
 
-        $message->attachments = $this->buildAttachments($email);
+        if ($attachments = $this->buildAttachments($email)) {
+            $message->attachments = $attachments;
+        }
 
         foreach ($email->getHeaders() as $header) {
             $message->addHeader($header->getField(), $header->getValue());

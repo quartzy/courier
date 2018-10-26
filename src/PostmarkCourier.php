@@ -173,7 +173,7 @@ class PostmarkCourier implements ConfirmingCourier
         } catch (PostmarkException $pe) {
             $this->logError($pe);
 
-            throw new TransmissionException($pe->postmarkApiErrorCode, $pe);
+            throw new TransmissionException($pe->postmarkApiErrorCode ?? 500, $pe);
         }
     }
 

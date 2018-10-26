@@ -54,17 +54,15 @@ class SparkPostCourierIntegrationTest extends IntegrationTestCase
 
     public function testSendsInlineEmail()
     {
-        $inbox    = $this->createInbox();
-        $ccInbox  = $this->createInbox();
-        $bccInbox = $this->createInbox();
+        $subject = 'Courier Integration Test ' . random_int(100000000, 999999999);
 
         $email = EmailBuilder::email()
-            ->to($inbox->getAddress())
+            ->to($this->getTo())
             ->from(getenv('FROM_EMAIL'))
-            ->withSubject('Courier Integration Test')
+            ->withSubject($subject)
             ->withContent(SimpleContent::text('Text')->addHtml('HTML'))
-            ->cc($ccInbox->getAddress())
-            ->bcc($bccInbox->getAddress())
+            ->cc($this->getCc())
+            ->bcc($this->getBcc())
             ->attach(new FileAttachment(self::$file, 'Attached File'))
             ->embed(new FileAttachment(self::$file, 'Embedded File'), 'embed-test')
             ->addHeader('X-test-header', 'Test')
@@ -72,41 +70,49 @@ class SparkPostCourierIntegrationTest extends IntegrationTestCase
 
         $this->courier->deliver($email);
 
-        $message = $this->getLatestEmail($inbox);
+        $message = $this->getEmailDeliveredToTo($subject);
 
-        self::assertEquals('Courier Integration Test', $message->getHeaderValue('subject'));
+        self::assertEquals($subject, $message->getHeaderValue('subject'));
         self::assertEquals(getenv('FROM_EMAIL'), $message->getHeaderValue('from'));
-        self::assertEquals($inbox->getAddress(), $message->getHeaderValue('to'));
-        self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
+        self::assertEquals($this->getTo(), $message->getHeaderValue('to'));
+        self::assertEquals($this->getCc(), $message->getHeaderValue('cc'));
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
         self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
 
-        $message = $this->getLatestEmail($ccInbox);
+        $message = $this->getEmailDeliveredToCc($subject);
 
-        self::assertEquals('Courier Integration Test', $message->getHeaderValue('subject'));
+        self::assertEquals($subject, $message->getHeaderValue('subject'));
         self::assertEquals(getenv('FROM_EMAIL'), $message->getHeaderValue('from'));
-        self::assertEquals($inbox->getAddress(), $message->getHeaderValue('to'));
-        self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
+        self::assertEquals($this->getTo(), $message->getHeaderValue('to'));
+        self::assertEquals($this->getCc(), $message->getHeaderValue('cc'));
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
         self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
 
-        // @TODO MailSlurp doesn't yet support BCC, but will soon
+        $message = $this->getEmailDeliveredToCc($subject);
+
+        self::assertEquals($subject, $message->getHeaderValue('subject'));
+        self::assertEquals(getenv('FROM_EMAIL'), $message->getHeaderValue('from'));
+        self::assertEquals($this->getTo(), $message->getHeaderValue('to'));
+        self::assertEquals($this->getCc(), $message->getHeaderValue('cc'));
+        self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
+        self::assertHasAttachmentWithContentId($message, 'embed-test');
+        self::assertHasAttachmentWithName($message, 'Attached File');
+
     }
 
     public function testSendsTemplatedEmail()
     {
-        $inbox    = $this->createInbox();
-        $ccInbox  = $this->createInbox();
-        $bccInbox = $this->createInbox();
+        $subject = 'Courier Integration Templated Test ' . random_int(100000000, 999999999);
 
         $email = EmailBuilder::email()
             ->from(getenv('FROM_EMAIL'))
-            ->to($inbox->getAddress(), 'To')
-            ->cc($ccInbox->getAddress(), 'CC')
-            ->bcc($ccInbox->getAddress(), 'BCC')
-            ->withSubject('Templated')
+            ->replyTo(getenv('FROM_EMAIL'))
+            ->to($this->getTo(), 'To')
+            ->cc($this->getCc(), 'CC')
+            ->bcc($this->getBcc(), 'BCC')
+            ->withSubject($subject)
             ->withContent(new TemplatedContent(
                 getenv('SPARKPOST_TEMPLATE_ID'),
                 [
@@ -121,28 +127,37 @@ class SparkPostCourierIntegrationTest extends IntegrationTestCase
 
         $this->courier->deliver($email);
 
-        $message = $this->getLatestEmail($inbox);
+        $message = $this->getEmailDeliveredToTo($subject);
 
-        self::assertEquals('Templated', $message->getHeaderValue('subject'));
-        self::assertEquals($inbox->getAddress(), $message->getHeaderValue('to'));
-        self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
+        self::assertEquals($subject, $message->getHeaderValue('subject'));
+        self::assertEquals($this->getTo(), $message->getHeaderValue('to'));
+        self::assertEquals($this->getCc(), $message->getHeaderValue('cc'));
         self::stringStartsWith('HTML', $message->getHtmlContent());
-
         self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
 
-        $message = $this->getLatestEmail($ccInbox);
+        $message = $this->getEmailDeliveredToCc($subject);
 
-        self::assertEquals('Templated', $message->getHeaderValue('subject'));
-        self::assertEquals($inbox->getAddress(), $message->getHeaderValue('to'));
-        self::assertEquals($ccInbox->getAddress(), $message->getHeaderValue('cc'));
+        self::assertEquals($subject, $message->getHeaderValue('subject'));
+        self::assertEquals($this->getTo(), $message->getHeaderValue('to'));
+        self::assertEquals($this->getCc(), $message->getHeaderValue('cc'));
         self::assertStringStartsWith('HTML', $message->getHtmlContent());
         self::assertEquals('text', trim($message->getTextContent()));
         self::assertHasAttachmentWithContentId($message, 'embed-test');
         self::assertHasAttachmentWithName($message, 'Attached File');
         self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
 
-        // @TODO MailSlurp doesn't yet support BCC, but will soon
+        $message = $this->getEmailDeliveredToBcc($subject);
+
+        self::assertEquals($subject, $message->getHeaderValue('subject'));
+        self::assertEquals($this->getTo(), $message->getHeaderValue('to'));
+        self::assertEquals($this->getCc(), $message->getHeaderValue('cc'));
+        self::assertStringStartsWith('HTML', $message->getHtmlContent());
+        self::assertEquals('text', trim($message->getTextContent()));
+        self::assertHasAttachmentWithContentId($message, 'embed-test');
+        self::assertHasAttachmentWithName($message, 'Attached File');
+        self::assertEquals('Test', $message->getHeaderValue('x-test-header'));
+
     }
 }
