@@ -7,11 +7,14 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ## Unreleased
 
+## 0.4.0 - 2018-10-27
+
 ### Added
 
 * Send custom headers defined on the `Email` (caveat on SparkPost templated emails in readme).
 * Add inline attachments defined on the `Email`
 * Add charset to attachments for all couriers that support it
+* Added integration tests for Postmark, SendGrid and SparkPost
 
 ### Changed
 
