@@ -140,12 +140,16 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
     }
 
     /**
-     * There appears to be a bug with SendGrid in whic the BCC is not included when both attachments and CC recipients are included.
+     * There appears to be a bug with SendGrid in which the BCC is not included when both attachments and CC recipients are included.
      * When the email includes a BCC list, it can either support having an attachment, or it can support having a CC, but not both.
      * This test ensures our standard features still work when using a recipient as well as a BCC list.
+     *
+     * This test fails sporadically because the BCC does not get added to the email by SendGrid. Rerunning the test can generally cause it to pass.
      */
     public function testSendsInlineEmailWithBcc()
     {
+        self::markTestSkipped('This test fails with enough frequency to make automated tests unreliable');
+
         $subject = 'Courier SendGrid Integration Test ' . random_int(100000000, 999999999);
 
         $email = EmailBuilder::email()
@@ -185,7 +189,7 @@ class SendGridCourierIntegrationTest extends IntegrationTestCase
     }
 
     /**
-     * There appears to be a bug with SendGrid in whic the BCC is not included when both attachments and CC recipients are included.
+     * There appears to be a bug with SendGrid in which the BCC is not included when both attachments and CC recipients are included.
      * When the email includes a BCC list, it can either support having an attachment, or it can support having a CC, but not both.
      * This test ensures our standard features still work when using a recipient as well as a BCC list.
      *
