@@ -263,7 +263,9 @@ class SparkPostCourier implements ConfirmingCourier
             self::TEMPLATE_ID => $email->getContent()->getTemplateId(),
         ];
 
-        $content[self::HEADERS] = $this->getContentHeaders($email);
+        if ($headers = $this->getContentHeaders($email)) {
+            $content[self::HEADERS] = $headers;
+        }
 
         if ($email->getAttachments()) {
             /*
@@ -349,7 +351,9 @@ class SparkPostCourier implements ConfirmingCourier
             self::REPLY_TO      => $replyTo,
         ];
 
-        $content[self::HEADERS] = $this->getContentHeaders($email);
+        if ($headers = $this->getContentHeaders($email)) {
+            $content[self::HEADERS] = $headers;
+        }
 
         return $content;
     }

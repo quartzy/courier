@@ -30,6 +30,15 @@ $courier->deliver($email);
 
 ## Notes for Postmark Templates
 
+### Implicit Template Variables
+
 Postmark allows users to define template keys in the subject of templated
 emails. To support this functionality, the courier will pass the `subject` of
 the `Email` into the template variables with the key `subject`.
+
+### BCC Recipients
+
+Postmark does not support sending emails with a BCC recipients list. Courier
+does not throw an error when sending emails with a BCC using the Postmark
+courier, but it is important to note, that the email will just not be delivered
+to the given email addresses.

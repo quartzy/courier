@@ -16,13 +16,16 @@
         "quartzy/php-email": "^0.5.1"
     },
     "require-dev": {
+        "ext-imap": "*",
         "sendgrid/sendgrid": "^5.1",
         "phpunit/phpunit": "^7.0",
-        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/guzzle": "^6.3",
         "php-http/guzzle6-adapter": "^1.1",
         "sparkpost/sparkpost": "^2.1",
         "mockery/mockery": "^0.9.8",
-        "wildbit/postmark-php": "^2.3"
+        "wildbit/postmark-php": "^2.3",
+        "vlucas/phpdotenv": "^2.4",
+        "zbateson/mail-mime-parser": "^0.4.8"
     },
     "suggest": {
         "sendgrid/sendgrid": "To use the SendGridCourier",
@@ -42,6 +45,7 @@
         }
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit --exclude=large",
+        "test-integrations": "phpunit"
     }
 }
