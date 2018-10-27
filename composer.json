@@ -16,6 +16,7 @@
         "quartzy/php-email": "^0.5.1"
     },
     "require-dev": {
+        "ext-imap": "*",
         "sendgrid/sendgrid": "^5.1",
         "phpunit/phpunit": "^7.0",
         "guzzlehttp/guzzle": "^6.3",
@@ -44,6 +45,7 @@
         }
     },
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit --exclude=large",
+        "test-integrations": "phpunit"
     }
 }
