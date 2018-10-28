@@ -19,7 +19,7 @@ use PhpEmail\Email;
 use PhpEmail\Header;
 use SendGrid;
 use SendGrid\Client;
-use SendGrid\Mail;
+use SendGrid\Mail\Mail;
 use SendGrid\Response;
 
 /**
@@ -80,10 +80,10 @@ class SendGridCourierTest extends TestCase
     public function testSendsSimpleEmail()
     {
         $expectedEmail = new Mail(
-            new SendGrid\Email(null, 'sender@test.com'),
+            new SendGrid\Mail\From('sender@test.com'),
+            new SendGrid\Mail\To('recipient@test.com'),
             'Subject',
-            new SendGrid\Email(null, 'recipient@test.com'),
-            new SendGrid\Content('text/plain', 'This is a test email')
+            new SendGrid\Mail\PlainTextContent('This is a test email')
         );
 
         $expectedResponse = $this->success();
@@ -106,10 +106,10 @@ class SendGridCourierTest extends TestCase
     public function testSendsAnEmptySimpleEmail()
     {
         $expectedEmail = new Mail(
-            new SendGrid\Email(null, 'sender@test.com'),
+            new SendGrid\Mail\From('sender@test.com'),
+            new SendGrid\Mail\To('recipient@test.com'),
             'Subject',
-            new SendGrid\Email(null, 'recipient@test.com'),
-            new SendGrid\Content('text/plain', '')
+            new SendGrid\Mail\PlainTextContent('')
         );
 
         $expectedResponse = $this->success();
@@ -132,10 +132,10 @@ class SendGridCourierTest extends TestCase
     public function testSendsEmptyEmail()
     {
         $expectedEmail = new Mail(
-            new SendGrid\Email(null, 'sender@test.com'),
+            new SendGrid\Mail\From('sender@test.com'),
+            new SendGrid\Mail\To('recipient@test.com'),
             'Subject',
-            new SendGrid\Email(null, 'recipient@test.com'),
-            new SendGrid\Content('text/plain', '')
+            new SendGrid\Mail\PlainTextContent('')
         );
 
         $expectedResponse = $this->success();
@@ -157,15 +157,12 @@ class SendGridCourierTest extends TestCase
      */
     public function testSendTemplatedEmail()
     {
-        $personalization = new SendGrid\Personalization();
-        $personalization->addTo(new SendGrid\Email(null, 'recipient@test.com'));
-
         $expectedEmail = new Mail();
         $expectedEmail->setSubject('Subject');
-        $expectedEmail->setFrom(new SendGrid\Email(null, 'sender@test.com'));
-        $expectedEmail->addPersonalization($personalization);
+        $expectedEmail->setFrom(new SendGrid\Mail\From('sender@test.com'));
+        $expectedEmail->addTo('recipient@test.com');
         $expectedEmail->setTemplateId('1234');
-        $expectedEmail->getPersonalizations()[0]->addSubstitution('test', 'value');
+        $expectedEmail->addSubstitution('test', 'value');
 
         $expectedResponse = $this->success();
 
@@ -186,17 +183,12 @@ class SendGridCourierTest extends TestCase
      */
     public function testAcceptsAllEmailValues()
     {
-        $personalization = new SendGrid\Personalization();
-        $personalization->addTo(new SendGrid\Email(null, 'recipient@test.com'));
-        $personalization->addCc(new SendGrid\Email('CC', 'cc@test.com'));
-        $personalization->addBcc(new SendGrid\Email('BCC', 'bcc@test.com'));
-
-        $attachment = new SendGrid\Attachment();
+        $attachment = new SendGrid\Mail\Attachment();
         $attachment->setContent(base64_encode(file_get_contents(self::$file)));
         $attachment->setFilename('file name.txt');
         $attachment->setType(mime_content_type(self::$file));
 
-        $inlineAttachment = new SendGrid\Attachment();
+        $inlineAttachment = new SendGrid\Mail\Attachment();
         $inlineAttachment->setContent(base64_encode(file_get_contents(self::$file)));
         $inlineAttachment->setFilename('image.jpg');
         $inlineAttachment->setContentID('inline');
@@ -205,10 +197,12 @@ class SendGridCourierTest extends TestCase
 
         $expectedEmail = new Mail();
         $expectedEmail->setSubject('This is the Subject');
-        $expectedEmail->setFrom(new SendGrid\Email(null, 'sender@test.com'));
-        $expectedEmail->addPersonalization($personalization);
-        $expectedEmail->addContent(new SendGrid\Content('text/html', 'This is a test email'));
-        $expectedEmail->setReplyTo(new SendGrid\Email('Reply To', 'replyTo@test.com'));
+        $expectedEmail->addTo('recipient@test.com');
+        $expectedEmail->addCc('cc@test.com', 'CC');
+        $expectedEmail->addBcc('bcc@test.com', 'BCC');
+        $expectedEmail->setFrom('sender@test.com');
+        $expectedEmail->addContent(new SendGrid\Mail\HtmlContent('This is a test email'));
+        $expectedEmail->setReplyTo('replyTo@test.com', 'Reply To');
         $expectedEmail->addAttachment($attachment);
         $expectedEmail->addAttachment($inlineAttachment);
         $expectedEmail->addHeader('X-Test-Header', 'test');
@@ -239,16 +233,13 @@ class SendGridCourierTest extends TestCase
      */
     public function testUsesUniqueAddress()
     {
-        $personalization = new SendGrid\Personalization();
-        $personalization->addTo(new SendGrid\Email(null, 'recipient@test.com'));
-        $personalization->addCc(new SendGrid\Email('CC', 'cc@test.com'));
-        $personalization->addBcc(new SendGrid\Email('BCC', 'bcc@test.com'));
-
         $expectedEmail = new Mail();
         $expectedEmail->setSubject('This is the Subject');
-        $expectedEmail->setFrom(new SendGrid\Email(null, 'sender@test.com'));
-        $expectedEmail->addPersonalization($personalization);
-        $expectedEmail->addContent(new SendGrid\Content('text/html', 'This is a test email'));
+        $expectedEmail->setFrom('sender@test.com');
+        $expectedEmail->addTo('recipient@test.com');
+        $expectedEmail->addCc('cc@test.com', 'CC');
+        $expectedEmail->addBcc('bcc@test.com', 'BCC');
+        $expectedEmail->addContent(new SendGrid\Mail\HtmlContent('This is a test email'));
 
         $expectedResponse = $this->success();
 
@@ -297,10 +288,10 @@ class SendGridCourierTest extends TestCase
     public function testHandlesTransmissionException()
     {
         $expectedEmail = new Mail(
-            new SendGrid\Email(null, 'sender@test.com'),
+            new SendGrid\Mail\From('sender@test.com'),
+            new SendGrid\Mail\To('recipient@test.com'),
             'Subject',
-            new SendGrid\Email(null, 'recipient@test.com'),
-            new SendGrid\Content('text/plain', '')
+            new SendGrid\Mail\PlainTextContent('')
         );
 
         $this->setExpectedCall($this->client, $expectedEmail, new Exception());
@@ -322,10 +313,10 @@ class SendGridCourierTest extends TestCase
     public function testThrowsWithoutId()
     {
         $expectedEmail = new Mail(
-            new SendGrid\Email(null, 'sender@test.com'),
+            new SendGrid\Mail\From('sender@test.com'),
+            new SendGrid\Mail\To('recipient@test.com'),
             'Subject',
-            new SendGrid\Email(null, 'recipient@test.com'),
-            new SendGrid\Content('text/plain', '')
+            new SendGrid\Mail\PlainTextContent('')
         );
 
         $expectedResponse = new Response(202, [], [/*missing the message ID header*/]);
@@ -349,10 +340,10 @@ class SendGridCourierTest extends TestCase
     public function testHandlesTransmissionErrorResponse()
     {
         $expectedEmail = new Mail(
-            new SendGrid\Email(null, 'sender@test.com'),
+            new SendGrid\Mail\From('sender@test.com'),
+            new SendGrid\Mail\To('recipient@test.com'),
             'Subject',
-            new SendGrid\Email(null, 'recipient@test.com'),
-            new SendGrid\Content('text/plain', '')
+            new SendGrid\Mail\PlainTextContent('')
         );
 
         $expectedResponse = new Response(400);

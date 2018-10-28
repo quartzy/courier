@@ -13,6 +13,10 @@ use PhpEmail\Email;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use SendGrid;
+use SendGrid\Mail\Attachment;
+use SendGrid\Mail\Mail;
+use SendGrid\Mail\PlainTextContent;
+use SendGrid\Mail\HtmlContent;
 
 /**
  * A courier implementation using the SendGrid v3 web API and sendgrid-php library to send emails.
@@ -159,44 +163,39 @@ class SendGridCourier implements ConfirmingCourier
     /**
      * @param Email $email
      *
-     * @return SendGrid\Mail
+     * @return Mail
      */
-    protected function prepareEmail(Email $email): SendGrid\Mail
+    protected function prepareEmail(Email $email): Mail
     {
-        $message = new SendGrid\Mail();
+        $message = new Mail();
 
         $message->setSubject($email->getSubject());
-        $message->setFrom(new SendGrid\Email($email->getFrom()->getName(), $email->getFrom()->getEmail()));
-
-        $personalization = new SendGrid\Personalization();
+        $message->setFrom($email->getFrom()->getEmail(), $email->getFrom()->getName());
 
         foreach ($this->distinctAddresses($email->getToRecipients()) as $recipient) {
-            $personalization->addTo(new SendGrid\Email($recipient->getName(), $recipient->getEmail()));
+            $message->addTo($recipient->getEmail(), $recipient->getName());
         }
 
         $existingAddresses = $email->getToRecipients();
         foreach ($this->distinctAddresses($email->getCcRecipients(), $existingAddresses) as $recipient) {
-            $personalization->addCc(new SendGrid\Email($recipient->getName(), $recipient->getEmail()));
+            $message->addCc($recipient->getEmail(), $recipient->getName());
         }
 
         $existingAddresses = array_merge($email->getToRecipients(), $email->getCcRecipients());
         foreach ($this->distinctAddresses($email->getBccRecipients(), $existingAddresses) as $recipient) {
-            $personalization->addBcc(new SendGrid\Email($recipient->getName(), $recipient->getEmail()));
+            $message->addBcc($recipient->getEmail(), $recipient->getName());
         }
-
-        $message->addPersonalization($personalization);
 
         if (!empty($email->getReplyTos())) {
             // The SendGrid API only supports one "Reply To" :(
             $replyTos = $email->getReplyTos();
             $first    = reset($replyTos);
-            $replyTo  = new SendGrid\Email($first->getName(), $first->getEmail());
 
-            $message->setReplyTo($replyTo);
+            $message->setReplyTo($first->getEmail(), $first->getName());
         }
 
         if ($attachments = $this->buildAttachments($email)) {
-            $message->attachments = $attachments;
+            $message->addAttachments($attachments);
         }
 
         foreach ($email->getHeaders() as $header) {
@@ -207,11 +206,11 @@ class SendGridCourier implements ConfirmingCourier
     }
 
     /**
-     * @param SendGrid\Mail $email
+     * @param Mail $email
      *
      * @return SendGrid\Response
      */
-    protected function send(SendGrid\Mail $email): SendGrid\Response
+    protected function send(Mail $email): SendGrid\Response
     {
         try {
             /** @var SendGrid\Response $response */
@@ -236,56 +235,53 @@ class SendGridCourier implements ConfirmingCourier
     }
 
     /**
-     * @param SendGrid\Mail $email
+     * @param Mail $email
      *
      * @return SendGrid\Response
      */
-    protected function sendEmptyContent(SendGrid\Mail $email): SendGrid\Response
+    protected function sendEmptyContent(Mail $email): SendGrid\Response
     {
-        $email->addContent(new SendGrid\Content('text/plain', ''));
+        $email->addContent(new SendGrid\Mail\PlainTextContent(''));
 
         return $this->send($email);
     }
 
     /**
-     * @param SendGrid\Mail                   $email
+     * @param Mail                            $email
      * @param Content\Contracts\SimpleContent $content
      *
      * @return SendGrid\Response
      */
     protected function sendSimpleContent(
-        SendGrid\Mail $email,
+        Mail $email,
         Content\Contracts\SimpleContent $content
     ): SendGrid\Response {
         if ($content->getText() !== null) {
-            $email->addContent(new SendGrid\Content('text/plain', $content->getText()->getBody()));
+            $email->addContent(new PlainTextContent($content->getText()->getBody()));
         }
 
         if ($content->getHtml() !== null) {
-            $email->addContent(new SendGrid\Content('text/html', $content->getHtml()->getBody()));
+            $email->addContent(new HtmlContent($content->getHtml()->getBody()));
         }
 
         if ($content->getHtml() === null && $content->getText() === null) {
-            $email->addContent(new SendGrid\Content('text/plain', ''));
+            $email->addContent(new PlainTextContent(''));
         }
 
         return $this->send($email);
     }
 
     /**
-     * @param SendGrid\Mail                      $email
+     * @param Mail                               $email
      * @param Content\Contracts\TemplatedContent $content
      *
      * @return SendGrid\Response
      */
     protected function sendTemplatedContent(
-        SendGrid\Mail $email,
+        Mail $email,
         Content\Contracts\TemplatedContent $content
     ): SendGrid\Response {
-        foreach ($content->getTemplateData() as $key => $value) {
-            $email->personalization[0]->addSubstitution($key, $value);
-        }
-
+        $email->addSubstitutions($content->getTemplateData());
         $email->setTemplateId($content->getTemplateId());
 
         return $this->send($email);
@@ -294,28 +290,30 @@ class SendGridCourier implements ConfirmingCourier
     /**
      * @param Email $email
      *
-     * @return SendGrid\Attachment[]
+     * @return Attachment[]
      */
     protected function buildAttachments(Email $email): array
     {
         $attachments = [];
 
         foreach ($email->getAttachments() as $attachment) {
-            $sendGridAttachment = new SendGrid\Attachment();
-            $sendGridAttachment->setFilename($attachment->getName());
-            $sendGridAttachment->setContent($attachment->getBase64Content());
-            $sendGridAttachment->setType($attachment->getContentType());
+            $sendGridAttachment = new Attachment(
+                $attachment->getBase64Content(),
+                $attachment->getContentType(),
+                $attachment->getName()
+            );
 
             $attachments[] = $sendGridAttachment;
         }
 
         foreach ($email->getEmbedded() as $attachment) {
-            $sendGridAttachment = new SendGrid\Attachment();
-            $sendGridAttachment->setFilename($attachment->getName());
-            $sendGridAttachment->setContent($attachment->getBase64Content());
-            $sendGridAttachment->setType($attachment->getContentType());
-            $sendGridAttachment->setContentID($attachment->getContentId());
-            $sendGridAttachment->setDisposition('inline');
+            $sendGridAttachment = new Attachment(
+                $attachment->getBase64Content(),
+                $attachment->getContentType(),
+                $attachment->getName(),
+                'inline',
+                $attachment->getContentId()
+            );
 
             $attachments[] = $sendGridAttachment;
         }

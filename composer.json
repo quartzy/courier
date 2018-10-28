@@ -17,7 +17,7 @@
     },
     "require-dev": {
         "ext-imap": "*",
-        "sendgrid/sendgrid": "^5.1",
+        "sendgrid/sendgrid": "^7.0",
         "phpunit/phpunit": "^7.0",
         "guzzlehttp/guzzle": "^6.3",
         "php-http/guzzle6-adapter": "^1.1",
