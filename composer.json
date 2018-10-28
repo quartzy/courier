@@ -18,6 +18,7 @@
     "require-dev": {
         "ext-imap": "*",
         "sendgrid/sendgrid": "^7.0",
+        "sendgrid/php-http-client": "^3.9.3",
         "phpunit/phpunit": "^7.0",
         "guzzlehttp/guzzle": "^6.3",
         "php-http/guzzle6-adapter": "^1.1",
@@ -29,6 +30,7 @@
     },
     "suggest": {
         "sendgrid/sendgrid": "To use the SendGridCourier",
+        "sendgrid/php-http-client": "Use version ^3.9.3 as lower versions of 3.9 include HTTP bugs.",
         "guzzlehttp/guzzle": "This or some other http client is needed for the SparkPostCourier",
         "php-http/guzzle6-adapter": "This or some other adapter is needed for the SparkPostCourier",
         "sparkpost/sparkpost": "To use the SparkPostCourier",

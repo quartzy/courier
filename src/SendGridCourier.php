@@ -214,7 +214,7 @@ class SendGridCourier implements ConfirmingCourier
     {
         try {
             /** @var SendGrid\Response $response */
-            $response = $this->sendGrid->client->mail()->send()->post($email);
+            $response = $this->sendGrid->send($email);
 
             if ($response->statusCode() >= 400) {
                 $this->logger->error(
