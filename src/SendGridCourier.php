@@ -14,9 +14,9 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use SendGrid;
 use SendGrid\Mail\Attachment;
+use SendGrid\Mail\HtmlContent;
 use SendGrid\Mail\Mail;
 use SendGrid\Mail\PlainTextContent;
-use SendGrid\Mail\HtmlContent;
 
 /**
  * A courier implementation using the SendGrid v3 web API and sendgrid-php library to send emails.
