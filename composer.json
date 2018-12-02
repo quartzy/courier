@@ -28,10 +28,8 @@
         "zbateson/mail-mime-parser": "^0.4.8"
     },
     "suggest": {
+        "quartzy/courier-sparkpost": "To deliver emails using Sparkpost",
         "sendgrid/sendgrid": "To use the SendGridCourier",
-        "guzzlehttp/guzzle": "This or some other http client is needed for the SparkPostCourier",
-        "php-http/guzzle6-adapter": "This or some other adapter is needed for the SparkPostCourier",
-        "sparkpost/sparkpost": "To use the SparkPostCourier",
         "wildbit/postmark-php": "To use the PostmarkCourier"
     },
     "autoload": {
