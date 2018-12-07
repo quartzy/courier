@@ -24,6 +24,8 @@ use SparkPost\SparkPostResponse;
  * this API simulates the feature by creating an inline template based on the defined template using the API. In this
  * case, all template variables will be sent as expected, but tracking/reporting may not work as expected within
  * SparkPost.
+ *
+ * @deprecated see https://github.com/quartzy/courier-sparkpost
  */
 class SparkPostCourier implements ConfirmingCourier
 {
