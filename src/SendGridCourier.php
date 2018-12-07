@@ -20,6 +20,8 @@ use SendGrid;
  * While SendGrid supports sending batches of emails using "personalizations", this does not fit completely into the
  * paradigm of transactional emails. For this reason, this courier only creates a single personalization with multiple
  * recipients.
+ *
+ * @deprecated see https://github.com/camuthig/courier-sendgrid
  */
 class SendGridCourier implements ConfirmingCourier
 {
