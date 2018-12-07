@@ -10,6 +10,7 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 ### Deprecated
 
 * Deprecated `Courier\SparkpostCourier` in favor of `Courier\Sparkpost\SparkpostCourier` see https://github.com/quartzy/courier-sparkpost
+* Deprecated `Courier\PostmarkCourier` in favor of `Camuthig\Courier\Postmark\PostmarkCourier` see https://github.com/camuthig/courier-postmark
 * Deprecated `Courier\SendGridCourier` in favor of `Camuthig\Courier\SendGrid\SendGridCourier` see https://github.com/camuthig/courier-sendgrid
 
 ## 0.4.0 - 2018-10-27
