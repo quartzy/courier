@@ -16,6 +16,9 @@ use Postmark\PostmarkClient;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
+/**
+ * @deprecated see https://github.com/camuthig/courier-postmark
+ */
 class PostmarkCourier implements ConfirmingCourier
 {
     use SavesReceipts;

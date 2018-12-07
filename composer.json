@@ -29,8 +29,7 @@
     },
     "suggest": {
         "quartzy/courier-sparkpost": "To deliver emails using Sparkpost",
-        "sendgrid/sendgrid": "To use the SendGridCourier",
-        "wildbit/postmark-php": "To use the PostmarkCourier"
+        "sendgrid/sendgrid": "To use the SendGridCourier"
     },
     "autoload": {
         "psr-4": {
