@@ -29,7 +29,8 @@
     },
     "suggest": {
         "quartzy/courier-sparkpost": "To deliver emails using Sparkpost",
-        "sendgrid/sendgrid": "To use the SendGridCourier"
+        "sendgrid/sendgrid": "To use the SendGridCourier",
+        "camuthig/courier-postmark": "To deliver emails using Postmark"
     },
     "autoload": {
         "psr-4": {
