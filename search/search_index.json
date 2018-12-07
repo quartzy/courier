@@ -32,23 +32,38 @@
         }, 
         {
             "location": "/couriers/postmark/", 
-            "text": "The Postmark courier supports both templated and simple emails.\n\n\nTo create a Postmark courier, you should follow the steps documented in the\n\nPostmark PHP\n\ndocs to create a client and pass it into the \nPostmarkCourier\n.\n\n\n?php\n\n\n\nuse\n \nCourier\\PostmarkCourier\n;\n\n\nuse\n \nGuzzleHttp\\Client\n;\n\n\nuse\n \nPhpEmail\\Content\\TemplatedContent\n;\n\n\nuse\n \nPhpEmail\\EmailBuilder\n;\n\n\nuse\n \nPostmark\\PostmarkClient\n;\n\n\n\nnew\n \nClient\n();\n\n\n\n$courier\n \n=\n \nnew\n \nPostmarkCourier\n(\nnew\n \nPostmarkClient\n(\nMY_KEY\n));\n\n\n\n$email\n \n=\n \nEmailBuilder\n::\nemail\n()\n\n    \n-\nfrom\n(\ntest@mybiz.com\n)\n\n    \n-\nto\n(\nloyal.customer@email.com\n)\n\n    \n-\nreplyTo\n(\ntest@mybiz.com\n,\n \nYour Sales Rep\n)\n\n    \n-\nwithSubject\n(\nWelcome!\n)\n\n    \n-\nwithContent\n(\nnew\n \nTemplatedContent\n(\nmy_email\n,\n \n[\ntestKey\n \n=\n \nvalue\n]))\n\n    \n-\nbuild\n();\n\n\n\n$courier\n-\ndeliver\n(\n$email\n);\n\n\n\n\n\n\nNotes for Postmark Templates\n\n\nPostmark allows users to define template keys in the subject of templated\nemails. To support this functionality, the courier will pass the \nsubject\n of\nthe \nEmail\n into the template variables with the key \nsubject\n.", 
+            "text": "The Postmark courier supports both templated and simple emails.\n\n\nTo create a Postmark courier, you should follow the steps documented in the\n\nPostmark PHP\n\ndocs to create a client and pass it into the \nPostmarkCourier\n.\n\n\n?php\n\n\n\nuse\n \nCourier\\PostmarkCourier\n;\n\n\nuse\n \nGuzzleHttp\\Client\n;\n\n\nuse\n \nPhpEmail\\Content\\TemplatedContent\n;\n\n\nuse\n \nPhpEmail\\EmailBuilder\n;\n\n\nuse\n \nPostmark\\PostmarkClient\n;\n\n\n\nnew\n \nClient\n();\n\n\n\n$courier\n \n=\n \nnew\n \nPostmarkCourier\n(\nnew\n \nPostmarkClient\n(\nMY_KEY\n));\n\n\n\n$email\n \n=\n \nEmailBuilder\n::\nemail\n()\n\n    \n-\nfrom\n(\ntest@mybiz.com\n)\n\n    \n-\nto\n(\nloyal.customer@email.com\n)\n\n    \n-\nreplyTo\n(\ntest@mybiz.com\n,\n \nYour Sales Rep\n)\n\n    \n-\nwithSubject\n(\nWelcome!\n)\n\n    \n-\nwithContent\n(\nnew\n \nTemplatedContent\n(\nmy_email\n,\n \n[\ntestKey\n \n=\n \nvalue\n]))\n\n    \n-\nbuild\n();\n\n\n\n$courier\n-\ndeliver\n(\n$email\n);\n\n\n\n\n\n\nNotes for Postmark Templates\n\n\nImplicit Template Variables\n\n\nPostmark allows users to define template keys in the subject of templated\nemails. To support this functionality, the courier will pass the \nsubject\n of\nthe \nEmail\n into the template variables with the key \nsubject\n.\n\n\nBCC Recipients\n\n\nPostmark does not support sending emails with a BCC recipients list. Courier\ndoes not throw an error when sending emails with a BCC using the Postmark\ncourier, but it is important to note, that the email will just not be delivered\nto the given email addresses.", 
             "title": "Postmark"
         }, 
         {
             "location": "/couriers/postmark/#notes-for-postmark-templates", 
-            "text": "Postmark allows users to define template keys in the subject of templated\nemails. To support this functionality, the courier will pass the  subject  of\nthe  Email  into the template variables with the key  subject .", 
+            "text": "", 
             "title": "Notes for Postmark Templates"
         }, 
         {
+            "location": "/couriers/postmark/#implicit-template-variables", 
+            "text": "Postmark allows users to define template keys in the subject of templated\nemails. To support this functionality, the courier will pass the  subject  of\nthe  Email  into the template variables with the key  subject .", 
+            "title": "Implicit Template Variables"
+        }, 
+        {
+            "location": "/couriers/postmark/#bcc-recipients", 
+            "text": "Postmark does not support sending emails with a BCC recipients list. Courier\ndoes not throw an error when sending emails with a BCC using the Postmark\ncourier, but it is important to note, that the email will just not be delivered\nto the given email addresses.", 
+            "title": "BCC Recipients"
+        }, 
+        {
             "location": "/couriers/sendgrid/", 
-            "text": "The SendGrid courier supports both templated and simple emails. To use the\nSendGrid courier, you will need an API key with the following permissions:\n\n\n\n\nMail Send - Full Access\n\n\n\n\nYou will also need to include \nsendgrid/sendgrid\n into your dependencies. You\ncan then make a SendGrid courier like so:\n\n\n?php\n\n\n\nuse\n \nCourier\\SendGridCourier\n;\n\n\n\n$courier\n \n=\n \nnew\n \nSendGridCourier\n(\nnew\n \n\\SendGrid\n(\nmysendgridkey\n));\n\n\n\n\n\n\nNote on Charset\n\n\nSendGrid does not support adding \n; charset=\"x\"\n when defining the type of an\nattachment, as such, whatever value is defined on the \nEmail\n will be ignored\nwhen preparing the delivery for SendGrid.", 
+            "text": "The SendGrid courier supports both templated and simple emails. To use the\nSendGrid courier, you will need an API key with the following permissions:\n\n\n\n\nMail Send - Full Access\n\n\n\n\nYou will also need to include \nsendgrid/sendgrid\n into your dependencies. You\ncan then make a SendGrid courier like so:\n\n\n?php\n\n\n\nuse\n \nCourier\\SendGridCourier\n;\n\n\n\n$courier\n \n=\n \nnew\n \nSendGridCourier\n(\nnew\n \n\\SendGrid\n(\nmysendgridkey\n));\n\n\n\n\n\n\nNote on Charset\n\n\nSendGrid does not support adding \n; charset=\"x\"\n when defining the type of an\nattachment, as such, whatever value is defined on the \nEmail\n will be ignored\nwhen preparing the delivery for SendGrid.\n\n\nKnown Issues\n\n\nThere are some of known issues regarding the SendGrid courier. These are\nissues built into using SendGrid specifically and not generally across Courier.\n\n\n\n\nThe SendGrid courier will behave unexpectedly when sending multiple attachments\nin templated emails. It has been noted and verified with SendGrid support that the\ntemplates do not render properly in these cases and should be avoided.\n\n\nSending an inline email with a CC list and BCC list along with attachments causes\nthe BCC list to be lost.\n\n\nSending a BCC recipient list will sporadically not include the BCC list in the\nfinal rendered email.", 
             "title": "SendGrid"
         }, 
         {
             "location": "/couriers/sendgrid/#note-on-charset", 
             "text": "SendGrid does not support adding  ; charset=\"x\"  when defining the type of an\nattachment, as such, whatever value is defined on the  Email  will be ignored\nwhen preparing the delivery for SendGrid.", 
             "title": "Note on Charset"
+        }, 
+        {
+            "location": "/couriers/sendgrid/#known-issues", 
+            "text": "There are some of known issues regarding the SendGrid courier. These are\nissues built into using SendGrid specifically and not generally across Courier.   The SendGrid courier will behave unexpectedly when sending multiple attachments\nin templated emails. It has been noted and verified with SendGrid support that the\ntemplates do not render properly in these cases and should be avoided.  Sending an inline email with a CC list and BCC list along with attachments causes\nthe BCC list to be lost.  Sending a BCC recipient list will sporadically not include the BCC list in the\nfinal rendered email.", 
+            "title": "Known Issues"
         }, 
         {
             "location": "/couriers/sparkpost/", 

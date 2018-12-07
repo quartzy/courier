@@ -1,56 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    
     <url>
      <loc>/</loc>
-     <lastmod>2018-03-16</lastmod>
+     <lastmod>2018-12-07</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
-        
     <url>
      <loc>/getting-started/installation/</loc>
-     <lastmod>2018-03-16</lastmod>
+     <lastmod>2018-12-07</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
      <loc>/getting-started/example-usage/</loc>
-     <lastmod>2018-03-16</lastmod>
+     <lastmod>2018-12-07</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
      <loc>/getting-started/couriers/</loc>
-     <lastmod>2018-03-16</lastmod>
+     <lastmod>2018-12-07</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
-    
-        
     <url>
      <loc>/couriers/postmark/</loc>
-     <lastmod>2018-03-16</lastmod>
+     <lastmod>2018-12-07</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
      <loc>/couriers/sendgrid/</loc>
-     <lastmod>2018-03-16</lastmod>
+     <lastmod>2018-12-07</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
     <url>
      <loc>/couriers/sparkpost/</loc>
-     <lastmod>2018-03-16</lastmod>
+     <lastmod>2018-12-07</lastmod>
      <changefreq>daily</changefreq>
     </url>
-        
-    
-
 </urlset>
