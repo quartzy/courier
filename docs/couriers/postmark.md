@@ -4,10 +4,17 @@ To create a Postmark courier, you should follow the steps documented in the
 [Postmark PHP](https://github.com/wildbit/postmark-php/wiki/Getting-Started)
 docs to create a client and pass it into the `PostmarkCourier`.
 
+
+## Install
+
+`composer require camuthig/courier-postmark`
+
+## Usage
+
 ```php
 <?php
 
-use Courier\PostmarkCourier;
+use Camuthig\Courier\Postmark\PostmarkCourier;
 use GuzzleHttp\Client;
 use PhpEmail\Content\TemplatedContent;
 use PhpEmail\EmailBuilder;

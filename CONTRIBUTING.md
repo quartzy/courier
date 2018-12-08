@@ -32,13 +32,4 @@ To run only the unit tests, use the following command
 $ composer test
 ```
 
-### Integration Tests
-
-Integration tests require valid API keys for SparkPost, SendGrid and Postmark. Because of the nature of email delivery,
-the integration tests will only be run on trusted PRs, those created directly within the project.
-
-```bash
-$ composer test-integrations
-```
-
 **Happy coding**!
