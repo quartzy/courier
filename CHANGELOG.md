@@ -7,6 +7,8 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ## Unreleased
 
+## 0.4.1 - 2018-12-08
+
 ### Deprecated
 
 * Deprecated `Courier\SparkpostCourier` in favor of `Courier\Sparkpost\SparkpostCourier` see https://github.com/quartzy/courier-sparkpost
