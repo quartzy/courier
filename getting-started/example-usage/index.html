@@ -453,21 +453,26 @@
                 
                   <h1>Example Usage</h1>
                 
-                <p>Each courier will have their own dependencies, for example:</p>
+                <p>Each courier is implemented as an adapter in it's own project, so
+the first step is to pull the correct courier implementation into your project.</p>
 <div class="codehilite"><pre><span></span><span class="c1"># Send emails with SendGrid</span>
-composer require sendgrid/sendgrid
+composer require quartzy/courier-sparkpost
 </pre></div>
 
 
 <p>Now you just need to create an email and send it:</p>
 <div class="codehilite"><pre><span></span><span class="cp">&lt;?php</span>
 
-<span class="k">use</span> <span class="nx">Courier\SendGridCourier</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Courier\Sparkpost\SparkpostCourier</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">GuzzleHttp\Client</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Http\Adapter\Guzzle6\Client</span> <span class="k">as</span> <span class="nx">GuzzleAdapter</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">PhpEmail\EmailBuilder</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">PhpEmail\Content\SimpleContent</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SparkPost\SparkPost</span><span class="p">;</span>
 
-<span class="nv">$key</span>     <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">&#39;SENDGRID_KEY&#39;</span><span class="p">);</span>
-<span class="nv">$courier</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SendGridCourier</span><span class="p">(</span><span class="k">new</span> <span class="nx">\SendGrid</span><span class="p">(</span><span class="nv">$key</span><span class="p">));</span>
+<span class="nv">$courier</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SparkPostCourier</span><span class="p">(</span>
+    <span class="k">new</span> <span class="nx">SparkPost</span><span class="p">(</span><span class="k">new</span> <span class="nx">GuzzleAdapter</span><span class="p">(</span><span class="k">new</span> <span class="nx">Client</span><span class="p">()),</span> <span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;YOUR_API_KEY&#39;</span><span class="p">])</span>
+<span class="p">);</span>
 
 <span class="nv">$email</span> <span class="o">=</span> <span class="nx">EmailBuilder</span><span class="o">::</span><span class="na">email</span><span class="p">()</span>
     <span class="o">-&gt;</span><span class="na">withSubject</span><span class="p">(</span><span class="s1">&#39;Welcome!&#39;</span><span class="p">)</span>
@@ -489,14 +494,17 @@ can be done with any <code>Courier</code> that implements the <code>ConfirmingCo
 interface.</p>
 <div class="codehilite"><pre><span></span><span class="cp">&lt;?php</span>
 
-<span class="k">use</span> <span class="nx">Courier\SendGridCourier</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Courier\Sparkpost\SparkpostCourier</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">GuzzleHttp\Client</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Http\Adapter\Guzzle6\Client</span> <span class="k">as</span> <span class="nx">GuzzleAdapter</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">PhpEmail\EmailBuilder</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">PhpEmail\Content\SimpleContent</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">SparkPost\SparkPost</span><span class="p">;</span>
 
-<span class="nv">$key</span>     <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">&#39;SENDGRID_KEY&#39;</span><span class="p">);</span>
-
-<span class="c1">// The SendGrid courier implements ConfirmingCourier</span>
-<span class="nv">$courier</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SendGridCourier</span><span class="p">(</span><span class="k">new</span> <span class="nx">\SendGrid</span><span class="p">(</span><span class="nv">$key</span><span class="p">));</span>
+<span class="c1">// The Sparkpost courier implements ConfirmingCourier</span>
+<span class="nv">$courier</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SparkPostCourier</span><span class="p">(</span>
+    <span class="k">new</span> <span class="nx">SparkPost</span><span class="p">(</span><span class="k">new</span> <span class="nx">GuzzleAdapter</span><span class="p">(</span><span class="k">new</span> <span class="nx">Client</span><span class="p">()),</span> <span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;YOUR_API_KEY&#39;</span><span class="p">])</span>
+<span class="p">);</span>
 
 <span class="nv">$email</span> <span class="o">=</span> <span class="nx">EmailBuilder</span><span class="o">::</span><span class="na">email</span><span class="p">()</span>
     <span class="o">-&gt;</span><span class="na">withSubject</span><span class="p">(</span><span class="s1">&#39;Welcome!&#39;</span><span class="p">)</span>

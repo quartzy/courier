@@ -102,7 +102,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#notes-on-headers" tabindex="1" class="md-skip">
+      <a href="#install" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -385,6 +385,20 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#install" title="Install" class="md-nav__link">
+    Install
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" title="Setup" class="md-nav__link">
+    Setup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#notes-on-headers" title="Notes on Headers" class="md-nav__link">
     Notes on Headers
   </a>
@@ -440,6 +454,20 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#install" title="Install" class="md-nav__link">
+    Install
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" title="Setup" class="md-nav__link">
+    Setup
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#notes-on-headers" title="Notes on Headers" class="md-nav__link">
     Notes on Headers
   </a>
@@ -481,8 +509,11 @@
                 
                   <h1>SparkPost</h1>
                 
-                <p>The SparkPost courier supports both templated and simple emails. To use the
-SparkPost courier, you will need an API key with the following permissions:</p>
+                <p>The SparkPost courier supports both templated and simple emails. </p>
+<h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
+<p><code>composer require quartzy/courier-sparkpost</code></p>
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<p>To use the SparkPost courier, you will need an API key with the following permissions:</p>
 <ul>
 <li><code>Transmissions: Read/Write</code></li>
 <li><code>Templates: Read-only</code></li>
@@ -492,14 +523,12 @@ PHP</a> project for details on how to
 build a SparkPost client and pass it into a <code>SparkPostCourier</code>:</p>
 <div class="codehilite"><pre><span></span><span class="cp">&lt;?php</span>
 
-<span class="k">use</span> <span class="nx">Courier\SparkPostCourier</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Courier\Sparkpost\SparkPostCourier</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">GuzzleHttp\Client</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">Http\Adapter\Guzzle6\Client</span> <span class="k">as</span> <span class="nx">GuzzleAdapter</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">PhpEmail\Content\TemplatedContent</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">PhpEmail\EmailBuilder</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">SparkPost\SparkPost</span><span class="p">;</span>
-
-<span class="k">new</span> <span class="nx">Client</span><span class="p">();</span>
 
 <span class="nv">$courier</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SparkPostCourier</span><span class="p">(</span>
     <span class="k">new</span> <span class="nx">SparkPost</span><span class="p">(</span><span class="k">new</span> <span class="nx">GuzzleAdapter</span><span class="p">(</span><span class="k">new</span> <span class="nx">Client</span><span class="p">()),</span> <span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="o">=&gt;</span><span class="s1">&#39;YOUR_API_KEY&#39;</span><span class="p">])</span>
