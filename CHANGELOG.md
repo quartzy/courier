@@ -7,6 +7,8 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ## Unreleased
 
+## 0.5.0 - 2018-12-09
+
 ### Removed
 
 * Removed `Courier\SparkpostCourier` in favor of `Courier\Sparkpost\SparkpostCourier` see https://github.com/quartzy/courier-sparkpost
