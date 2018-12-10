@@ -1,4 +1,4 @@
-Each courier is implemented as an adapter in it's own dependency, so
+Each courier is implemented as an adapter in it's own project, so
 the first step is to pull the correct courier implementation into your project.
 
 ```bash
