@@ -1,8 +1,9 @@
-Each courier will have their own dependencies, for example:
+Each courier is implemented as an adapter in it's own project, so
+the first step is to pull the correct courier implementation into your project.
 
 ```bash
 # Send emails with SendGrid
-composer require sendgrid/sendgrid
+composer require quartzy/courier-sparkpost
 ```
 
 Now you just need to create an email and send it:
@@ -10,12 +11,16 @@ Now you just need to create an email and send it:
 ```php
 <?php
 
-use Courier\SendGridCourier;
+use Courier\Sparkpost\SparkpostCourier;
+use GuzzleHttp\Client;
+use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use PhpEmail\EmailBuilder;
 use PhpEmail\Content\SimpleContent;
+use SparkPost\SparkPost;
 
-$key     = getenv('SENDGRID_KEY');
-$courier = new SendGridCourier(new \SendGrid($key));
+$courier = new SparkPostCourier(
+    new SparkPost(new GuzzleAdapter(new Client()), ['key'=>'YOUR_API_KEY'])
+);
 
 $email = EmailBuilder::email()
     ->withSubject('Welcome!')
@@ -40,14 +45,17 @@ interface.
 ```php
 <?php
 
-use Courier\SendGridCourier;
+use Courier\Sparkpost\SparkpostCourier;
+use GuzzleHttp\Client;
+use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use PhpEmail\EmailBuilder;
 use PhpEmail\Content\SimpleContent;
+use SparkPost\SparkPost;
 
-$key     = getenv('SENDGRID_KEY');
-
-// The SendGrid courier implements ConfirmingCourier
-$courier = new SendGridCourier(new \SendGrid($key));
+// The Sparkpost courier implements ConfirmingCourier
+$courier = new SparkPostCourier(
+    new SparkPost(new GuzzleAdapter(new Client()), ['key'=>'YOUR_API_KEY'])
+);
 
 $email = EmailBuilder::email()
     ->withSubject('Welcome!')

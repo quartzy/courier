@@ -1,5 +1,12 @@
-The SparkPost courier supports both templated and simple emails. To use the
-SparkPost courier, you will need an API key with the following permissions:
+The SparkPost courier supports both templated and simple emails. 
+
+## Install
+
+`composer require quartzy/courier-sparkpost`
+
+## Setup
+
+To use the SparkPost courier, you will need an API key with the following permissions:
 
 * `Transmissions: Read/Write`
 * `Templates: Read-only`
@@ -11,14 +18,12 @@ build a SparkPost client and pass it into a `SparkPostCourier`:
 ```php
 <?php
 
-use Courier\SparkPostCourier;
+use Courier\Sparkpost\SparkPostCourier;
 use GuzzleHttp\Client;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use PhpEmail\Content\TemplatedContent;
 use PhpEmail\EmailBuilder;
 use SparkPost\SparkPost;
-
-new Client();
 
 $courier = new SparkPostCourier(
     new SparkPost(new GuzzleAdapter(new Client()), ['key'=>'YOUR_API_KEY'])

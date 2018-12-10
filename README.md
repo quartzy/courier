@@ -8,19 +8,15 @@
 [![Style Status][ico-styleci]][link-styleci]
 [![Scrutinizer Code Quality][ico-scrutinizer]][link-scrutinizer]
 
-A library to send transactional emails using domain objects and concise
+Courier is a library to send transactional emails using domain objects and concise
 interfaces.
 
-Check out the [documentation](https://quartzy.github.io/courier/) for more details on
-how to use Courier!
-
-This library provides tools to send standardized emails using third-party SaaS
-SMTP providers like SparkPost and Postmark without having to reinvent the wheel.
-By leveraging a [standardized domain
-model](https://github.com/quartzy/php-email) for defining our emails, Courier is
+Courier provides an interface to sending standardized emails using third-party 
+SaaS SMTP providers, like SparkPost and Postmark. By leveraging a [standardized domain
+model](https://github.com/quartzy/php-email) for defining emails, Courier is
 capable of defining drivers (or "couriers" in our case) that allow the developer
-to easily switch out how they send their emails without changing any part of
-their code that builds and delivers the email.
+to easily switch how the provider sending their emails without changing any part of
+their code that builds the email.
 
 ## Install
 
@@ -32,11 +28,11 @@ composer require quartzy/courier
 
 ## Usage
 
-Each email provider will also have their own dependencies, for example:
+Each email provider will also have their own courier dependency:
 
 ```bash
-# Send emails with SendGrid
-composer require sendgrid/sendgrid
+# Send emails with Sparkpost
+composer require quartzy/courier-sparkpost
 ```
 
 Now you just need to create an email and send it:
@@ -44,12 +40,16 @@ Now you just need to create an email and send it:
 ```php
 <?php
 
-use Courier\SendGridCourier;
+use Courier\Sparkpost\SparkpostCourier;
+use GuzzleHttp\Client;
+use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 use PhpEmail\EmailBuilder;
 use PhpEmail\Content\SimpleContent;
+use SparkPost\SparkPost;
 
-$key     = getenv('SENDGRID_KEY');
-$courier = new SendGridCourier(new \SendGrid($key));
+$courier = new SparkPostCourier(
+    new SparkPost(new GuzzleAdapter(new Client()), ['key'=>'YOUR_API_KEY'])
+);
 
 $email = EmailBuilder::email()
     ->withSubject('Welcome!')
@@ -62,13 +62,6 @@ $courier->deliver($email);
 ```
 
 For details on building the email objects, see [Php Email](https://github.com/quartzy/php-email).
-
-
-## Supported Service Providers
-
-1. SendGrid (using v3 Web API)
-1. SparkPost
-1. Postmark
 
 ## Change log
 

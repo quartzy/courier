@@ -7,6 +7,12 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ## Unreleased
 
+### Removed
+
+* Removed `Courier\SparkpostCourier` in favor of `Courier\Sparkpost\SparkpostCourier` see https://github.com/quartzy/courier-sparkpost
+* Removed `Courier\PostmarkCourier` in favor of `Camuthig\Courier\Postmark\PostmarkCourier` see https://github.com/camuthig/courier-postmark
+* Removed `Courier\SendGridCourier` in favor of `Camuthig\Courier\SendGrid\SendGridCourier` see https://github.com/camuthig/courier-sendgrid
+
 ## 0.4.1 - 2018-12-08
 
 ### Deprecated

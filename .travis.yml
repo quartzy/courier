@@ -12,9 +12,7 @@ cache:
 install: composer update --prefer-lowest --no-interaction
 
 script:
-  - cp .env.example .env
-  - 'if [ "$TRAVIS_SECURE_ENV_VARS" = "true" ]; then phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.clover; fi'
-  - 'if [ "$TRAVIS_SECURE_ENV_VARS" = "false" ]; then phpdbg -qrr vendor/bin/phpunit --exclude-group=large --coverage-clover=coverage.clover; fi'
+  - phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.clover
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
