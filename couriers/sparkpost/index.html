@@ -399,6 +399,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#usage" title="Usage" class="md-nav__link">
+    Usage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#notes-on-headers" title="Notes on Headers" class="md-nav__link">
     Notes on Headers
   </a>
@@ -468,6 +475,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#usage" title="Usage" class="md-nav__link">
+    Usage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#notes-on-headers" title="Notes on Headers" class="md-nav__link">
     Notes on Headers
   </a>
@@ -509,8 +523,7 @@
                 
                   <h1>SparkPost</h1>
                 
-                <p>The SparkPost courier supports both templated and simple emails. </p>
-<h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
+                <h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
 <p><code>composer require quartzy/courier-sparkpost</code></p>
 <h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
 <p>To use the SparkPost courier, you will need an API key with the following permissions:</p>
@@ -518,9 +531,11 @@
 <li><code>Transmissions: Read/Write</code></li>
 <li><code>Templates: Read-only</code></li>
 </ul>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p>The SparkPost courier supports both templated and simple emails.</p>
 <p>You should follow the steps documented in the <a href="https://github.com/SparkPost/php-sparkpost">SparkPost
 PHP</a> project for details on how to
-build a SparkPost client and pass it into a <code>SparkPostCourier</code>:</p>
+build a SparkPost client and pass it into a <code>SparkPostCourier</code>.</p>
 <div class="codehilite"><pre><span></span><span class="cp">&lt;?php</span>
 
 <span class="k">use</span> <span class="nx">Courier\Sparkpost\SparkPostCourier</span><span class="p">;</span>
@@ -556,7 +571,7 @@ headers defined on the <code>Email</code>.</p>
 <h2 id="notes-for-sparkpost-templates">Notes for SparkPost Templates<a class="headerlink" href="#notes-for-sparkpost-templates" title="Permanent link">&para;</a></h2>
 <p>SparkPost allows users to define templated keys in the from, reply to, and
 subject fields along with the body. In order to make your courier work as
-expected, the library will automatically created the following template values
+expected, the library will automatically create the following template values
 based on the properties of the <code>Email</code>:</p>
 <ul>
 <li><code>fromEmail</code></li>
@@ -567,7 +582,7 @@ based on the properties of the <code>Email</code>:</p>
 <li><code>ccHeader</code></li>
 </ul>
 <p>These will be added to the template data already defined in the
-<code>TemplatedContent</code> assuming the keys are not already set manually.</p>
+<code>TemplatedContent</code>, assuming the keys are not already set manually.</p>
 <h2 id="temporary-fix-for-correctly-displaying-cc-header">Temporary fix for correctly displaying CC header<a class="headerlink" href="#temporary-fix-for-correctly-displaying-cc-header" title="Permanent link">&para;</a></h2>
 <p>As documented in this
 <a href="https://www.sparkpost.com/docs/faq/cc-bcc-with-rest-api/">post</a>, the SparkPost

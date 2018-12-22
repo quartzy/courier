@@ -521,13 +521,13 @@
                 
                   <h1>Postmark</h1>
                 
-                <p>The Postmark courier supports both templated and simple emails.</p>
+                <h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
+<p><code>composer require camuthig/courier-postmark</code></p>
+<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
+<p>The Postmark courier supports both templated and simple emails.</p>
 <p>To create a Postmark courier, you should follow the steps documented in the
 <a href="https://github.com/wildbit/postmark-php/wiki/Getting-Started">Postmark PHP</a>
 docs to create a client and pass it into the <code>PostmarkCourier</code>.</p>
-<h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
-<p><code>composer require camuthig/courier-postmark</code></p>
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><span class="cp">&lt;?php</span>
 
 <span class="k">use</span> <span class="nx">Camuthig\Courier\Postmark\PostmarkCourier</span><span class="p">;</span>
@@ -560,7 +560,7 @@ the <code>Email</code> into the template variables with the key <code>subject</c
 <h3 id="bcc-recipients">BCC Recipients<a class="headerlink" href="#bcc-recipients" title="Permanent link">&para;</a></h3>
 <p>Postmark does not support sending emails with a BCC recipients list. Courier
 does not throw an error when sending emails with a BCC using the Postmark
-courier, but it is important to note, that the email will just not be delivered
+courier, but it is important to note that the email will just not be delivered
 to the given email addresses.</p>
                 
                   
