@@ -1,15 +1,14 @@
-The Postmark courier supports both templated and simple emails.
-
-To create a Postmark courier, you should follow the steps documented in the
-[Postmark PHP](https://github.com/wildbit/postmark-php/wiki/Getting-Started)
-docs to create a client and pass it into the `PostmarkCourier`.
-
-
 ## Install
 
 `composer require camuthig/courier-postmark`
 
 ## Usage
+
+The Postmark courier supports both templated and simple emails.
+
+To create a Postmark courier, you should follow the steps documented in the
+[Postmark PHP](https://github.com/wildbit/postmark-php/wiki/Getting-Started)
+docs to create a client and pass it into the `PostmarkCourier`.
 
 ```php
 <?php
@@ -47,5 +46,5 @@ the `Email` into the template variables with the key `subject`.
 
 Postmark does not support sending emails with a BCC recipients list. Courier
 does not throw an error when sending emails with a BCC using the Postmark
-courier, but it is important to note, that the email will just not be delivered
+courier, but it is important to note that the email will just not be delivered
 to the given email addresses.

@@ -1,5 +1,3 @@
-The SendGrid courier supports both templated and simple emails. 
-
 ## Install
 
 `composer require camuthig/courier-sendgrid`
@@ -11,6 +9,8 @@ To use the SendGrid courier, you will need an API key with the following permiss
 * `Mail Send - Full Access`
 
 ## Usage
+
+The SendGrid courier supports both templated and simple emails.
 
 ```php
 <?php

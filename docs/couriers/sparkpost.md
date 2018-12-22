@@ -1,5 +1,3 @@
-The SparkPost courier supports both templated and simple emails. 
-
 ## Install
 
 `composer require quartzy/courier-sparkpost`
@@ -11,9 +9,13 @@ To use the SparkPost courier, you will need an API key with the following permis
 * `Transmissions: Read/Write`
 * `Templates: Read-only`
 
+## Usage
+
+The SparkPost courier supports both templated and simple emails.
+
 You should follow the steps documented in the [SparkPost
 PHP](https://github.com/SparkPost/php-sparkpost) project for details on how to
-build a SparkPost client and pass it into a `SparkPostCourier`:
+build a SparkPost client and pass it into a `SparkPostCourier`.
 
 ```php
 <?php
@@ -54,7 +56,7 @@ headers defined on the `Email`.
 
 SparkPost allows users to define templated keys in the from, reply to, and
 subject fields along with the body. In order to make your courier work as
-expected, the library will automatically created the following template values
+expected, the library will automatically create the following template values
 based on the properties of the `Email`:
 
 * `fromEmail`
@@ -65,7 +67,7 @@ based on the properties of the `Email`:
 * `ccHeader`
 
 These will be added to the template data already defined in the
-`TemplatedContent` assuming the keys are not already set manually.
+`TemplatedContent`, assuming the keys are not already set manually.
 
 ## Temporary fix for correctly displaying CC header
 

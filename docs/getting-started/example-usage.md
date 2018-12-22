@@ -2,7 +2,7 @@ Each courier is implemented as an adapter in it's own project, so
 the first step is to pull the correct courier implementation into your project.
 
 ```bash
-# Send emails with SendGrid
+# Send emails with Sparkpost
 composer require quartzy/courier-sparkpost
 ```
 
@@ -32,7 +32,7 @@ $email = EmailBuilder::email()
 $courier->deliver($email);
 ```
 
-For details on building the email objects, see the [Php
+For details on building the email objects, see [Php
 Email](https://github.com/quartzy/php-email).
 
 ## Tracking Emails
