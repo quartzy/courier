@@ -97,7 +97,7 @@ class MailCourierTest extends TestCase
 
         $ch = curl_init('http://localhost:8025/api/v2/search?kind=containing&query=' . urlencode($subject));
 
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         $result = curl_exec($ch);

@@ -26,7 +26,7 @@ class MailCourier implements Courier
             throw new UnsupportedContentException($email->getContent());
         }
 
-        $boundary = "==Multipart_Boundary_" . bin2hex(random_bytes(8));
+        $boundary = '==Multipart_Boundary_' . bin2hex(random_bytes(8));
 
         $headers = [
             'From: ' . $email->getFrom()->toRfc2822(),
@@ -85,7 +85,7 @@ class MailCourier implements Courier
     /**
      * Build the MIME parts for the content.
      *
-     * @param Email  $email
+     * @param Email $email
      *
      * @return array
      */
@@ -110,14 +110,13 @@ Content-Type: text/html; {$content->getHtml()->getCharset()}
 
 {$content->getHtml()->getBody()}
 MIME;
-
         }
 
         return $parts;
     }
 
     /**
-     * Create the MIME parts for each of the attachments
+     * Create the MIME parts for each of the attachments.
      *
      * @param Email $email
      *
