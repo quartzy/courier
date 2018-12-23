@@ -48,7 +48,8 @@ class MailCourierTest extends TestCase
             ->replyTo('reply2@test.com', 'Reply Two Testerson')
             ->attach(FileAttachment::fromFile(self::$file, 'Test Attachment', null, 'plain/text'))
             ->embed(FileAttachment::fromFile(__DIR__ . '/beaker.jpg', 'beaker_pic', 'beaker'))
-            // TODO Test custom headers
+            ->addHeader('X-Test', 'test-value')
+            ->addHeader('X-Other', 'other-value')
             // TODO Build templating functionality
             ->build();
 
@@ -87,6 +88,8 @@ class MailCourierTest extends TestCase
         self::assertEquals('image/jpeg', $attachment->getContentType());
         self::assertEquals('inline', $attachment->getContentDisposition());
         self::assertEquals('Test Email', $receivedEmail->getTextContent());
+        self::assertEquals('test-value', $receivedEmail->getHeader('X-Test')->getValue());
+        self::assertEquals('other-value', $receivedEmail->getHeader('X-Other')->getValue());
         self::assertEquals('<b>Test Email</b><img src="cid:beaker" />', $receivedEmail->getHtmlContent());
         self::assertEquals($subject, $receivedEmail->getHeader('Subject')->getValue());
     }

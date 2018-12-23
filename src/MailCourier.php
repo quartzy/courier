@@ -45,6 +45,12 @@ class MailCourier implements Courier
             $headers[] = 'Reply-To: ' . $this->mapAddresses($email->getReplyTos());
         }
 
+        if ($email->getHeaders()) {
+            foreach ($email->getHeaders() as $header) {
+                $headers[] = sprintf('%s: %s', $header->getField(), $header->getValue());
+            }
+        }
+
         $result = mail(
             $this->mapAddresses($email->getToRecipients()),
             $email->getSubject() ?? '',
