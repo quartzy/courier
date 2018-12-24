@@ -6,6 +6,9 @@ php:
 
 sudo: false
 
+services:
+  - docker
+
 cache:
   directories:
     - $HOME/.composer/cache
