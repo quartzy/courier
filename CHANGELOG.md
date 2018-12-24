@@ -13,7 +13,8 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ### Changed
 
-* Allow for PHP Email ^0.6.0 as well as ^0.5.1
+* Add support for PHP Email ^0.6.0
+* Drop support for PHP Email ^0.5.1
 
 ## 0.5.0 - 2018-12-09
 
