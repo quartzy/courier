@@ -11,6 +11,8 @@
 Courier is a library to send transactional emails using domain objects and concise
 interfaces.
 
+See full [documentation](https://quartzy.github.io/courier) for more details.
+
 Courier provides an interface to sending standardized emails using third-party 
 SaaS SMTP providers, like SparkPost and Postmark. By leveraging a [standardized domain
 model](https://github.com/quartzy/php-email) for defining emails, Courier is
