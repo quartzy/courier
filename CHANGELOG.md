@@ -7,6 +7,10 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ## Unreleased
 
+### Added
+
+* Added `MailCourier` implementation using native `mail` function
+
 ### Changed
 
 * Allow for PHP Email ^0.6.0 as well as ^0.5.1

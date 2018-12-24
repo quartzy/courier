@@ -4,13 +4,25 @@ php:
   - 7.2
   - 7.3
 
-sudo: false
+sudo: required
+
+services:
+  - docker
 
 cache:
   directories:
     - $HOME/.composer/cache
 
+before_install:
+  - wget https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64
+  - chmod +x mhsendmail_linux_amd64
+  - sudo mv mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
+  - docker-compose up -d
+
 install: composer update --prefer-lowest --no-interaction
+
+before_script:
+  - echo 'sendmail_path = /usr/local/bin/mhsendmail' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 script:
   - phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.clover
