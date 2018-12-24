@@ -67,7 +67,7 @@ class MailCourier implements Courier
         );
 
         if (!$result) {
-            throw new TransmissionException(0, new \Exception(error_get_last()['message']));
+            throw new TransmissionException(0, new \Exception(error_get_last()['message'] ?? 'Unknown mail error'));
         }
     }
 
