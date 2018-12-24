@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/", 
-            "text": "Courier is a library for sending transactional emails using domain objects and concise\ninterfaces.\n\n\nSee full \ndocumentation\n for more details.\n\n\nCourier provides an interface for sending standardized emails using third-party\nSaaS SMTP providers, like SparkPost and Postmark. By leveraging a \nstandardized domain\nmodel\n for defining emails, Courier is\ncapable of defining drivers, referred to as \"couriers\", that allow the developer\nto easily swap underlying providers without changing any part of their code that builds\nthe email.", 
+            "text": "Courier is a library for sending transactional emails using domain objects and concise\ninterfaces.\n\n\nCourier provides an interface for sending standardized emails using third-party\nSaaS SMTP providers, like SparkPost and Postmark. By leveraging a \nstandardized domain\nmodel\n for defining emails, Courier is\ncapable of defining drivers, referred to as \"couriers\", that allow the developer\nto easily swap underlying providers without changing any part of their code that builds\nthe email.", 
             "title": "Home"
         }, 
         {
