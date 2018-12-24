@@ -7,6 +7,7 @@ namespace Courier\Test;
 use Courier\MailCourier;
 use PhpEmail\Attachment\FileAttachment;
 use PhpEmail\Content\SimpleContent;
+use PhpEmail\Content\TemplatedContent;
 use PhpEmail\EmailBuilder;
 use ZBateson\MailMimeParser\MailMimeParser;
 use ZBateson\MailMimeParser\Message;
@@ -50,7 +51,6 @@ class MailCourierTest extends TestCase
             ->embed(FileAttachment::fromFile(__DIR__ . '/beaker.jpg', 'beaker_pic', 'beaker'))
             ->addHeader('X-Test', 'test-value')
             ->addHeader('X-Other', 'other-value')
-            // TODO Build templating functionality
             ->build();
 
         $courier = new MailCourier();
@@ -92,6 +92,38 @@ class MailCourierTest extends TestCase
         self::assertEquals('other-value', $receivedEmail->getHeader('X-Other')->getValue());
         self::assertEquals('<b>Test Email</b><img src="cid:beaker" />', $receivedEmail->getHtmlContent());
         self::assertEquals($subject, $receivedEmail->getHeader('Subject')->getValue());
+    }
+
+    public function testSendsTemplatedEmail()
+    {
+        $subject = 'Test Email ' . bin2hex(random_bytes(8));
+
+        $email = EmailBuilder::email()
+            ->withSubject($subject)
+            ->from('from@test.com', 'From Testerson')
+            ->to('to@test.com', 'To Testerson')
+            ->withContent(new TemplatedContent('test-template', ['one' => 1, 'two' => 2]))
+            ->build();
+
+        $courier = new MailCourier();
+
+        $courier->deliver($email);
+
+        $receivedEmail = $this->getEmail($subject);
+
+        self::assertNotNull($receivedEmail, 'Email was not received');
+
+        $expectedContent = <<<CONTENT
+Template ID: test-template\r
+Template Data:\r
+\r
+{\r
+    "one": 1,\r
+    "two": 2\r
+}
+CONTENT;
+
+        self::assertEquals($expectedContent, $receivedEmail->getTextContent());
     }
 
     private function getEmail(string $subject): ?Message
