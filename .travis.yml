@@ -9,16 +9,12 @@ sudo: required
 services:
   - docker
 
-env:
-  - DOCKER_COMPOSE_VERSION=1.23.2
-
 cache:
   directories:
     - $HOME/.composer/cache
 
 before_install:
-  - docker-compose --version
-  - docker-compose --verbose start
+  - docker-compose up -d
 
 install: composer update --prefer-lowest --no-interaction
 
