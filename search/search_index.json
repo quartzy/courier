@@ -27,8 +27,28 @@
         }, 
         {
             "location": "/getting-started/couriers/", 
-            "text": "Couriers are the drivers implementing the \nCourier\n interface. The following\ncouriers are supported out of the box:\n\n\n\n\nPostmark\n\n\nSendGrid\n\n\nSparkPost", 
+            "text": "Couriers are the drivers implementing the \nCourier\n interface. The following\ncouriers are supported out of the box:\n\n\n\n\nMail (using mail function)\n\n\nPostmark\n\n\nSendGrid\n\n\nSparkPost", 
             "title": "Couriers"
+        }, 
+        {
+            "location": "/couriers/mail/", 
+            "text": "The \nMailCourier\n is primarily built as a drop-in testing courier for local development, using the native \nmail\n\nfunction and no other dependencies. The courier will deliver \nSimpleContent\n emails as defined, however, it does not\ncontain any logic for rendering templates. When delivering templated content, the courier will build a text email\nwith the ID of the template and the json-encoded template data.\n\n\nInstall\n\n\nThis package is included in the core \nquartzy/courier\n and no other dependencies are necessary.\n\n\ncomposer require quartzy/courier\n\n\nUsage\n\n\n?php\n\n\n\nuse\n \nCourier\\MailCourier\n;\n\n\nuse\n \nPhpEmail\\Content\\TemplatedContent\n;\n\n\nuse\n \nPhpEmail\\EmailBuilder\n;\n\n\n\n$courier\n \n=\n \nnew\n \nMailCourier\n();\n\n\n\n$email\n \n=\n \nEmailBuilder\n::\nemail\n()\n\n    \n-\nfrom\n(\ntest@mybiz.com\n)\n\n    \n-\nto\n(\nloyal.customer@email.com\n)\n\n    \n-\nreplyTo\n(\ntest@mybiz.com\n,\n \nYour Sales Rep\n)\n\n    \n-\nwithSubject\n(\nWelcome!\n)\n\n    \n-\nwithContent\n(\nnew\n \nTemplatedContent\n(\nmy_email\n,\n \n[\ntestKey\n \n=\n \nvalue\n]))\n\n    \n-\nbuild\n();\n\n\n\n$courier\n-\ndeliver\n(\n$email\n);\n\n\n\n\n\n\nAdding Template Support\n\n\nThe \nMailCourier\n can be extended to support the template rendering of your choice. The \nbuildTemplatedContent\n protected\nfunction in the class is what builds the MIME content of the email body and can be overwritten to support\na template rendering pattern.", 
+            "title": "Mail"
+        }, 
+        {
+            "location": "/couriers/mail/#install", 
+            "text": "This package is included in the core  quartzy/courier  and no other dependencies are necessary.  composer require quartzy/courier", 
+            "title": "Install"
+        }, 
+        {
+            "location": "/couriers/mail/#usage", 
+            "text": "?php  use   Courier\\MailCourier ;  use   PhpEmail\\Content\\TemplatedContent ;  use   PhpEmail\\EmailBuilder ;  $courier   =   new   MailCourier ();  $email   =   EmailBuilder :: email () \n     - from ( test@mybiz.com ) \n     - to ( loyal.customer@email.com ) \n     - replyTo ( test@mybiz.com ,   Your Sales Rep ) \n     - withSubject ( Welcome! ) \n     - withContent ( new   TemplatedContent ( my_email ,   [ testKey   =   value ])) \n     - build ();  $courier - deliver ( $email );", 
+            "title": "Usage"
+        }, 
+        {
+            "location": "/couriers/mail/#adding-template-support", 
+            "text": "The  MailCourier  can be extended to support the template rendering of your choice. The  buildTemplatedContent  protected\nfunction in the class is what builds the MIME content of the email body and can be overwritten to support\na template rendering pattern.", 
+            "title": "Adding Template Support"
         }, 
         {
             "location": "/couriers/postmark/", 
