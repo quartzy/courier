@@ -1,6 +1,6 @@
 The `MailCourier` is primarily built as a drop-in testing courier for local development, using the native `mail`
 function and no other dependencies. The courier will deliver `SimpleContent` emails as defined, however, it does not
-contain any logic for rendering templates. When delivering templated content, the courier will include a text body
+contain any logic for rendering templates. When delivering templated content, the courier will build a text email
 with the ID of the template and the json-encoded template data.
 
 ## Install
@@ -33,6 +33,6 @@ $courier->deliver($email);
 
 ## Adding Template Support
 
-The `MailCourier` can be extended to support template rendering of your choice. The `buildTemplatedContent` protected
-function in the class is what build the MIME content of the email body. This function can be overwritten to support
+The `MailCourier` can be extended to support the template rendering of your choice. The `buildTemplatedContent` protected
+function in the class is what builds the MIME content of the email body and can be overwritten to support
 a template rendering pattern.
