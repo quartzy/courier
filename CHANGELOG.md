@@ -7,6 +7,10 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ## Unreleased
 
+### Removed
+
+* Dropped `EmptyContent` class
+
 ### Added
 
 * Added `MailCourier` implementation using native `mail` function

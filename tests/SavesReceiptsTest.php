@@ -6,7 +6,7 @@ namespace Courier\Test;
 
 use Courier\Exceptions\ReceiptException;
 use Courier\SavesReceipts;
-use PhpEmail\Content\EmptyContent;
+use PhpEmail\Content\SimpleContent;
 use PhpEmail\EmailBuilder;
 
 /**
@@ -25,7 +25,7 @@ class SavesReceiptsTest extends TestCase
             ->to('to@test.com')
             ->from('from@test.com')
             ->withSubject('Test Subject')
-            ->withContent(new EmptyContent())
+            ->withContent(SimpleContent::text(''))
             ->build();
 
         $this->saveReceipt($email, 'first');
@@ -42,7 +42,7 @@ class SavesReceiptsTest extends TestCase
             ->to('to@test.com')
             ->from('from@test.com')
             ->withSubject('Test Subject')
-            ->withContent(new EmptyContent())
+            ->withContent(SimpleContent::text(''))
             ->build();
 
         $this->saveReceipt($first, 'first');
@@ -51,7 +51,7 @@ class SavesReceiptsTest extends TestCase
             ->to('to@test.com')
             ->from('from@test.com')
             ->withSubject('Test Subject')
-            ->withContent(new EmptyContent())
+            ->withContent(SimpleContent::text(''))
             ->build();
 
         $this->saveReceipt($second, 'second');
@@ -71,7 +71,7 @@ class SavesReceiptsTest extends TestCase
             ->to('to@test.com')
             ->from('from@test.com')
             ->withSubject('Test Subject')
-            ->withContent(new EmptyContent())
+            ->withContent(SimpleContent::text(''))
             ->build();
 
         $this->receiptFor($email);
