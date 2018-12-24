@@ -22,7 +22,7 @@ before_install:
 install: composer update --prefer-lowest --no-interaction
 
 before_script:
-  - echo 'sendmail_path = /usr/local/bin/mbsendmail' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  - echo 'sendmail_path = /usr/local/bin/mhsendmail' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 script:
   - phpdbg -qrr vendor/bin/phpunit --coverage-clover=coverage.clover
