@@ -16,7 +16,7 @@ cache:
 install: composer update --prefer-lowest --no-interaction
 
 before_script:
-  - docker-compose start
+  - sudo docker-compose start
   - echo 'sendmail_path = /usr/sbin/sendmail -S mail:1025' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 script:
