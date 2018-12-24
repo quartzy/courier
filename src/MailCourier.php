@@ -86,7 +86,7 @@ class MailCourier implements Courier
     {
         return [
             SimpleContent::class,
-            TemplatedContent::class
+            TemplatedContent::class,
         ];
     }
 
