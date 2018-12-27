@@ -59,8 +59,7 @@ subject fields along with the body. In order to make your courier work as
 expected, the library will automatically create the following template values
 based on the properties of the `Email`:
 
-* `fromEmail`
-* `fromDomain`
+* `fromAddress`
 * `fromName`
 * `replyTo`
 * `subject`
