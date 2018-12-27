@@ -7,6 +7,8 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ## Unreleased
 
+## 0.6.0
+
 ### Removed
 
 * Dropped `EmptyContent` class
