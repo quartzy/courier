@@ -12,6 +12,7 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 ### Removed
 
 * Dropped `EmptyContent` class
+* Drop support for PHP Email ^0.5.1
 
 ### Added
 
@@ -20,7 +21,6 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 ### Changed
 
 * Add support for PHP Email ^0.6.0
-* Drop support for PHP Email ^0.5.1
 
 ## 0.5.0 - 2018-12-09
 
