@@ -5,3 +5,4 @@ couriers are supported out of the box:
 * [Postmark](/couriers/postmark)
 * [SendGrid](/couriers/sendgrid)
 * [SparkPost](/couriers/sparkpost)
+* [Mailjet](/couriers/mailjet)
