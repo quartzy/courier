@@ -27,7 +27,7 @@
         }, 
         {
             "location": "/getting-started/couriers/", 
-            "text": "Couriers are the drivers implementing the \nCourier\n interface. The following\ncouriers are supported out of the box:\n\n\n\n\nMail (using mail function)\n\n\nPostmark\n\n\nSendGrid\n\n\nSparkPost", 
+            "text": "Couriers are the drivers implementing the \nCourier\n interface. The following\ncouriers are supported out of the box:\n\n\n\n\nMail (using mail function)\n\n\nPostmark\n\n\nSendGrid\n\n\nSparkPost\n\n\nMailjet", 
             "title": "Couriers"
         }, 
         {
