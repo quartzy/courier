@@ -46,3 +46,4 @@ pages:
     - Postmark: couriers/postmark.md
     - SendGrid: couriers/sendgrid.md
     - SparkPost: couriers/sparkpost.md
+    - Mailjet: couriers/mailjet.md
