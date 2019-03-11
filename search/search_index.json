@@ -144,6 +144,26 @@
             "location": "/couriers/sparkpost/#temporary-fix-for-correctly-displaying-cc-header", 
             "text": "As documented in this post , the SparkPost\nAPI requires sending the  CC  header information in order to properly display\nrecipients. In the context of inline templates and non-templated emails, setting\nthis header works fine. However, if sending a standard templated email,\nSparkPost's API does not respect the  CC  header. To work around this, Courier\nwill set the  ccHeader  variable in the substitution data to what the value should  be. In order to leverage this variable, you will need to update your\ntemplate using the API (the header attributes are not available in the web\neditor) to include the value. This can be done with a request like:  // PUT https://api.sparkpost.com/api/v1/templates/my-template-id  { \n   content :   { \n     // All of your other content must go here as this PUT will overwrite all other content \n     headers :   { \n       CC :   {{ccHeader}} \n     } \n   }  }", 
             "title": "Temporary fix for correctly displaying CC header"
+        }, 
+        {
+            "location": "/couriers/mailjet/", 
+            "text": "Install\n\n\ncomposer require camuthig/courier-mailjet\n\n\nUsage\n\n\nVisit \nMailjet\n to retrieve your API key and secret.\n\n\n?php\n\n\n\nuse\n \nCamuthig\\Courier\\Mailjet\\MailjetCourier\n;\n\n\nuse\n \nMailjet\\Client\n;\n\n\nuse\n \nPhpEmail\\EmailBuilder\n;\n\n\nuse\n \nPhpEmail\\Content\\SimpleContent\n;\n\n\n\n$client\n \n=\n \nnew\n \nClient\n(\ngetenv\n(\nMAILJET_API_KEY\n),\n \ngetenv\n(\nMAILJET_API_SECRET\n));\n\n\n$courier\n \n=\n \nnew\n \nMailjetCourier\n(\n$client\n);\n\n\n\n$email\n \n=\n \nEmailBuilder\n::\nemail\n()\n\n            \n-\nto\n(\nto@test.com\n)\n\n            \n-\nfrom\n(\nfrom@test.com\n)\n\n            \n-\nwithSubject\n(\nGreat Email!\n)\n\n            \n-\nwithContent\n(\nSimpleContent\n::\ntext\n(\nText\n)\n-\naddHtml\n(\nHTML\n))\n\n            \n-\nbuild\n();\n\n\n\n$courier\n-\ndeliver\n(\n$email\n);\n\n\n\n\n\n\nReceipt ID\n\n\nMailjet returns a unique ID for each receipient of a message. However, the Courier receipt\nAPI expects a single ID to be returned for each email delivery. To work around this, the\nreceipt ID returned by this implementation is actually added to the messages as the Custom ID\nproperty.", 
+            "title": "Mailjet"
+        }, 
+        {
+            "location": "/couriers/mailjet/#install", 
+            "text": "composer require camuthig/courier-mailjet", 
+            "title": "Install"
+        }, 
+        {
+            "location": "/couriers/mailjet/#usage", 
+            "text": "Visit  Mailjet  to retrieve your API key and secret.  ?php  use   Camuthig\\Courier\\Mailjet\\MailjetCourier ;  use   Mailjet\\Client ;  use   PhpEmail\\EmailBuilder ;  use   PhpEmail\\Content\\SimpleContent ;  $client   =   new   Client ( getenv ( MAILJET_API_KEY ),   getenv ( MAILJET_API_SECRET ));  $courier   =   new   MailjetCourier ( $client );  $email   =   EmailBuilder :: email () \n             - to ( to@test.com ) \n             - from ( from@test.com ) \n             - withSubject ( Great Email! ) \n             - withContent ( SimpleContent :: text ( Text ) - addHtml ( HTML )) \n             - build ();  $courier - deliver ( $email );", 
+            "title": "Usage"
+        }, 
+        {
+            "location": "/couriers/mailjet/#receipt-id", 
+            "text": "Mailjet returns a unique ID for each receipient of a message. However, the Courier receipt\nAPI expects a single ID to be returned for each email delivery. To work around this, the\nreceipt ID returned by this implementation is actually added to the messages as the Custom ID\nproperty.", 
+            "title": "Receipt ID"
         }
     ]
 }
