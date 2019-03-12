@@ -7,6 +7,14 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ## Unreleased
 
+### Removed
+
+* Removed `MailCourier` see https://github.com/quartzy/courier/pull/35
+
+### Added
+
+* Added `LoggingCourier` class for local testing purposes
+
 ## 0.6.0
 
 ### Removed
