@@ -38,7 +38,7 @@ class LoggingCourierTest extends TestCase
 
         $email = EmailBuilder::email()
             ->withSubject($subject)
-            ->from('from@test.com', "From Testerson")
+            ->from('from@test.com', 'From Testerson')
             ->to('to@test.com', 'To Testerson')
             ->withContent(SimpleContent::text('Test Email')->addHtml('<b>Test Email</b><img src="cid:beaker" />'))
             ->cc('cc@test.com', 'CC Testerson')
