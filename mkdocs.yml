@@ -42,8 +42,8 @@ pages:
     - Example Usage: getting-started/example-usage.md
     - Couriers: getting-started/couriers.md
   - Couriers:
-    - Mail: couriers/mail.md
+    - Logging: couriers/logging.md
+    - Mailjet: couriers/mailjet.md
     - Postmark: couriers/postmark.md
     - SendGrid: couriers/sendgrid.md
     - SparkPost: couriers/sparkpost.md
-    - Mailjet: couriers/mailjet.md
