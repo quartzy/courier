@@ -9,7 +9,7 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ### Removed
 
-* Removed `MailCourier` class
+* Removed `MailCourier` see https://github.com/quartzy/courier/pull/35
 
 ### Added
 

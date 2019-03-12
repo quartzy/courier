@@ -75,12 +75,12 @@ class LoggingCourier implements Courier
             return $attachment->getName();
         }, $email->getAttachments()));
 
-        $embeddedIds = implode(', ', array_map(function (Attachment $attachment) {
-            return $attachment->getContentId() ?? 'NA';
+        $embeddedNames = implode(', ', array_map(function (Attachment $attachment) {
+            return $attachment->getName();
         }, $email->getAttachments()));
 
         $this->logger->debug("Attaching: $attachmentNames");
-        $this->logger->debug("Embedding IDs: $embeddedIds");
+        $this->logger->debug("Embedding: $embeddedNames");
     }
 
     private function logContent(Email $email): void
@@ -92,10 +92,8 @@ class LoggingCourier implements Courier
         }
 
         if ($content instanceof SimpleContent) {
-            $this->logger->debug("HTML:\n");
-            $this->logger->debug($content->getHtml()->getBody());
-            $this->logger->debug("Text:\n");
-            $this->logger->debug($content->getText()->getBody());
+            $this->logger->debug("HTML:\n{$content->getHtml()->getBody()}");
+            $this->logger->debug("Text:\n{$content->getText()->getBody()}");
         }
     }
 }
