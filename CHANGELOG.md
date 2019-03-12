@@ -7,6 +7,8 @@ and this project attempts to follow [Semantic Versioning](http://semver.org/spec
 
 ## Unreleased
 
+## 0.7.0 - 2019-03-12
+
 ### Removed
 
 * Removed `MailCourier` see https://github.com/quartzy/courier/pull/35
