@@ -40,7 +40,7 @@
     
     
       
-        <title>Mail - Courier</title>
+        <title>Logging - Courier</title>
       
     
     
@@ -128,7 +128,7 @@
                 Courier
               </span>
               <span class="md-header-nav__topic">
-                Mail
+                Logging
               </span>
             
           
@@ -345,11 +345,11 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Mail
+        Logging
       </label>
     
-    <a href="./" title="Mail" class="md-nav__link md-nav__link--active">
-      Mail
+    <a href="./" title="Logging" class="md-nav__link md-nav__link--active">
+      Logging
     </a>
     
       
@@ -374,13 +374,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#adding-template-support" title="Adding Template Support" class="md-nav__link">
-    Adding Template Support
-  </a>
-  
-</li>
-      
       
       
       
@@ -389,6 +382,18 @@
   
 </nav>
     
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../mailjet/" title="Mailjet" class="md-nav__link">
+      Mailjet
+    </a>
   </li>
 
         
@@ -424,18 +429,6 @@
   <li class="md-nav__item">
     <a href="../sparkpost/" title="SparkPost" class="md-nav__link">
       SparkPost
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../mailjet/" title="Mailjet" class="md-nav__link">
-      Mailjet
     </a>
   </li>
 
@@ -477,13 +470,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#adding-template-support" title="Adding Template Support" class="md-nav__link">
-    Adding Template Support
-  </a>
-  
-</li>
-      
       
       
       
@@ -500,26 +486,27 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/quartzy/courier/edit/master/docs/couriers/mail.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
+                  <a href="https://github.com/quartzy/courier/edit/master/docs/couriers/logging.md" title="Edit this page" class="md-icon md-content__icon">&#xE3C9;</a>
                 
                 
-                  <h1>Mail</h1>
+                  <h1>Logging</h1>
                 
-                <p>The <code>MailCourier</code> is primarily built as a drop-in testing courier for local development, using the native <code>mail</code>
-function and no other dependencies. The courier will deliver <code>SimpleContent</code> emails as defined, however, it does not
-contain any logic for rendering templates. When delivering templated content, the courier will build a text email
-with the ID of the template and the json-encoded template data.</p>
+                <p>The LoggingCourier is not designed to be used in a production system, but it can act as a drop-in testing implementation,
+allowing developers to build content and log it to their local systems, without delivering emails. This can be
+helpful in cases where the email might contain important information, like a generated password reset token.</p>
 <h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
 <p>This package is included in the core <code>quartzy/courier</code> and no other dependencies are necessary.</p>
 <p><code>composer require quartzy/courier</code></p>
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
 <div class="codehilite"><pre><span></span><span class="cp">&lt;?php</span>
 
-<span class="k">use</span> <span class="nx">Courier\MailCourier</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Courier\LoggingCourier</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">PhpEmail\Content\TemplatedContent</span><span class="p">;</span>
 <span class="k">use</span> <span class="nx">PhpEmail\EmailBuilder</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Psr\Log\NullLogger</span><span class="p">;</span>
 
-<span class="nv">$courier</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MailCourier</span><span class="p">();</span>
+<span class="c1">// Be sure to create your own logger implementation and pass it into the courier.</span>
+<span class="nv">$courier</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LoggingCourier</span><span class="p">(</span><span class="k">new</span> <span class="nx">NullLogger</span><span class="p">());</span>
 
 <span class="nv">$email</span> <span class="o">=</span> <span class="nx">EmailBuilder</span><span class="o">::</span><span class="na">email</span><span class="p">()</span>
     <span class="o">-&gt;</span><span class="na">from</span><span class="p">(</span><span class="s1">&#39;test@mybiz.com&#39;</span><span class="p">)</span>
@@ -531,12 +518,6 @@ with the ID of the template and the json-encoded template data.</p>
 
 <span class="nv">$courier</span><span class="o">-&gt;</span><span class="na">deliver</span><span class="p">(</span><span class="nv">$email</span><span class="p">);</span>
 </pre></div>
-
-
-<h2 id="adding-template-support">Adding Template Support<a class="headerlink" href="#adding-template-support" title="Permanent link">&para;</a></h2>
-<p>The <code>MailCourier</code> can be extended to support the template rendering of your choice. The <code>buildTemplatedContent</code> protected
-function in the class is what builds the MIME content of the email body and can be overwritten to support
-a template rendering pattern.</p>
                 
                   
                 
@@ -572,13 +553,13 @@ a template rendering pattern.</p>
           </a>
         
         
-          <a href="../postmark/" title="Postmark" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../mailjet/" title="Mailjet" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Postmark
+                Mailjet
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
