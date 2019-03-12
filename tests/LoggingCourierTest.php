@@ -55,6 +55,8 @@ class LoggingCourierTest extends TestCase
         $courier = new LoggingCourier(new NullLogger());
 
         $courier->deliver($email);
+
+        self::assertTrue(true);
     }
 
     public function testSendsTemplatedEmail()
@@ -71,5 +73,7 @@ class LoggingCourierTest extends TestCase
         $courier = new LoggingCourier(new NullLogger());
 
         $courier->deliver($email);
+
+        self::assertTrue(true);
     }
 }
