@@ -42,7 +42,7 @@ class LoggingCourier implements Courier
      */
     public function deliver(Email $email): void
     {
-        $this->logger->debug("Delivered email");
+        $this->logger->debug('Delivered email');
         $this->logger->debug("Subject: {$email->getSubject()}");
         $this->logger->debug("From: {$email->getFrom()->toRfc2822()}");
         $this->logger->debug("Reply To: {$this->mapAddresses($email->getReplyTos())}");
